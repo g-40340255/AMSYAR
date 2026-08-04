@@ -3,1060 +3,1033 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Kuiz Comel Bahasa</title>
+    <title>Kuiz Interaktif - Demon Slayer</title>
     
+    <!-- External Libraries -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Menggunakan font yang lebih comel dan bulat -->
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800;900&family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
+    <!-- Fonts: Russo One for action headings, Nunito for highly legible text -->
+    <link href="https://fonts.googleapis.com/css2?family=Russo+One&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <style>
-        body {
-            font-family: 'Nunito', sans-serif;
-            background-color: #fff0f5; /* Soft pastel pink background */
-            touch-action: manipulation;
-        }
-        
-        .game-font { font-family: 'Fredoka', sans-serif; }
-        
-        /* Animations */
-        @keyframes popIn {
-            0% { transform: scale(0.5) rotate(-10deg); opacity: 0; }
-            70% { transform: scale(1.1) rotate(5deg); }
-            100% { transform: scale(1) rotate(0); opacity: 1; }
-        }
-        .animate-pop { animation: popIn 0.5s ease-out forwards; }
-        
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
-        .animate-float { animation: float 3s ease-in-out infinite; }
-
-        @keyframes pulse-fast {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-        .animate-pulse-fast { animation: pulse-fast 1s infinite; }
-
-        /* Level 1: Kumpul Epal */
-        #field-container {
-            position: relative;
-            background: linear-gradient(to bottom, #a1c4fd 0%, #c2e9fb 100%); /* Cloud sky */
-            border: 4px solid #ffb7b2;
-            border-radius: 20px;
-            overflow: hidden;
-            height: 250px;
-            box-shadow: inset 0 0 20px rgba(255,255,255,0.8);
-        }
-        .cloud-decor {
-            position: absolute;
-            background: white;
-            border-radius: 50px;
-            opacity: 0.7;
-        }
-        #ball {
-            position: absolute;
-            transition: all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
-            font-size: 2.5rem;
-            z-index: 10;
-        }
-        #goal {
-            position: absolute;
-            right: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 3.5rem;
-            color: #ff6b6b;
-        }
-
-        /* Level 2: Lompat Awan (Dam Haji) */
-        .checkers-board {
-            display: grid;
-            grid-template-columns: repeat(8, 1fr);
-            width: 100%;
-            max-width: 400px;
-            aspect-ratio: 1/1;
-            margin: 0 auto;
-            border: 6px solid #ffb7b2;
-            border-radius: 12px;
-            overflow: hidden;
-        }
-        .checkers-cell {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .cell-black { background-color: #ffccd5; } /* Pastel pink */
-        .cell-white { background-color: #ffffff; }
-        .dam-piece {
-            width: 80%;
-            height: 80%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            color: #fcd34d; /* Yellow star */
-            filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.2));
-            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-
-        /* Level 3: Kotak Hadiah */
-        .jersey-grid {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 12px;
-        }
-        @media (max-width: 640px) {
-            .jersey-grid { grid-template-columns: repeat(3, 1fr); }
-        }
-        .jersey-card {
-            background-color: #ffb7b2;
-            color: white;
-            border-radius: 15px;
-            padding: 15px 5px;
-            text-align: center;
-            cursor: pointer;
-            box-shadow: 0 6px 0 #ff9a9e;
-            transition: all 0.1s;
-            position: relative;
-            border: 2px solid white;
-        }
-        .jersey-card:active { 
-            transform: translateY(4px); 
-            box-shadow: 0 2px 0 #ff9a9e; 
-        }
-        .jersey-card.solved {
-            background-color: #a1c4fd;
-            box-shadow: 0 4px 0 #89b4f8;
-            cursor: not-allowed;
-            opacity: 0.9;
-        }
-        .jersey-icon { font-size: 2.2rem; margin-bottom: 5px; text-shadow: 1px 1px 0 rgba(0,0,0,0.1); }
-
-        /* UI Overlays */
-        .modal-overlay {
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(255,204,213,0.8);
-            backdrop-filter: blur(4px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 50;
-            padding: 20px;
-        }
-        .hidden { display: none !important; }
-        
-        .huge-text {
-            font-size: 4rem;
-            font-weight: 900;
-            font-family: 'Fredoka', sans-serif;
-            color: #ff6b81;
-            text-shadow: 3px 3px 0 #fff, -2px -2px 0 #fff, 2px -2px 0 #fff, -2px 2px 0 #fff, 2px 2px 0 #fff;
-            filter: drop-shadow(0 10px 10px rgba(255,107,129,0.3));
-        }
-    </style>
-
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, getDoc, setDoc, onSnapshot, collection, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'kuiz-sanrio-app';
-        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
-        const initialToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
-
-        let app, db, auth, userId;
-        try {
-            app = initializeApp(firebaseConfig);
-            db = getFirestore(app);
-            auth = getAuth(app);
-        } catch(e) {
-            console.warn("Firebase offline mod.", e);
-        }
-
-        // Global State
-        window.appState = {
-            user: { name: '', className: '' },
-            scores: { level1: 0, level2: 0, level3: 0 },
-            checklist: Array(30).fill(false),
-            isLoggedIn: false
-        };
-
-        async function initAuth() {
-            if (!auth) return;
-            try {
-                if (initialToken) {
-                    await signInWithCustomToken(auth, initialToken);
-                } else {
-                    await signInAnonymously(auth);
-                }
-            } catch(error) {
-                console.error("Auth error:", error);
-            }
-        }
-
-        onAuthStateChanged(auth, async (user) => {
-            if (user) {
-                userId = user.uid;
-                loadUserData();
-            }
-        });
-
-        async function saveUserData() {
-            if (!db || !userId) return;
-            try {
-                const totalScore = window.appState.scores.level1 + window.appState.scores.level2 + window.appState.scores.level3;
-                
-                const userDocRef = doc(db, 'artifacts', appId, 'users', userId, 'profile');
-                await setDoc(userDocRef, {
-                    name: window.appState.user.name,
-                    className: window.appState.user.className,
-                    scores: window.appState.scores,
-                    checklist: window.appState.checklist,
-                    totalScore: totalScore,
-                    updatedAt: new Date().toISOString()
-                });
-
-                const publicDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'leaderboard', userId);
-                await setDoc(publicDocRef, {
-                    name: window.appState.user.name,
-                    className: window.appState.user.className,
-                    totalScore: totalScore,
-                    updatedAt: new Date().toISOString()
-                });
-            } catch (e) {
-                console.error("Ralat menyimpan data:", e);
-            }
-        }
-
-        async function loadUserData() {
-            if (!db || !userId) return;
-            try {
-                const userDocRef = doc(db, 'artifacts', appId, 'users', userId, 'profile');
-                const docSnap = await getDoc(userDocRef);
-                if (docSnap.exists()) {
-                    const data = docSnap.data();
-                    window.appState.user.name = data.name || '';
-                    window.appState.user.className = data.className || '';
-                    window.appState.scores = data.scores || { level1: 0, level2: 0, level3: 0 };
-                    window.appState.checklist = data.checklist || Array(30).fill(false);
-                    
-                    if (window.appState.user.name !== '') {
-                        window.appState.isLoggedIn = true;
-                        document.getElementById('display-name').textContent = window.appState.user.name;
-                        showScreen('screen-menu');
-                        updateMenuLocks();
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { 
+                        sans: ['Nunito', 'sans-serif'],
+                        display: ['Russo One', 'sans-serif']
+                    },
+                    colors: {
+                        ds: { 
+                            green: '#059669',  // Tanjiro Green
+                            dark: '#111827',   // Deep Black/Charcoal
+                            red: '#991B1B',    // Blood Red / Fire
+                            yellow: '#F59E0B', // Zenitsu Yellow
+                            purple: '#7C3AED', // Wisteria Purple
+                            light: '#F3F4F6'   // Light Grey
+                        }
+                    },
+                    boxShadow: {
+                        'ds-btn': '0 6px 0 0 #047857',
+                        'ds-btn-red': '0 6px 0 0 #7F1D1D',
+                        'ds-btn-purple': '0 6px 0 0 #5B21B6',
+                        'ds-card': '0 8px 24px rgba(5, 150, 105, 0.2)',
                     }
                 }
-            } catch (e) {
-                console.error("Ralat memuat data:", e);
             }
         }
-
-        window.saveUserData = saveUserData;
-        window.db = db;
-        window.appId = appId;
-        initAuth();
     </script>
-</head>
-<body class="text-gray-700 antialiased selection:bg-pink-300 selection:text-white flex flex-col h-screen">
 
-    <header class="bg-pink-400 text-white p-4 shadow-sm z-10 flex justify-between items-center border-b-4 border-pink-300">
-        <div class="flex items-center gap-2">
-            <i class="fas fa-heart text-white text-2xl animate-pulse-fast"></i>
-            <h1 class="font-bold text-xl tracking-wide game-font mt-1">Kuiz Comel</h1>
-        </div>
-        <div id="user-info-badge" class="hidden flex items-center bg-white/30 px-3 py-1 rounded-full text-sm font-bold shadow-sm">
-            <i class="fas fa-cat mr-2"></i>
-            <span id="display-name">Pelajar</span>
-        </div>
-    </header>
-
-    <main class="flex-1 overflow-y-auto relative w-full max-w-2xl mx-auto bg-white shadow-xl">
+    <style>
+        body { 
+            font-family: 'Nunito', sans-serif; 
+            background-color: #F3F4F6;
+            /* Subtle Checkerboard Pattern like Tanjiro's Haori but very faint */
+            background-image: 
+                linear-gradient(45deg, rgba(5, 150, 105, 0.05) 25%, transparent 25%, transparent 75%, rgba(5, 150, 105, 0.05) 75%, rgba(5, 150, 105, 0.05)), 
+                linear-gradient(45deg, rgba(5, 150, 105, 0.05) 25%, transparent 25%, transparent 75%, rgba(5, 150, 105, 0.05) 75%, rgba(5, 150, 105, 0.05));
+            background-size: 40px 40px;
+            background-position: 0 0, 20px 20px;
+            overscroll-behavior-y: none; 
+            color: #111827;
+        }
         
-        <!-- 1. SCREEN: LOGIN -->
-        <section id="screen-login" class="h-full flex flex-col items-center justify-center p-6 bg-gradient-to-br from-pink-50 to-pink-100">
-            <div class="bg-white p-8 rounded-3xl shadow-xl w-full max-w-md border-t-8 border-pink-400 text-center relative overflow-hidden">
-                <div class="absolute -top-4 -right-4 text-pink-100 text-8xl opacity-50 z-0"><i class="fas fa-paw"></i></div>
-                
-                <div class="relative z-10">
-                    <i class="fas fa-cat text-6xl text-pink-500 mb-4 animate-float"></i>
-                    <h2 class="text-3xl font-black mb-6 text-pink-600 game-font">Selamat Datang!</h2>
-                    <div class="space-y-4">
-                        <div>
-                            <label class="block text-left text-sm font-bold mb-1 text-pink-400">Siapa nama awak?</label>
-                            <input type="text" id="input-name" class="w-full border-2 border-pink-200 rounded-2xl p-4 text-lg focus:border-pink-500 focus:ring-4 focus:ring-pink-100 outline-none transition bg-pink-50/50" placeholder="Cth: Alisa">
-                        </div>
-                        <div>
-                            <label class="block text-left text-sm font-bold mb-1 text-pink-400">Awak kelas mana?</label>
-                            <input type="text" id="input-class" class="w-full border-2 border-pink-200 rounded-2xl p-4 text-lg focus:border-pink-500 focus:ring-4 focus:ring-pink-100 outline-none transition bg-pink-50/50" placeholder="Cth: 5 Mawar">
-                        </div>
-                        <button onclick="handleLogin()" class="w-full bg-pink-500 hover:bg-pink-400 text-white font-bold text-xl py-4 rounded-2xl shadow-lg shadow-pink-200 transform transition active:scale-95 mt-6 game-font">
-                            MULA MAIN <i class="fas fa-star ml-2 text-yellow-300"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </section>
+        h1, h2, h3, h4, .font-display { font-family: 'Russo One', sans-serif; letter-spacing: 1px;}
+        
+        .hide { display: none !important; }
+        .screen { min-height: 100vh; width: 100%; display: flex; flex-direction: column; align-items: center; padding: 1rem; position: relative; z-index: 10; overflow-x: hidden; }
+        
+        /* Action Buttons */
+        .btn-ds {
+            background-color: #059669;
+            color: white;
+            border: 2px solid #111827;
+            border-radius: 12px;
+            box-shadow: 0 6px 0 0 #111827;
+            transition: all 0.1s;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .btn-ds:active {
+            transform: translateY(6px);
+            box-shadow: 0 0px 0 0 #111827;
+        }
 
-        <!-- 2. SCREEN: MENU -->
-        <section id="screen-menu" class="hidden h-full p-6 flex flex-col bg-pink-50">
-            <div class="text-center mb-6">
-                <h2 class="text-2xl font-black text-pink-600 game-font">Pilih Permainan</h2>
-                <p class="text-pink-400 text-sm mt-1 font-bold">Kumpul markah penuh untuk buka kunci!</p>
-            </div>
-            
-            <div id="prize-banner" class="hidden bg-gradient-to-r from-pink-400 to-pink-300 text-white p-4 rounded-2xl shadow-md mb-6 animate-pulse-fast text-center font-bold border-2 border-white">
-                <i class="fas fa-gift text-3xl mb-1 block text-yellow-300"></i>
-                YAY! Markah anda > 90%. Tuntut hadiah misteri daripada cikgu! 🎀
-            </div>
+        .btn-red { background-color: #991B1B; box-shadow: 0 6px 0 0 #7F1D1D; }
+        .btn-red:active { box-shadow: 0 0px 0 0 #7F1D1D; }
 
-            <div class="space-y-4 flex-1">
-                <!-- Aras 1 -->
-                <button onclick="startLevel(1)" class="w-full bg-white border-2 border-pink-200 rounded-3xl p-4 flex items-center justify-between shadow-sm hover:shadow-md hover:border-pink-400 transition group">
-                    <div class="flex items-center gap-4">
-                        <div class="bg-pink-100 text-pink-500 w-14 h-14 rounded-2xl flex items-center justify-center text-2xl group-hover:scale-110 transition">
-                            <i class="fas fa-apple-whole"></i>
-                        </div>
-                        <div class="text-left">
-                            <h3 class="font-bold text-lg text-pink-600 game-font">Aras Rendah</h3>
-                            <p class="text-xs text-pink-400 font-bold">Kumpul Epal (10 Soalan)</p>
-                        </div>
-                    </div>
-                    <div class="text-right">
-                        <span id="score-badge-1" class="font-black text-pink-500 bg-pink-50 px-3 py-1 rounded-full text-sm">0/10</span>
-                    </div>
-                </button>
+        /* Animations */
+        @keyframes popIn { 
+            0% { transform: scale(0.5); opacity: 0; } 
+            70% { transform: scale(1.05); }
+            100% { transform: scale(1); opacity: 1; } 
+        }
+        .animate-pop { animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+        
+        @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-8px); } 100% { transform: translateY(0px); } }
+        .animate-float { animation: float 3s ease-in-out infinite; }
 
-                <!-- Aras 2 -->
-                <button id="btn-level-2" onclick="startLevel(2)" class="w-full bg-gray-50 border-2 border-gray-200 rounded-3xl p-4 flex items-center justify-between shadow-sm transition opacity-70 relative overflow-hidden group">
-                    <div class="flex items-center gap-4 relative z-10">
-                        <div class="bg-gray-200 text-gray-400 w-14 h-14 rounded-2xl flex items-center justify-center text-2xl transition" id="icon-level-2">
-                            <i class="fas fa-lock"></i>
-                        </div>
-                        <div class="text-left">
-                            <h3 class="font-bold text-lg text-gray-500 game-font" id="title-level-2">Aras Sederhana</h3>
-                            <p class="text-xs text-gray-400 font-bold">Lompat Awan (Perlu 8/10 Aras 1)</p>
-                        </div>
-                    </div>
-                    <div class="text-right relative z-10">
-                        <span id="score-badge-2" class="font-black text-gray-400 bg-gray-100 px-3 py-1 rounded-full text-sm">0/10</span>
-                    </div>
-                </button>
+        @keyframes slashCheer { 
+            0% { transform: scale(1) translateX(-50px) skewX(-20deg); opacity: 0; } 
+            20% { transform: scale(1.3) translateX(0px) skewX(-10deg); opacity: 1; text-shadow: 0 0 15px #F59E0B; } 
+            80% { transform: scale(1.1) translateX(10px) skewX(0deg); opacity: 1; } 
+            100% { transform: scale(0.8) translateY(-30px); opacity: 0; } 
+        }
+        .goal-anim { animation: slashCheer 1.2s ease-out forwards; pointer-events: none; }
 
-                <!-- Aras 3 -->
-                <button id="btn-level-3" onclick="startLevel(3)" class="w-full bg-gray-50 border-2 border-gray-200 rounded-3xl p-4 flex items-center justify-between shadow-sm transition opacity-70 relative overflow-hidden group">
-                    <div class="flex items-center gap-4 relative z-10">
-                        <div class="bg-gray-200 text-gray-400 w-14 h-14 rounded-2xl flex items-center justify-center text-2xl transition" id="icon-level-3">
-                            <i class="fas fa-lock"></i>
-                        </div>
-                        <div class="text-left">
-                            <h3 class="font-bold text-lg text-gray-500 game-font" id="title-level-3">Aras Tinggi</h3>
-                            <p class="text-xs text-gray-400 font-bold">Buka Hadiah (Perlu 8/10 Aras 2)</p>
-                        </div>
-                    </div>
-                    <div class="text-right relative z-10">
-                        <span id="score-badge-3" class="font-black text-gray-400 bg-gray-100 px-3 py-1 rounded-full text-sm">0/10</span>
-                    </div>
-                </button>
-            </div>
+        @keyframes run { 0% { transform: translateY(0) rotate(-5deg); } 50% { transform: translateY(-5px) rotate(5deg); } 100% { transform: translateY(0) rotate(-5deg); } }
+        .running { animation: run 0.3s infinite; }
 
-            <!-- Extras -->
-            <div class="grid grid-cols-2 gap-4 mt-6 border-t-2 border-pink-100 pt-6">
-                <button onclick="showScreen('screen-checklist')" class="bg-white border-2 border-pink-100 rounded-2xl p-3 flex flex-col items-center justify-center text-pink-500 hover:bg-pink-50 shadow-sm transition active:scale-95">
-                    <i class="fas fa-list-check text-2xl mb-2 text-blue-400"></i>
-                    <span class="font-bold text-sm game-font">Senarai Semak</span>
-                </button>
-                <button onclick="showScreen('screen-leaderboard'); loadLeaderboard();" class="bg-white border-2 border-pink-100 rounded-2xl p-3 flex flex-col items-center justify-center text-pink-500 hover:bg-pink-50 shadow-sm transition active:scale-95">
-                    <i class="fas fa-crown text-2xl mb-2 text-yellow-400"></i>
-                    <span class="font-bold text-sm game-font">Ranking</span>
-                </button>
-            </div>
-        </section>
+        /* Level 1: Forest Track */
+        .forest-track {
+            background-color: #1f2937; /* Dark path */
+            background-image: repeating-linear-gradient(90deg, transparent, transparent 40px, rgba(255, 255, 255, 0.1) 40px, rgba(255, 255, 255, 0.1) 42px);
+            border-top: 4px solid #111827;
+            border-bottom: 4px solid #111827;
+        }
+        
+        #hero-sprite { transition: left 0.4s cubic-bezier(0.25, 1, 0.5, 1); }
 
-        <!-- 3. SCREEN: LEVEL 1 (Kumpul Epal) -->
-        <section id="screen-level1" class="hidden h-full flex flex-col bg-white">
-            <div class="p-4 bg-pink-400 text-white flex justify-between items-center shadow-sm">
-                <button onclick="showScreen('screen-menu')" class="px-3 py-2 bg-white/20 rounded-xl font-bold text-sm hover:bg-white/30 transition"><i class="fas fa-arrow-left"></i> Kembali</button>
-                <span class="font-bold game-font text-lg tracking-wide">Kumpul Epal</span>
-                <span class="font-black bg-white text-pink-500 px-3 py-1 rounded-full text-sm" id="l1-score-display">0/10</span>
-            </div>
-            
-            <div class="p-5 flex-1 flex flex-col bg-pink-50">
-                <!-- Visual Area -->
-                <div id="field-container" class="mb-6 relative">
-                    <!-- Cloud decorations -->
-                    <div class="cloud-decor w-16 h-8 top-4 left-4"></div>
-                    <div class="cloud-decor w-24 h-10 top-10 right-10 opacity-50"></div>
-                    <div class="cloud-decor w-12 h-6 bottom-4 left-1/3"></div>
-                    
-                    <!-- Goal and Ball -->
-                    <i id="goal" class="fas fa-apple-whole animate-pulse-fast"></i>
-                    <div id="goal-post" class="absolute right-0 top-[20%] bottom-[20%] w-10 border-4 border-r-0 border-white/50 rounded-l-3xl bg-white/20 z-0"></div>
-                    
-                    <div id="ball" style="left: 5%; top: 60%;" class="text-pink-600 drop-shadow-lg">
-                        <i class="fas fa-cat"></i>
-                    </div>
-                </div>
+        /* Level 2: Checkerboard Dam Haji (Black & White as requested) */
+        .dam-board { display: grid; grid-template-columns: repeat(8, 1fr); border: 6px solid #111827; width: 100%; max-width: 380px; aspect-ratio: 1; margin: 0 auto; background: white; border-radius: 4px; overflow: hidden;}
+        .dam-cell { width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; position: relative;}
+        .dam-black { background-color: #111827; } /* Black box */
+        .dam-white { background-color: #ffffff; } /* White box */
+        #dam-piece { transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); z-index: 20; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.5)); }
+        
+        /* Level 3: Hanafuda Cards */
+        .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(75px, 1fr)); gap: 12px; width: 100%; max-width: 500px; }
+        .pocket-card { 
+            background: #ffffff; 
+            border: 3px solid #111827;
+            border-radius: 8px;
+            box-shadow: 0 6px 0 #111827;
+            color: #111827; 
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            aspect-ratio: 1/1.4; /* Taller like Hanafuda */
+            cursor: pointer; transition: all 0.15s ease; 
+            position: relative; overflow: hidden;
+            font-family: 'Russo One';
+            background-image: repeating-linear-gradient(45deg, #f87171 0, #f87171 2px, transparent 2px, transparent 8px);
+        }
+        .pocket-card::before {
+            content: ''; position: absolute; inset: 4px; background: white; border-radius: 4px; border: 1px solid #111827;
+        }
+        .pocket-card:active { transform: translateY(4px); box-shadow: 0 2px 0 #111827; }
+        .pocket-card.solved { 
+            background: #E2E8F0; background-image: none;
+            color: #94A3B8; box-shadow: none; border-color: #CBD5E1;
+            cursor: not-allowed; pointer-events: none; transform: translateY(6px);
+        }
+        .pocket-card.solved::before { display: none; }
+        .pocket-card.solved::after { content: '⚔️'; position: absolute; font-size: 2rem; }
+        .card-number { font-size: 1.8rem; z-index: 1; font-weight: 800; color: #111827;}
+        
+        /* Scrollbar */
+        .custom-scroll::-webkit-scrollbar { width: 8px; }
+        .custom-scroll::-webkit-scrollbar-track { background: #E5E7EB; border-radius: 4px;}
+        .custom-scroll::-webkit-scrollbar-thumb { background: #059669; border-radius: 4px; }
+        
+        .modal-overlay { background-color: rgba(17, 24, 39, 0.85); backdrop-filter: blur(4px); }
+        
+    </style>
+</head>
+<body class="text-ds-dark overflow-x-hidden">
 
-                <!-- Question Area -->
-                <div class="flex-1 flex flex-col bg-white p-6 rounded-3xl shadow-sm border-2 border-pink-100" id="l1-question-container">
-                    <h3 class="text-xl font-bold text-center text-pink-600 mb-6 game-font leading-snug" id="l1-question-text">Soalan dimuatkan...</h3>
-                    <div class="grid grid-cols-1 gap-3 mt-auto" id="l1-options">
-                        <!-- Options generated by JS -->
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- 4. SCREEN: LEVEL 2 (Lompat Awan) -->
-        <section id="screen-level2" class="hidden h-full flex flex-col bg-white">
-            <div class="p-4 bg-blue-400 text-white flex justify-between items-center shadow-sm">
-                <button onclick="showScreen('screen-menu')" class="px-3 py-2 bg-white/20 rounded-xl font-bold text-sm hover:bg-white/30 transition"><i class="fas fa-arrow-left"></i> Kembali</button>
-                <span class="font-bold game-font text-lg tracking-wide">Lompat Awan</span>
-                <span class="font-black bg-white text-blue-500 px-3 py-1 rounded-full text-sm" id="l2-score-display">0/10</span>
-            </div>
-            
-            <div class="p-5 flex-1 flex flex-col bg-blue-50">
-                <!-- Visual Area -->
-                <div class="mb-6 bg-white p-3 rounded-3xl shadow-sm border-2 border-blue-100">
-                    <div class="checkers-board" id="checkers-board">
-                        <!-- Board generated by JS -->
-                    </div>
-                </div>
-
-                <!-- Question Area -->
-                <div class="flex-1 flex flex-col bg-white p-6 rounded-3xl shadow-sm border-2 border-blue-100" id="l2-question-container">
-                    <h3 class="text-xl font-bold text-center text-blue-600 mb-6 game-font leading-snug" id="l2-question-text">Soalan dimuatkan...</h3>
-                    <div class="grid grid-cols-1 gap-3 mt-auto" id="l2-options">
-                        <!-- Options generated by JS -->
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- 5. SCREEN: LEVEL 3 (Kotak Hadiah) -->
-        <section id="screen-level3" class="hidden h-full flex flex-col bg-white">
-            <div class="p-4 bg-yellow-400 text-yellow-900 flex justify-between items-center shadow-sm">
-                <button onclick="showScreen('screen-menu')" class="px-3 py-2 bg-black/10 rounded-xl font-bold text-sm hover:bg-black/20 transition"><i class="fas fa-arrow-left"></i> Kembali</button>
-                <span class="font-bold game-font text-lg tracking-wide">Buka Hadiah</span>
-                <span class="font-black bg-white text-yellow-600 px-3 py-1 rounded-full text-sm" id="l3-score-display">0/10</span>
-            </div>
-            
-            <div class="p-5 flex-1 overflow-y-auto bg-yellow-50">
-                <div class="bg-white p-4 rounded-2xl border-2 border-yellow-200 mb-6 text-center">
-                    <p class="text-sm font-bold text-yellow-700">Pilih kotak misteri dan taip jawapan yang betul! 🎁</p>
-                </div>
-                <div class="jersey-grid" id="jersey-grid">
-                    <!-- Cards generated by JS -->
-                </div>
-            </div>
-        </section>
-
-        <!-- 6. SCREEN: CHECKLIST -->
-        <section id="screen-checklist" class="hidden h-full flex flex-col bg-white">
-            <div class="p-4 bg-pink-400 text-white flex justify-between items-center shadow-sm">
-                <button onclick="showScreen('screen-menu')" class="px-3 py-2 bg-white/20 rounded-xl font-bold text-sm transition"><i class="fas fa-arrow-left"></i> Kembali</button>
-                <span class="font-bold game-font text-lg">Buku Nota Comel</span>
-            </div>
-            
-            <div class="p-5 border-b-2 border-pink-100 bg-pink-50">
-                <div class="flex justify-between text-sm font-bold text-pink-500 mb-2">
-                    <span>Kemajuan Belajar</span>
-                    <span id="checklist-progress-text" class="bg-white px-2 py-1 rounded-md">0/30</span>
-                </div>
-                <div class="w-full bg-pink-200 rounded-full h-5 overflow-hidden border-2 border-white shadow-inner">
-                    <div id="checklist-progress-bar" class="bg-gradient-to-r from-pink-400 to-yellow-300 h-full transition-all duration-500 w-0"></div>
-                </div>
-            </div>
-
-            <div class="flex-1 overflow-y-auto p-4 space-y-3 bg-white" id="checklist-container">
-                <!-- Checklist items generated by JS -->
-            </div>
-        </section>
-
-        <!-- 7. SCREEN: LEADERBOARD -->
-        <section id="screen-leaderboard" class="hidden h-full flex flex-col bg-white">
-            <div class="p-4 bg-yellow-400 text-yellow-900 flex justify-between items-center shadow-sm">
-                <button onclick="showScreen('screen-menu')" class="px-3 py-2 bg-black/10 rounded-xl font-bold text-sm transition"><i class="fas fa-arrow-left"></i> Kembali</button>
-                <span class="font-bold game-font text-lg">Dewan Bintang</span>
-                <i class="fas fa-crown text-xl"></i>
-            </div>
-            
-            <div class="p-4 flex-1 overflow-y-auto bg-gradient-to-b from-yellow-50 to-white">
-                <div class="flex justify-between px-4 py-3 text-xs font-black text-yellow-600 uppercase tracking-widest border-b-2 border-yellow-200 mb-2">
-                    <span>Nama Kawan</span>
-                    <span>Bintang (Max 30)</span>
-                </div>
-                <div id="leaderboard-list" class="space-y-3">
-                    <div class="text-center py-10 text-yellow-400">
-                        <i class="fas fa-star fa-spin text-4xl mb-3"></i>
-                        <p class="font-bold game-font">Mencari bintang...</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-    </main>
-
-    <!-- OVERLAYS -->
-    
-    <!-- Typing Answer Modal (Level 3) -->
-    <div id="typing-modal" class="modal-overlay hidden">
-        <div class="bg-white rounded-3xl p-6 w-full max-w-sm animate-pop text-center relative border-4 border-yellow-300 shadow-2xl">
-            <button onclick="closeTypingModal()" class="absolute top-4 right-4 text-gray-400 hover:text-pink-500 bg-gray-100 rounded-full w-8 h-8 flex items-center justify-center transition">
-                <i class="fas fa-times"></i>
-            </button>
-            <div class="w-20 h-20 bg-pink-100 text-pink-500 rounded-full flex items-center justify-center text-4xl mx-auto mb-4 border-4 border-white shadow-md">
-                <i class="fas fa-gift"></i>
-            </div>
-            <p class="text-sm font-bold text-yellow-500 mb-2 bg-yellow-50 inline-block px-3 py-1 rounded-full">Hadiah #<span id="modal-jersey-num"></span></p>
-            <h3 class="font-bold text-xl text-gray-700 mb-6 game-font leading-tight" id="modal-question">Soalan di sini</h3>
-            
-            <input type="text" id="modal-input" class="w-full border-b-4 border-pink-300 text-center text-2xl font-bold p-3 mb-6 outline-none focus:bg-pink-50 focus:border-pink-500 rounded-t-xl transition text-pink-600" placeholder="Taip jawapan...">
-            
-            <button onclick="submitTypingAnswer()" class="w-full bg-yellow-400 hover:bg-yellow-300 text-yellow-900 font-bold text-lg py-4 rounded-2xl shadow-md transition active:scale-95 game-font">
-                HANTAR JAWAPAN ✨
+    <!-- Audio Init & Welcome Screen -->
+    <div id="audioInitOverlay" class="fixed inset-0 bg-ds-dark z-[100] flex flex-col items-center justify-center box-border p-4">
+        <!-- Checkerboard overlay for visual flair -->
+        <div class="absolute inset-0 opacity-20 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCI+PHJlY3Qgd2lkdGg9IjIwIiBoZWlnaHQ9IjIwIiBmaWxsPSIjMDU5NjY5Ii8+PHJlY3QgeD0iMjAiIHk9IjIwIiB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIGZpbGw9IiMwNTk2NjkiLz48L3N2Zz4=')]"></div>
+        
+        <div class="bg-white p-8 rounded-xl border-4 border-ds-green shadow-[0_0_30px_rgba(5,150,105,0.5)] text-center max-w-sm w-11/12 animate-pop relative z-10">
+            <i class="fa-solid fa-mask text-6xl text-ds-red mb-4 animate-float" style="filter: drop-shadow(0 4px 0 #111827);"></i>
+            <h1 class="text-3xl font-display text-ds-dark mb-2 leading-tight uppercase">KUIZ<br><span class="text-ds-green text-4xl">DEMON SLAYER</span></h1>
+            <p class="mt-2 text-sm font-bold text-slate-500 mb-6">Asah kemahiran simpulan bahasa anda seperti mata pedang!</p>
+            <button onclick="initApp()" class="btn-ds px-8 py-4 text-lg w-full">
+                MULAKAN MISI!
             </button>
         </div>
     </div>
 
-    <!-- Feedback Modal -->
-    <div id="feedback-modal" class="modal-overlay hidden">
-        <div id="feedback-box" class="bg-white rounded-3xl p-8 w-full max-w-sm animate-pop text-center shadow-2xl border-t-8 border-pink-400">
-            <div id="feedback-icon" class="text-6xl mb-4 animate-float"></div>
-            <h2 id="feedback-title" class="text-3xl font-black mb-3 game-font text-pink-500">TAHNIAH!</h2>
-            <p id="feedback-explanation" class="text-gray-600 font-bold mb-6 bg-pink-50 border-2 border-pink-100 p-4 rounded-2xl text-sm">Penerangan di sini.</p>
-            <button onclick="closeFeedbackAndNext()" class="w-full bg-pink-500 text-white font-bold text-lg py-4 rounded-2xl shadow-md hover:bg-pink-400 transition active:scale-95 game-font">
-                TERUSKAN <i class="fas fa-chevron-right ml-2"></i>
+    <!-- Custom Toast Alert Notification -->
+    <div id="toast" class="fixed top-4 left-1/2 transform -translate-x-1/2 bg-ds-dark border-2 border-ds-green text-white px-6 py-3 shadow-lg z-50 transition-all duration-300 opacity-0 -translate-y-full pointer-events-none text-center w-11/12 max-w-sm font-bold text-sm rounded-lg">
+        <span id="toastMsg">Mesej...</span>
+    </div>
+
+    <!-- Login Screen -->
+    <div id="screen-login" class="screen hide justify-center">
+        <div class="bg-white p-8 border-4 border-ds-dark shadow-ds-card w-full max-w-md animate-pop rounded-xl relative">
+            <div class="absolute -top-6 -right-6 bg-ds-yellow w-12 h-12 rounded-full border-4 border-ds-dark flex items-center justify-center text-ds-dark font-bold animate-bounce shadow-lg text-xl"><i class="fa-solid fa-bolt"></i></div>
+
+            <div class="text-center mb-8 pb-4 border-b-2 border-slate-100">
+                <h2 class="text-2xl text-ds-dark font-display uppercase">PENDAFTARAN DEMON SLAYER</h2>
+                <p class="text-sm text-slate-500 font-bold mt-1">Sila kenalkan diri anda.</p>
+            </div>
+            <div class="space-y-5 font-bold">
+                <div>
+                    <label class="block text-ds-green text-sm mb-2 uppercase tracking-wider">Nama Anda:</label>
+                    <input type="text" id="inputName" class="w-full bg-slate-50 border-2 border-slate-300 p-3 rounded-lg text-ds-dark focus:outline-none focus:border-ds-green focus:ring-4 focus:ring-ds-green/20 transition-all text-base" placeholder="cth: Tanjiro">
+                </div>
+                <div>
+                    <label class="block text-ds-green text-sm mb-2 uppercase tracking-wider">Kelas / Tahun:</label>
+                    <input type="text" id="inputClass" class="w-full bg-slate-50 border-2 border-slate-300 p-3 rounded-lg text-ds-dark focus:outline-none focus:border-ds-green focus:ring-4 focus:ring-ds-green/20 transition-all text-base" placeholder="cth: 3 Mawar">
+                </div>
+                <button onclick="login()" class="w-full btn-ds text-lg py-4 mt-6 flex items-center justify-center">
+                    MASUK SKUAD <i class="fa-solid fa-khanda ml-2 text-xl"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dashboard Screen -->
+    <div id="screen-dashboard" class="screen hide">
+        <!-- Player Stats Card -->
+        <div class="w-full max-w-md bg-ds-dark text-white border-4 border-ds-green shadow-ds-card rounded-xl p-6 mb-6 relative">
+            <div class="absolute inset-0 opacity-10 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCI+PHJlY3Qgd2lkdGg9IjIwIiBoZWlnaHQ9IjIwIiBmaWxsPSIjZmZmIi8+PHJlY3QgeD0iMjAiIHk9IjIwIiB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIGZpbGw9IiNmZmYiLz48L3N2Zz4=')]"></div>
+            <div class="flex justify-between items-center relative z-10">
+                <div>
+                    <p class="text-[10px] text-ds-green font-bold uppercase mb-1 tracking-widest">ID Demon Slayer</p>
+                    <h3 id="dashName" class="font-display text-2xl uppercase tracking-wider">Nama</h3>
+                    <p id="dashClass" class="text-sm text-slate-300 font-bold">Kelas</p>
+                </div>
+                <div class="text-right flex flex-col items-end">
+                    <p class="text-[10px] text-ds-green font-bold uppercase mb-1 tracking-widest">Mata Demon Slayer</p>
+                    <div class="flex items-center bg-white/10 px-3 py-1 rounded-lg border border-ds-green/50 backdrop-blur-sm">
+                        <span class="text-xl mr-2 text-ds-yellow"><i class="fa-solid fa-star"></i></span>
+                        <p class="text-2xl font-display"><span id="dashScore">0</span><span class="text-sm text-slate-400">/30</span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Reward Banner reminder (>90%) -->
+        <div id="rewardBanner" class="w-full max-w-md bg-white p-4 border-2 border-ds-yellow shadow-lg rounded-lg mb-6 flex items-center relative overflow-hidden">
+            <div class="absolute -right-4 -bottom-4 opacity-10 text-7xl text-ds-yellow"><i class="fa-solid fa-gift"></i></div>
+            <div class="w-12 h-12 bg-ds-yellow rounded-full flex items-center justify-center text-white mr-4 shadow-inner border-2 border-ds-dark z-10 animate-float text-xl"><i class="fa-solid fa-box-open"></i></div>
+            <div class="z-10 flex-grow">
+                <p class="font-display text-sm text-ds-dark uppercase">Misi Ganjaran Hashira!</p>
+                <p class="text-[11px] text-slate-600 font-bold mt-1 leading-tight">Kumpul 27 Mata (90%) ke atas untuk membuka hadiah misteri!</p>
+            </div>
+        </div>
+
+        <!-- Utility Navigation: Nota & Checklist -->
+        <div class="w-full max-w-md grid grid-cols-2 gap-3 mb-6">
+            <button onclick="showScreen('screen-notes')" class="bg-white border-2 border-ds-dark text-ds-dark py-3 rounded-lg shadow-[0_4px_0_0_#111827] active:translate-y-[4px] active:shadow-none hover:bg-slate-50 transition-all flex flex-col items-center justify-center group font-bold">
+                <i class="fa-solid fa-scroll text-2xl mb-1 text-ds-purple group-hover:scale-110 transition-transform"></i> <span class="text-[11px] uppercase tracking-wide">Skrol Nota</span>
+            </button>
+            <button onclick="showScreen('screen-checklist')" class="bg-white border-2 border-ds-dark text-ds-dark py-3 rounded-lg shadow-[0_4px_0_0_#111827] active:translate-y-[4px] active:shadow-none hover:bg-slate-50 transition-all flex flex-col items-center justify-center group font-bold">
+                <i class="fa-solid fa-list-check text-2xl mb-1 text-ds-green group-hover:scale-110 transition-transform"></i> <span class="text-[11px] uppercase tracking-wide">Senarai Semak</span>
+            </button>
+        </div>
+
+        <!-- Mission Levels Container -->
+        <div class="w-full max-w-md space-y-4 flex-grow">
+            <!-- Level 1 Button -->
+            <button onclick="startLevel(1)" class="w-full bg-white border-2 border-ds-dark p-4 flex items-center rounded-xl shadow-[0_6px_0_0_#111827] active:translate-y-[6px] active:shadow-none hover:bg-slate-50 transition-all duration-300 text-left">
+                <div class="bg-ds-green text-white w-14 h-14 rounded-lg flex items-center justify-center text-2xl font-display shadow-inner border-2 border-ds-dark flex-shrink-0">1</div>
+                <div class="ml-4 flex-grow">
+                    <h4 class="font-display text-base text-ds-dark tracking-wide">Demon Slayer (Larian)</h4>
+                    <p class="text-xs text-slate-500 font-bold uppercase tracking-wider">Aras Rendah</p>
+                </div>
+                <div class="bg-slate-100 text-ds-dark px-3 py-1.5 rounded-md font-bold text-sm border border-slate-300"><span id="statusL1">0/10</span></div>
+            </button>
+
+            <!-- Level 2 Button -->
+            <button id="btnL2" onclick="startLevel(2)" class="w-full bg-slate-200 border-2 border-slate-300 p-4 flex items-center opacity-70 cursor-not-allowed rounded-xl text-left relative transition-all duration-300">
+                <div class="bg-slate-300 text-slate-500 w-14 h-14 rounded-lg flex items-center justify-center text-xl font-display flex-shrink-0 border-2 border-transparent" id="iconL2"><i class="fa-solid fa-lock"></i></div>
+                <div class="ml-4 flex-grow">
+                    <h4 class="font-display text-base text-slate-600 tracking-wide" id="titleL2">Taktikal Dam Haji</h4>
+                    <p class="text-xs text-slate-500 font-bold uppercase tracking-wider" id="descL2">Aras Sederhana</p>
+                    <p class="text-[10px] text-ds-red mt-1 font-bold bg-red-50 inline-block px-2 py-0.5 rounded border border-ds-red/30" id="reqL2"><i class="fa-solid fa-key mr-1"></i>Syarat: 8/10 Aras 1</p>
+                </div>
+                <div id="statusL2" class="font-bold text-slate-500 text-sm"></div>
+            </button>
+
+            <!-- Level 3 Button -->
+            <button id="btnL3" onclick="startLevel(3)" class="w-full bg-slate-200 border-2 border-slate-300 p-4 flex items-center opacity-70 cursor-not-allowed rounded-xl text-left relative transition-all duration-300">
+                <div class="bg-slate-300 text-slate-500 w-14 h-14 rounded-lg flex items-center justify-center text-xl font-display flex-shrink-0 border-2 border-transparent" id="iconL3"><i class="fa-solid fa-lock"></i></div>
+                <div class="ml-4 flex-grow">
+                    <h4 class="font-display text-base text-slate-600 tracking-wide" id="titleL3">Kad Hanafuda Misteri</h4>
+                    <p class="text-xs text-slate-500 font-bold uppercase tracking-wider" id="descL3">Aras Tinggi (Menaip)</p>
+                    <p class="text-[10px] text-ds-red mt-1 font-bold bg-red-50 inline-block px-2 py-0.5 rounded border border-ds-red/30" id="reqL3"><i class="fa-solid fa-key mr-1"></i>Syarat: 8/10 Aras 2</p>
+                </div>
+                <div id="statusL3" class="font-bold text-slate-500 text-sm"></div>
+            </button>
+        </div>
+
+        <!-- Leaderboard Button -->
+        <div class="w-full max-w-md mt-6">
+            <button onclick="showScreen('screen-leaderboard'); renderLeaderboard();" class="w-full bg-ds-yellow border-2 border-ds-dark text-ds-dark py-4 rounded-xl shadow-[0_6px_0_0_#111827] active:translate-y-[6px] active:shadow-none flex items-center justify-center group font-display text-lg tracking-wider">
+                <i class="fa-solid fa-fire text-ds-red mr-3 text-2xl group-hover:scale-125 transition-transform"></i> KEDUDUKAN HASHIRA
             </button>
         </div>
     </div>
 
-    <!-- Big Animation Overlay (Comel / Hebat) -->
-    <div id="big-anim-overlay" class="fixed inset-0 pointer-events-none flex items-center justify-center z-[100] hidden">
-        <div id="big-anim-text" class="huge-text animate-pop opacity-0">
-            COMEL!
+    <!-- Nota Simpulan Bahasa Screen -->
+    <div id="screen-notes" class="screen hide bg-ds-light p-4 relative">
+        <div class="w-full max-w-md z-10 flex flex-col h-[90vh]">
+            <div class="flex justify-between items-center mb-4 bg-ds-dark text-white p-3 rounded-lg shadow-sm border-2 border-ds-dark">
+                <button onclick="showScreen('screen-dashboard')" class="text-ds-green hover:text-white p-2"><i class="fa-solid fa-arrow-left text-xl"></i></button>
+                <h2 class="font-display text-xl tracking-wider">SKROL NOTA</h2>
+                <div class="w-10"></div>
+            </div>
+            
+            <div class="bg-white border-2 border-ds-dark rounded-xl p-4 flex-grow overflow-y-auto custom-scroll shadow-inner">
+                <p class="text-sm font-bold text-slate-500 mb-4 text-center border-b-2 border-slate-100 pb-2">Hafal 30 teknik simpulan bahasa ini sebelum berjuang!</p>
+                <div id="notesContainer" class="space-y-3">
+                    <!-- Injected via JS -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Checklist Screen -->
+    <div id="screen-checklist" class="screen hide bg-ds-light p-4 relative">
+        <div class="w-full max-w-md z-10 flex flex-col h-[90vh]">
+            <div class="flex justify-between items-center mb-4 bg-ds-dark text-white p-3 rounded-lg shadow-sm border-2 border-ds-dark">
+                <button onclick="showScreen('screen-dashboard')" class="text-ds-green hover:text-white p-2"><i class="fa-solid fa-arrow-left text-xl"></i></button>
+                <h2 class="font-display text-xl tracking-wider">SENARAI SEMAK</h2>
+                <div class="w-10"></div>
+            </div>
+            
+            <div class="bg-white border-2 border-ds-dark p-5 mb-4 rounded-xl shadow-sm">
+                <p class="text-xs font-bold text-slate-500 mb-2 uppercase tracking-widest text-center">Kemajuan 30 Teknik</p>
+                <div class="w-full bg-slate-200 h-6 mb-2 rounded-sm relative overflow-hidden border border-slate-300 shadow-inner">
+                    <div id="progressBar" class="bg-ds-green h-full transition-all duration-500 rounded-sm flex items-center justify-end pr-2 text-[10px] text-white font-bold" style="width: 0%"></div>
+                </div>
+                <p class="text-center text-sm font-bold text-slate-600"><span id="progressText" class="text-ds-green font-display text-xl">0</span> / 30 DIKUASAI</p>
+            </div>
+
+            <div class="bg-white border-2 border-ds-dark rounded-xl overflow-hidden shadow-inner flex-grow">
+                <div class="h-full overflow-y-auto custom-scroll p-2" id="checklistContainer">
+                    <!-- Dynamic checklist items -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Leaderboard Screen -->
+    <div id="screen-leaderboard" class="screen hide bg-ds-light p-4 relative">
+        <div class="w-full max-w-md z-10">
+            <div class="flex justify-between items-center mb-6 bg-ds-dark text-white p-3 rounded-lg shadow-sm border-2 border-ds-dark">
+                <button onclick="showScreen('screen-dashboard')" class="text-ds-yellow hover:text-white p-2"><i class="fa-solid fa-arrow-left text-xl"></i></button>
+                <h2 class="font-display text-xl tracking-wider">KEDUDUKAN HASHIRA</h2>
+                <div class="w-10"></div>
+            </div>
+
+            <div class="bg-white border-2 border-ds-dark rounded-xl p-5 shadow-ds-card">
+                <div class="flex justify-center mb-4 relative">
+                    <i class="fa-solid fa-fire-flame-curved text-6xl text-ds-red" style="filter: drop-shadow(0 4px 0 #111827);"></i>
+                    <i class="fa-solid fa-khanda text-3xl text-ds-yellow absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"></i>
+                </div>
+                <div id="leaderboardList" class="space-y-3 mt-6">
+                    <!-- Injected by JS -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Level 1 Screen (Memburu Iblis / Larian) -->
+    <div id="screen-level1" class="screen hide p-0 bg-slate-800 justify-between relative overflow-hidden">
+        <!-- Moon/Night Background -->
+        <div class="absolute top-10 right-10 w-24 h-24 bg-yellow-100 rounded-full shadow-[0_0_50px_rgba(254,240,138,0.5)] animate-float"></div>
+        
+        <!-- Header -->
+        <div class="w-full max-w-md flex justify-between items-center p-4 z-10 pt-6">
+            <button onclick="quitLevel()" class="bg-ds-dark text-white font-bold text-xs px-4 py-2 border-2 border-ds-green rounded shadow-sm"><i class="fa-solid fa-arrow-left mr-1"></i> KELUAR</button>
+            <div class="font-display text-sm bg-ds-dark text-white border-2 border-ds-green px-4 py-2 rounded shadow-sm tracking-wider">TEBASAN: <span id="l1ScoreDisplay" class="text-ds-green ml-1 text-lg">0</span>/10</div>
+        </div>
+
+        <!-- Track Arena Container -->
+        <div class="w-full flex-grow relative max-w-md mx-auto pointer-events-none flex flex-col justify-end pb-[40vh]">
+            <!-- Target Demon -->
+            <div class="absolute right-[5%] bottom-10 flex flex-col items-center z-10">
+                <div class="text-6xl" style="filter: drop-shadow(0 5px 5px rgba(0,0,0,0.5));">👹</div>
+            </div>
+            
+            <!-- Swordsman Player -->
+            <div id="player-sprite" class="absolute bottom-12 text-5xl z-20 transition-all duration-700 ease-in-out flex flex-col items-center" style="left: 5%; filter: drop-shadow(0 5px 2px rgba(0,0,0,0.8));">
+                🤺
+                <span class="text-3xl absolute -right-6 top-0 opacity-0 transition-opacity" id="slashEffect">💢</span>
+            </div>
+
+            <!-- Cheer Text -->
+            <div id="cheerText" class="absolute top-1/4 left-1/2 transform -translate-x-1/2 text-5xl font-display text-white opacity-0 z-30 tracking-widest filter drop-shadow-[0_4px_10px_rgba(0,0,0,0.8)]" style="-webkit-text-stroke: 2px #059669;">
+                TEBASAN TEPAT!
+            </div>
+        </div>
+        
+        <!-- Ground Track -->
+        <div class="w-full h-[35vh] forest-track absolute bottom-0 left-0 z-0 border-t-8 border-ds-green flex flex-col justify-start"></div>
+    </div>
+
+    <!-- Level 2 Screen (Taktikal Dam Haji) -->
+    <div id="screen-level2" class="screen hide bg-slate-300 justify-between relative p-0">
+        <!-- Header -->
+        <div class="w-full max-w-md flex justify-between items-center p-4 z-10 pt-6 bg-ds-dark border-b-4 border-ds-dark text-white">
+            <button onclick="quitLevel()" class="bg-white text-ds-dark font-bold text-xs px-4 py-2 border-2 border-ds-dark rounded shadow-sm"><i class="fa-solid fa-arrow-left mr-1"></i> KELUAR</button>
+            <div class="font-display text-sm bg-white border-2 border-ds-dark px-4 py-2 rounded text-ds-dark shadow-sm tracking-wider">LANGKAH: <span id="l2ScoreDisplay" class="text-ds-red ml-1 text-lg">0</span>/10</div>
+        </div>
+
+        <!-- Board Arena Container -->
+        <div class="w-full max-w-md flex-grow flex flex-col items-center justify-start pt-8 px-4 z-10 pb-[50vh]">
+            <div class="bg-white border-2 border-ds-dark p-3 rounded-lg mb-6 max-w-xs shadow-sm">
+                <p class="font-bold text-xs text-center text-ds-dark">Gerakkan Topeng Musang merentasi papan dam (hitam putih) untuk setiap jawapan yang betul!</p>
+            </div>
+            
+            <!-- Checkerboard -->
+            <div class="dam-board relative shadow-2xl" id="checkerboard">
+                <!-- Grids injected via JS -->
+                <!-- Piece: Fox Mask -->
+                <div id="dam-piece" class="absolute w-[12.5%] h-[12.5%] flex items-center justify-center text-3xl z-20" style="bottom: 0; left: 0;">
+                    🦊
+                </div>
+            </div>
+            
+            <div id="damCheer" class="absolute top-1/3 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-4xl font-display text-ds-yellow opacity-0 z-30 text-center w-full filter drop-shadow-[0_4px_10px_rgba(0,0,0,0.8)]" style="-webkit-text-stroke: 2px #111827;">
+                LANGKAH BERJAYA!
+            </div>
+        </div>
+    </div>
+
+    <!-- Level 3 Screen (Kad Hanafuda Misteri) -->
+    <div id="screen-level3" class="screen hide bg-ds-purple justify-between relative p-0">
+        <!-- Background elements (Wisteria Vibe) -->
+        <div class="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-white to-transparent pointer-events-none"></div>
+
+        <!-- Header -->
+        <div class="w-full max-w-md flex justify-between items-center p-4 z-10 pt-6 bg-ds-dark border-b-4 border-ds-dark text-white">
+            <button onclick="quitLevel()" class="bg-white text-ds-dark font-bold text-xs px-4 py-2 border-2 border-ds-dark rounded shadow-sm"><i class="fa-solid fa-arrow-left mr-1"></i> KELUAR</button>
+            <div class="font-display text-sm bg-white border-2 border-ds-dark px-4 py-2 rounded text-ds-dark shadow-sm tracking-wider">KAD DIBUKA: <span id="l3ScoreDisplay" class="text-ds-purple ml-1 text-lg">0</span>/10</div>
+        </div>
+
+        <!-- Cards Arena Container -->
+        <div class="w-full max-w-md flex-grow flex flex-col items-center pt-8 px-4 z-10 pb-[50vh]">
+            <div class="bg-white border-2 border-ds-dark p-3 rounded-lg shadow-lg text-center max-w-xs mb-8">
+                <p class="font-bold text-xs text-ds-dark uppercase">Klik Kad Hanafuda & taip jawapan sebenar di ruang bawah!</p>
+            </div>
+            
+            <div class="card-grid" id="mystery-blocks">
+                <!-- 10 cards generated via JS -->
+            </div>
+            
+            <div id="l3Cheer" class="absolute top-[30%] left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-4xl font-display text-white opacity-0 z-40 text-center w-full tracking-wider filter drop-shadow-[0_5px_10px_rgba(0,0,0,0.8)]" style="-webkit-text-stroke: 2px #7C3AED;">
+                ANDA HEBAT!
+            </div>
+        </div>
+    </div>
+
+    <!-- Universal Floating Quiz Question Panel -->
+    <div id="quiz-container" class="w-full max-w-md flex flex-col bg-white shadow-[0_-10px_50px_rgba(17,24,39,0.5)] p-6 fixed bottom-0 left-1/2 transform -translate-x-1/2 transition-transform duration-300 translate-y-full z-40" style="height: 55vh; border-top-left-radius: 24px; border-top-right-radius: 24px; border-top: 6px solid #111827;">
+        
+        <div class="flex justify-between items-center mb-4 border-b-2 border-slate-200 pb-3">
+            <span id="quizLevelLabel" class="font-display tracking-widest text-xs bg-ds-dark text-white px-4 py-1.5 rounded uppercase">ARAS 1</span>
+            <span id="quizCounter" class="font-display text-xs text-ds-dark bg-slate-100 px-4 py-1.5 border border-slate-300 rounded tracking-widest">Q: 1/10</span>
+        </div>
+        
+        <div class="flex-grow overflow-y-auto custom-scroll pr-2 flex flex-col justify-start">
+            <h3 id="questionText" class="text-lg font-bold text-ds-dark mb-6 leading-relaxed">Soalan akan dimuat naik di sini?</h3>
+            
+            <!-- Standard Multiple Choice Container (L1 & L2) -->
+            <div id="optionsContainer" class="space-y-3 flex-col pb-4">
+                <!-- Injected options -->
+            </div>
+
+            <!-- Subjective input container (L3 Only) -->
+            <div id="inputContainer" class="hide flex-col w-full pb-4">
+                <div class="bg-slate-100 p-3 border border-slate-300 mb-4 rounded-lg text-xs text-slate-600 font-bold text-center">
+                    <p class="text-ds-dark uppercase"><i class="fa-solid fa-keyboard mr-1"></i> Taipkan jawapan yang tepat:</p>
+                </div>
+                <input type="text" id="answerInput" class="w-full bg-white border-4 border-ds-dark p-4 rounded-xl text-ds-dark text-center focus:outline-none focus:ring-4 focus:ring-ds-purple/30 text-xl font-display uppercase transition-all shadow-inner" placeholder="TAIP JAWAPAN...">
+                <button onclick="checkSubjectiveAnswer()" class="w-full btn-ds text-lg py-4 mt-4 rounded-xl">HANTAR SERANGAN <i class="fa-solid fa-khanda ml-2"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Immediate Feedback / Explanation Modal -->
+    <div id="feedbackModal" class="fixed inset-0 modal-overlay z-50 flex items-center justify-center hide px-4">
+        <div id="feedbackCard" class="bg-white p-6 w-full max-w-sm transform scale-90 transition-all duration-300 relative rounded-xl shadow-2xl border-4 border-ds-dark">
+            <div id="feedbackIcon" class="absolute -top-12 left-1/2 transform -translate-x-1/2 w-24 h-24 rounded-full flex items-center justify-center border-4 border-ds-dark shadow-lg text-4xl text-white">
+                <!-- Icon injected -->
+            </div>
+            
+            <h3 id="feedbackTitle" class="font-display text-center mb-4 mt-12 text-3xl tracking-widest">TEPAT!</h3>
+            <div class="bg-slate-100 border-2 border-slate-300 p-4 rounded-lg mb-6 text-center shadow-inner">
+                <p id="feedbackExplanation" class="text-ds-dark font-bold text-sm leading-relaxed">Penerangan ringkas jawapan.</p>
+            </div>
+            <button onclick="nextQuestion()" class="w-full btn-ds text-sm py-4 rounded-lg tracking-wider">TERUSKAN MARA <i class="fa-solid fa-forward-step ml-2"></i></button>
         </div>
     </div>
 
     <script>
-        // Data and Questions
-        const simpulanBahasaList = [
-            "Anak emas", "Kaki bangku", "Ulat buku", "Buah tangan", "Kera sumbang", 
-            "Hidung tinggi", "Telinga lintah", "Ringan tulang", "Berat tulang", "Mulut murai",
-            "Durian runtuh", "Mandi peluh", "Putih tulang", "Langkah kanan", "Ayam tambatan", 
-            "Kepala batu", "Darah daging", "Bekas tangan", "Panjang tangan", "Tanda mata",
-            "Makan angin", "Rambang mata", "Ikat perut", "Beri muka", "Mulut tempayan", 
-            "Hati batu", "Kacang hantu", "Lipas kudung", "Nyawa-nyawa ikan", "Atas pagar"
+        // Data Soalan & Nota: 30 Simpulan Bahasa (Kekal 30)
+        const notaSimpulan = [
+            { id: 1, simpulan: "Ulat buku", maksud: "Seseorang yang suka/rajin membaca buku." },
+            { id: 2, simpulan: "Kaki bangku", maksud: "Orang yang tidak pandai bermain sukan terutamanya bola." },
+            { id: 3, simpulan: "Ringan tulang", maksud: "Orang yang rajin bekerja dan suka menolong orang." },
+            { id: 4, simpulan: "Cakar ayam", maksud: "Tulisan yang sangat buruk dan sukar dibaca." },
+            { id: 5, simpulan: "Mandi peluh", maksud: "Bekerja dengan sangat kuat hingga berpeluh-peluh." },
+            { id: 6, simpulan: "Keras kepala", maksud: "Orang yang degil dan tidak mahu mendengar nasihat." },
+            { id: 7, simpulan: "Makan suap", maksud: "Menerima rasuah atau wang haram." },
+            { id: 8, simpulan: "Makan angin", maksud: "Pergi bersiar-siar untuk berehat atau melancong." },
+            { id: 9, simpulan: "Anak emas", maksud: "Anak yang paling disayangi oleh ibu bapa atau ketua." },
+            { id: 10, simpulan: "Mulut murai", maksud: "Seseorang yang banyak bercakap dan bising." },
+            { id: 11, simpulan: "Panas baran", maksud: "Orang yang cepat marah walaupun perkara kecil." },
+            { id: 12, simpulan: "Batu api", maksud: "Orang yang suka menghasut orang lain supaya bergaduh." },
+            { id: 13, simpulan: "Kaki ayam", maksud: "Berjalan tanpa memakai sebarang kasut atau selipar." },
+            { id: 14, simpulan: "Durian runtuh", maksud: "Mendapat keuntungan atau nasib baik secara tiba-tiba." },
+            { id: 15, simpulan: "Hidung tinggi", maksud: "Orang yang sombong dan bongkak." },
+            { id: 16, simpulan: "Pecah tembelang", maksud: "Rahsia yang disembunyikan telah diketahui oleh orang ramai." },
+            { id: 17, simpulan: "Telinga lintah", maksud: "Mempunyai pendengaran yang sangat tajam." },
+            { id: 18, simpulan: "Curi tulang", maksud: "Orang yang malas atau mengelak dari melakukan tugasan." },
+            { id: 19, simpulan: "Tidur mati", maksud: "Tidur yang sangat nyenyak dan susah dikejutkan." },
+            { id: 20, simpulan: "Lipas kudung", maksud: "Membuat kerja dengan sangat pantas dan cekap." },
+            { id: 21, simpulan: "Tanda mata", maksud: "Hadiah atau cenderamata untuk dijadikan kenangan." },
+            { id: 22, simpulan: "Tali barut", maksud: "Orang yang menjadi pengkhianat atau penyampai rahsia kepada musuh." },
+            { id: 23, simpulan: "Menyerah kalah", maksud: "Berserah kepada nasib atau berputus asa dalam perjuangan." },
+            { id: 24, simpulan: "Cekal hati", maksud: "Mempunyai azam yang sangat kuat dan tidak mudah putus asa." },
+            { id: 25, simpulan: "Batu loncatan", maksud: "Sesuatu yang digunakan sebagai asas/jalan untuk mencapai kejayaan." },
+            { id: 26, simpulan: "Buta huruf", maksud: "Seseorang yang tidak pandai membaca dan menulis." },
+            { id: 27, simpulan: "Rambang mata", maksud: "Bingung tidak tahu membuat pilihan kerana terlalu banyak barang menarik." },
+            { id: 28, simpulan: "Mata duitan", maksud: "Orang yang terlalu mementingkan wang dan harta." },
+            { id: 29, simpulan: "Langkah seribu", maksud: "Lari lintang-pukang dengan sangat pantas kerana ketakutan." },
+            { id: 30, simpulan: "Makan hati", maksud: "Berasa sangat kecewa atau sedih merana secara diam-diam." }
         ];
 
-        const qLevel1 = [
-            { q: "Orang yang disayangi oleh ibu bapa atau ketua.", a: "Anak emas", opts: ["Anak emas", "Anak angkat", "Anak tiri"], exp: "Anak emas bermaksud orang yang sangat disayangi." },
-            { q: "Seseorang yang tidak pandai bermain sukan.", a: "Kaki bangku", opts: ["Kaki ayam", "Kaki bangku", "Kaki bola"], exp: "Kaki bangku merujuk kepada orang yang tak pandai main bola." },
-            { q: "Orang yang sangat rajin membaca buku.", a: "Ulat buku", opts: ["Kutu embun", "Ulat buku", "Kutu buku"], exp: "Ulat buku ialah gelaran untuk orang yang suka membaca." },
-            { q: "Hadiah yang dibawa semasa melawat seseorang.", a: "Buah tangan", opts: ["Buah mulut", "Buah hati", "Buah tangan"], exp: "Buah tangan ialah hadiah atau pemberian." },
-            { q: "Orang yang sombong dan angkuh.", a: "Hidung tinggi", opts: ["Hidung belang", "Hidung tinggi", "Telinga nipis"], exp: "Hidung tinggi bermaksud orang yang bersikap sombong." },
-            { q: "Seseorang yang tajam pendengarannya.", a: "Telinga lintah", opts: ["Telinga kuali", "Telinga lintah", "Mata keranjang"], exp: "Telinga lintah bermaksud pendengaran yang sangat peka." },
-            { q: "Orang yang rajin bekerja dan menolong orang.", a: "Ringan tulang", opts: ["Berat tulang", "Tulang belakang", "Ringan tulang"], exp: "Ringan tulang adalah sikap yang rajin." },
-            { q: "Orang yang malas bekerja.", a: "Berat tulang", opts: ["Tulang hitam", "Berat tulang", "Putih tulang"], exp: "Berat tulang adalah kebalikan ringan tulang, iaitu malas." },
-            { q: "Orang yang banyak bercakap.", a: "Mulut murai", opts: ["Mulut tempayan", "Mulut murai", "Mulut manis"], exp: "Burung murai suka berbunyi, jadi mulut murai bermaksud banyak cakap." },
-            { q: "Orang yang suka menyendiri dan tidak bergaul.", a: "Kera sumbang", opts: ["Kera sumbang", "Kutu embun", "Kucing kurap"], exp: "Kera sumbang merujuk kepada orang yang mengasingkan diri." }
-        ];
+        // Format for Quiz Generator
+        const allQuestions = notaSimpulan.map((nota, index) => {
+            let qObj = { id: nota.id, exp: nota.maksud };
+            
+            if (index < 20) {
+                // Aras 1 & 2: Multiple Choice (Give meaning, ask for idiom)
+                qObj.q = `Pilih teknik simpulan bahasa yang tepat untuk maksud: "${nota.maksud}"`;
+                // Generate 3 random wrong options
+                let options = [nota.simpulan];
+                while(options.length < 4) {
+                    let rand = notaSimpulan[Math.floor(Math.random() * 30)].simpulan;
+                    if(!options.includes(rand)) options.push(rand);
+                }
+                options.sort(() => Math.random() - 0.5);
+                qObj.options = options;
+                qObj.ans = options.indexOf(nota.simpulan);
+            } else {
+                // Aras 3: Subjective Typing
+                qObj.q = `Taip simpulan bahasa untuk: "${nota.maksud}" (2 patah perkataan).`;
+                qObj.ans = nota.simpulan;
+            }
+            return qObj;
+        });
 
-        const qLevel2 = [
-            { q: "Keuntungan besar yang diperoleh tanpa disangka-sangka.", a: "Durian runtuh", opts: ["Durian runtuh", "Rezeki terpijak", "Bulan jatuh"], exp: "Durian runtuh melambangkan keuntungan yang tiba-tiba." },
-            { q: "Bekerja dengan sangat kuat dan bersungguh-sungguh.", a: "Mandi peluh", opts: ["Mandi darah", "Mandi peluh", "Banting tulang"], exp: "Mandi peluh bermaksud bekerja keras sehingga berpeluh." },
-            { q: "Lebih baik mati daripada menanggung malu.", a: "Putih tulang", opts: ["Putih mata", "Putih tulang", "Tulang belakang"], exp: "Biar putih tulang, jangan putih mata (biar mati dari malu)." },
-            { q: "Sangat bernasib baik atau bertuah.", a: "Langkah kanan", opts: ["Langkah kiri", "Langkah kanan", "Langkah seribu"], exp: "Langkah kanan bermaksud nasib yang sangat baik apabila tiba di suatu tempat." },
-            { q: "Orang yang menjadi harapan dalam sesebuah pasukan.", a: "Ayam tambatan", opts: ["Ayam sabung", "Ayam tambatan", "Bapa ayam"], exp: "Ayam tambatan ialah pemain atau orang yang menjadi sandaran." },
-            { q: "Seseorang yang sangat degil dan tidak mahu mendengar nasihat.", a: "Kepala batu", opts: ["Hati batu", "Kepala batu", "Otak udang"], exp: "Kepala batu merujuk kepada kedegilan yang melampau." },
-            { q: "Anak kandung atau saudara mara sendiri.", a: "Darah daging", opts: ["Darah manis", "Darah daging", "Daging mentah"], exp: "Darah daging adalah pertalian keluarga yang rapat." },
-            { q: "Hasil kerja tangan atau karya seseorang.", a: "Bekas tangan", opts: ["Tanda tangan", "Bekas tangan", "Buah tangan"], exp: "Bekas tangan ialah hasil ciptaan atau kerja seseorang." },
-            { q: "Orang yang suka mencuri barang orang lain.", a: "Panjang tangan", opts: ["Tangan terbuka", "Tangan panjang", "Panjang tangan"], exp: "Panjang tangan merujuk kepada pencuri." },
-            { q: "Hadiah kenangan.", a: "Tanda mata", opts: ["Tanda harga", "Tanda mata", "Cahaya mata"], exp: "Tanda mata diberikan sebagai ingatan." }
-        ];
-
-        const qLevel3 = [
-            { q: "Pergi bercuti atau bersiar-siar untuk berehat.", a: ["makan angin"], exp: "Makan angin bermaksud mengambil angin luar untuk berehat." },
-            { q: "Sukar membuat pilihan kerana semuanya cantik-cantik.", a: ["rambang mata"], exp: "Rambang mata berlaku bila banyak pilihan yang menarik." },
-            { q: "Menahan lapar untuk berjimat cermat.", a: ["ikat perut"], exp: "Ikat perut bermaksud mengurangkan makan kerana ingin berjimat." },
-            { q: "Terlalu memanjakan seseorang.", a: ["beri muka", "bagi muka"], exp: "Beri muka boleh menyebabkan orang naik lemak." },
-            { q: "Orang yang tidak boleh menyimpan rahsia.", a: ["mulut tempayan"], exp: "Mulut tempayan merujuk kepada orang yang pecah rahsia." },
-            { q: "Sifat degil atau tidak bertimbang rasa.", a: ["hati batu"], exp: "Hati batu ialah orang yang keras hati." },
-            { q: "Orang jahat, nakal atau suka mengganggu orang lain.", a: ["kacang hantu"], exp: "Kacang hantu ialah budak yang nakal." },
-            { q: "Membuat kerja dengan sangat pantas.", a: ["lipas kudung"], exp: "Lipas kudung bergerak sangat laju." },
-            { q: "Keadaan yang hampir-hampir mati.", a: ["nyawa-nyawa ikan", "nyawa nyawa ikan"], exp: "Nyawa-nyawa ikan bermaksud nyawa di hujung tanduk." },
-            { q: "Tidak menyebelahi mana-mana pihak (berkecuali).", a: ["atas pagar"], exp: "Atas pagar bermaksud bersikap neutral." }
-        ];
-
-        const cuteEncouragements = ["COMEL!", "HEBAT!", "YAY!", "TERBAIK!", "BIJAK!"];
-
+        // State variables
+        let player = { name: '', class: '', scoreL1: 0, scoreL2: 0, scoreL3: 0, completed: [] };
         let currentLevel = 0;
         let currentQuestionIndex = 0;
         let levelQuestions = [];
-        let scoreCounter = 0;
+        let synth;
+        let fxSynth;
+
+        // Level 3 Praises (As requested)
+        const pujian = ["ANDA HEBAT!", "ANDA CEMERLANG!", "ANDA TERBAIK!"];
+
+        async function initApp() {
+            try {
+                await Tone.start();
+                synth = new Tone.Synth({
+                    oscillator: { type: "square" }, // A bit more retro/arcade tone
+                    envelope: { attack: 0.05, decay: 0.2, sustain: 0.2, release: 1 }
+                }).toDestination();
+                
+                fxSynth = new Tone.Synth({
+                    oscillator: { type: "triangle" }, // Different texture for sound effects
+                    envelope: { attack: 0.02, decay: 0.1, sustain: 0.1, release: 0.5 }
+                }).toDestination();
+                
+                // Play intro (Action style)
+                const now = Tone.now();
+                synth.triggerAttackRelease("A3", "8n", now);
+                synth.triggerAttackRelease("E4", "8n", now + 0.15);
+                synth.triggerAttackRelease("A4", "4n", now + 0.3);
+                
+                document.getElementById('audioInitOverlay').classList.add('hide');
+                showScreen('screen-login');
+                populateNotes();
+            } catch (err) {
+                console.error("Audio initialization failed:", err);
+                document.getElementById('audioInitOverlay').classList.add('hide');
+                showScreen('screen-login');
+                populateNotes();
+            }
+        }
 
         function playSound(type) {
-            try {
-                if(Tone.context.state !== 'running') Tone.start();
-                const synth = new Tone.Synth().toDestination();
-                const now = Tone.now();
-                
-                if (type === 'goal') {
-                    // Magical / Cute sound
-                    synth.triggerAttackRelease("C5", "16n", now);
-                    synth.triggerAttackRelease("E5", "16n", now + 0.1);
-                    synth.triggerAttackRelease("G5", "16n", now + 0.2);
-                    synth.triggerAttackRelease("C6", "8n", now + 0.3);
-                } else if (type === 'wrong') {
-                    // Soft bonk
-                    synth.triggerAttackRelease("C4", "8n", now);
-                    synth.triggerAttackRelease("G3", "4n", now + 0.2);
+            if (!synth) return;
+            const now = Tone.now();
+            if (type === 'correct') { // Sword clash / success sound
+                synth.triggerAttackRelease("E5", "16n", now);
+                synth.triggerAttackRelease("A5", "8n", now + 0.1);
+            } else if (type === 'wrong') { // Dull thud
+                synth.triggerAttackRelease("C3", "8n", now);
+                synth.triggerAttackRelease("G2", "4n", now + 0.15);
+            } else if (type === 'levelComplete') { // Victory fanfare
+                synth.triggerAttackRelease("A4", "8n", now);
+                synth.triggerAttackRelease("C5", "8n", now + 0.15);
+                synth.triggerAttackRelease("E5", "8n", now + 0.3);
+                synth.triggerAttackRelease("A5", "2n", now + 0.45);
+            } else if (type === 'slash') {
+                if (fxSynth) {
+                    fxSynth.triggerAttackRelease("G5", "32n", now);
+                    fxSynth.triggerAttackRelease("C6", "16n", now + 0.05);
                 }
-            } catch(e) { console.log("Audio not supported or interaction needed.", e); }
-        }
-
-        function showScreen(screenId) {
-            document.querySelectorAll('section').forEach(s => s.classList.add('hidden'));
-            document.getElementById(screenId).classList.remove('hidden');
-            
-            if (screenId !== 'screen-login') {
-                document.getElementById('user-info-badge').classList.remove('hidden');
-                document.getElementById('display-name').textContent = window.appState.user.name;
             }
         }
 
-        function handleLogin() {
-            const name = document.getElementById('input-name').value.trim();
-            const cls = document.getElementById('input-class').value.trim();
+        function showScreen(id) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.add('hide'));
+            document.getElementById(id).classList.remove('hide');
+        }
+
+        function showToast(msg) {
+            const t = document.getElementById('toast');
+            document.getElementById('toastMsg').innerText = msg;
+            t.classList.remove('opacity-0', '-translate-y-full', 'pointer-events-none');
+            t.classList.add('translate-y-4');
+            setTimeout(() => {
+                t.classList.add('opacity-0', '-translate-y-full', 'pointer-events-none');
+                t.classList.remove('translate-y-4');
+            }, 3000);
+        }
+
+        function login() {
+            const n = document.getElementById('inputName').value.trim();
+            const c = document.getElementById('inputClass').value.trim();
             
-            if (!name || !cls) {
-                document.getElementById('input-name').classList.add('border-red-400');
-                setTimeout(() => document.getElementById('input-name').classList.remove('border-red-400'), 1000);
+            if (n === '' || c === '') {
+                showToast("Sila masukkan nama dan kelas anda.");
+                return;
+            }
+            
+            player.name = n;
+            player.class = c;
+            updateDashboard();
+            showScreen('screen-dashboard');
+            playSound('correct');
+        }
+
+        function populateNotes() {
+            const container = document.getElementById('notesContainer');
+            container.innerHTML = '';
+            notaSimpulan.forEach((n, idx) => {
+                const item = document.createElement('div');
+                item.className = "p-3 bg-slate-50 rounded-lg border border-slate-200";
+                item.innerHTML = `
+                    <div class="flex items-center mb-1">
+                        <span class="w-6 h-6 rounded bg-ds-dark text-white flex items-center justify-center text-xs font-bold mr-2">${idx+1}</span>
+                        <h4 class="font-display text-ds-green text-lg capitalize tracking-wide">${n.simpulan}</h4>
+                    </div>
+                    <p class="text-sm font-bold text-slate-600 pl-8">${n.maksud}</p>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        function updateDashboard() {
+            document.getElementById('dashName').innerText = player.name;
+            document.getElementById('dashClass').innerText = player.class;
+            
+            const totalScore = player.scoreL1 + player.scoreL2 + player.scoreL3;
+            document.getElementById('dashScore').innerText = totalScore;
+
+            // Highlight reward banner if 90% or more (27 points)
+            const banner = document.getElementById('rewardBanner');
+            if (totalScore >= 27) {
+                banner.className = "w-full max-w-md bg-gradient-to-r from-ds-yellow to-[#d97706] text-ds-dark p-4 rounded-lg mb-6 flex items-center relative overflow-hidden shadow-lg animate-pulse";
+                banner.innerHTML = `
+                    <div class="absolute -right-4 -bottom-4 opacity-20 text-7xl"><i class="fa-solid fa-gift"></i></div>
+                    <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center text-2xl mr-4 shadow-inner z-10 animate-bounce">🎉</div>
+                    <div class="z-10 flex-grow">
+                        <p class="font-display text-base uppercase">TAHNIAH! MISI SELESAI!</p>
+                        <p class="text-[11px] font-bold mt-1 leading-tight text-ds-dark/80">Anda bertaraf Hashira! Tuntut ganjaran misteri daripada guru anda!</p>
+                    </div>`;
+            }
+
+            document.getElementById('statusL1').innerText = `${player.scoreL1}/10`;
+            
+            // Unlock Level 2 Logic (needs 8/10 on Level 1)
+            const btnL2 = document.getElementById('btnL2');
+            if (player.scoreL1 >= 8) {
+                btnL2.classList.remove('opacity-70', 'cursor-not-allowed', 'bg-slate-200', 'border-slate-300');
+                btnL2.classList.add('bg-white', 'border-ds-dark', 'hover:bg-slate-50', 'shadow-[0_6px_0_0_#111827]', 'active:translate-y-[6px]', 'active:shadow-none');
+                document.getElementById('iconL2').className = "bg-ds-dark text-white w-14 h-14 rounded-lg flex items-center justify-center text-2xl font-display shadow-inner border-2 border-white flex-shrink-0";
+                document.getElementById('iconL2').innerHTML = "2";
+                document.getElementById('reqL2').classList.add('hide');
+                document.getElementById('titleL2').className = "font-display text-base text-ds-dark tracking-wide";
+                document.getElementById('statusL2').innerText = `${player.scoreL2}/10`;
+                document.getElementById('statusL2').className = "bg-slate-100 text-ds-dark px-3 py-1.5 rounded-md font-bold text-sm border border-slate-300";
+            }
+
+            // Unlock Level 3 Logic (needs 8/10 on Level 2)
+            const btnL3 = document.getElementById('btnL3');
+            if (player.scoreL2 >= 8) {
+                btnL3.classList.remove('opacity-70', 'cursor-not-allowed', 'bg-slate-200', 'border-slate-300');
+                btnL3.classList.add('bg-white', 'border-ds-dark', 'hover:bg-slate-50', 'shadow-[0_6px_0_0_#111827]', 'active:translate-y-[6px]', 'active:shadow-none');
+                document.getElementById('iconL3').className = "bg-ds-purple text-white w-14 h-14 rounded-lg flex items-center justify-center text-2xl font-display shadow-inner border-2 border-white flex-shrink-0";
+                document.getElementById('iconL3').innerHTML = "3";
+                document.getElementById('reqL3').classList.add('hide');
+                document.getElementById('titleL3').className = "font-display text-base text-ds-dark tracking-wide";
+                document.getElementById('statusL3').innerText = `${player.scoreL3}/10`;
+                document.getElementById('statusL3').className = "bg-slate-100 text-ds-dark px-3 py-1.5 rounded-md font-bold text-sm border border-slate-300";
+            }
+
+            updateChecklist();
+        }
+
+        function startLevel(l) {
+            if (l === 2 && player.scoreL1 < 8) { showToast("Selesaikan Aras 1 dengan 8/10 dahulu!"); return; }
+            if (l === 3 && player.scoreL2 < 8) { showToast("Selesaikan Aras 2 dengan 8/10 dahulu!"); return; }
+
+            currentLevel = l;
+            currentQuestionIndex = 0;
+            player['scoreL' + l] = 0;
+
+            if (l === 1) { levelQuestions = allQuestions.slice(0, 10); setupLevel1(); }
+            if (l === 2) { levelQuestions = allQuestions.slice(10, 20); setupLevel2(); }
+            if (l === 3) { levelQuestions = allQuestions.slice(20, 30); setupLevel3(); }
+
+            showScreen(`screen-level${l}`);
+            
+            if (l === 1 || l === 2) {
+                setTimeout(() => openQuizPanel(), 700);
+            }
+        }
+
+        function quitLevel() {
+            document.getElementById('quiz-container').classList.remove('translate-y-0');
+            document.getElementById('quiz-container').classList.add('translate-y-full');
+            updateDashboard();
+            showScreen('screen-dashboard');
+        }
+
+        function openQuizPanel() {
+            if (currentQuestionIndex >= 10) {
+                finishLevel();
                 return;
             }
 
-            window.appState.user.name = name;
-            window.appState.user.className = cls;
-            window.appState.isLoggedIn = true;
-            
-            saveUserData();
-            updateMenuLocks();
-            showScreen('screen-menu');
-            Tone.start();
-        }
-
-        function updateMenuLocks() {
-            document.getElementById('score-badge-1').textContent = `${window.appState.scores.level1}/10`;
-            document.getElementById('score-badge-2').textContent = `${window.appState.scores.level2}/10`;
-            document.getElementById('score-badge-3').textContent = `${window.appState.scores.level3}/10`;
-
-            const btn2 = document.getElementById('btn-level-2');
-            const icon2 = document.getElementById('icon-level-2');
-            const title2 = document.getElementById('title-level-2');
-            if (window.appState.scores.level1 >= 8) {
-                btn2.classList.remove('opacity-70', 'bg-gray-50');
-                btn2.classList.add('bg-white', 'border-blue-200', 'hover:shadow-md', 'hover:border-blue-400');
-                icon2.classList.remove('bg-gray-200', 'text-gray-400');
-                icon2.classList.add('bg-blue-100', 'text-blue-500', 'group-hover:scale-110');
-                icon2.innerHTML = '<i class="fas fa-cloud"></i>';
-                title2.classList.remove('text-gray-500');
-                title2.classList.add('text-blue-600');
-            }
-
-            const btn3 = document.getElementById('btn-level-3');
-            const icon3 = document.getElementById('icon-level-3');
-            const title3 = document.getElementById('title-level-3');
-            if (window.appState.scores.level2 >= 8) {
-                btn3.classList.remove('opacity-70', 'bg-gray-50');
-                btn3.classList.add('bg-white', 'border-yellow-200', 'hover:shadow-md', 'hover:border-yellow-400');
-                icon3.classList.remove('bg-gray-200', 'text-gray-400');
-                icon3.classList.add('bg-yellow-100', 'text-yellow-500', 'group-hover:scale-110');
-                icon3.innerHTML = '<i class="fas fa-gift"></i>';
-                title3.classList.remove('text-gray-500');
-                title3.classList.add('text-yellow-600');
-            }
-
-            const totalScore = window.appState.scores.level1 + window.appState.scores.level2 + window.appState.scores.level3;
-            if (totalScore >= 27) { 
-                document.getElementById('prize-banner').classList.remove('hidden');
-            }
-        }
-
-        function shuffle(array) {
-            let currentIndex = array.length,  randomIndex;
-            while (currentIndex != 0) {
-                randomIndex = Math.floor(Math.random() * currentIndex);
-                currentIndex--;
-                [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
-            }
-            return array;
-        }
-
-        function startLevel(levelNum) {
-            if (levelNum === 2 && window.appState.scores.level1 < 8) return;
-            if (levelNum === 3 && window.appState.scores.level2 < 8) return;
-
-            currentLevel = levelNum;
-            currentQuestionIndex = 0;
-            scoreCounter = 0;
-
-            if (levelNum === 1) {
-                levelQuestions = shuffle([...qLevel1]);
-                document.getElementById('ball').style.left = '5%';
-                document.getElementById('ball').style.top = '60%';
-                updateScoreDisplay();
-                loadQuestionLevel1();
-                showScreen('screen-level1');
-            } 
-            else if (levelNum === 2) {
-                levelQuestions = shuffle([...qLevel2]);
-                initCheckersBoard();
-                updateScoreDisplay();
-                loadQuestionLevel2();
-                showScreen('screen-level2');
-            }
-            else if (levelNum === 3) {
-                levelQuestions = shuffle([...qLevel3]);
-                initJerseyGrid();
-                updateScoreDisplay();
-                showScreen('screen-level3');
-            }
-        }
-
-        function updateScoreDisplay() {
-            document.getElementById(`l${currentLevel}-score-display`).textContent = `${scoreCounter}/10`;
-        }
-
-        function loadQuestionLevel1() {
-            if (currentQuestionIndex >= 10) { endLevel(); return; }
             const q = levelQuestions[currentQuestionIndex];
-            document.getElementById('l1-question-text').textContent = q.q;
             
-            const optsContainer = document.getElementById('l1-options');
-            optsContainer.innerHTML = '';
+            const levelColors = ['bg-ds-green', 'bg-ds-dark', 'bg-ds-purple'];
+            document.getElementById('quizLevelLabel').innerText = `ARAS ${currentLevel}`;
+            document.getElementById('quizLevelLabel').className = `font-display tracking-widest text-xs text-white px-4 py-1.5 rounded uppercase ${levelColors[currentLevel-1]}`;
             
-            let opts = shuffle([...q.opts]);
-            opts.forEach(opt => {
-                const btn = document.createElement('button');
-                btn.className = "bg-white border-2 border-pink-200 text-pink-600 font-bold py-4 px-4 rounded-2xl shadow-sm hover:bg-pink-50 hover:border-pink-400 transition transform active:scale-95 text-lg";
-                btn.textContent = opt;
-                btn.onclick = () => checkAnswer(opt, q.a, q.exp);
-                optsContainer.appendChild(btn);
-            });
-        }
+            document.getElementById('quizCounter').innerText = `SOALAN: ${currentQuestionIndex + 1}/10`;
+            document.getElementById('questionText').innerText = q.q;
 
-        let damPosition = 0; 
-        function initCheckersBoard() {
-            const board = document.getElementById('checkers-board');
-            board.innerHTML = '';
-            damPosition = 0;
+            const opts = document.getElementById('optionsContainer');
+            const inp = document.getElementById('inputContainer');
             
-            for(let i=0; i<64; i++) {
-                const row = Math.floor(i/8);
-                const col = i%8;
-                const cell = document.createElement('div');
-                const isPink = (row + col) % 2 !== 0;
-                cell.className = `checkers-cell ${isPink ? 'cell-black' : 'cell-white'} relative`;
-                cell.id = `cell-${row}-${col}`;
-                board.appendChild(cell);
-            }
-            placeDamPiece();
-        }
-
-        function placeDamPiece() {
-            const existing = document.getElementById('the-dam-piece');
-            if(existing) existing.remove();
-
-            let row = 7 - Math.floor(damPosition * 0.7);
-            let col = Math.floor(damPosition * 0.7);
-            
-            if ((row + col) % 2 === 0) col += 1; 
-            if(row < 0) row = 0; if(col > 7) col = 7;
-
-            const targetCell = document.getElementById(`cell-${row}-${col}`);
-            if(targetCell) {
-                const piece = document.createElement('div');
-                piece.id = 'the-dam-piece';
-                piece.className = 'dam-piece';
-                piece.innerHTML = '<i class="fas fa-star"></i>';
-                targetCell.appendChild(piece);
-            }
-        }
-
-        function loadQuestionLevel2() {
-            if (currentQuestionIndex >= 10) { endLevel(); return; }
-            const q = levelQuestions[currentQuestionIndex];
-            document.getElementById('l2-question-text').textContent = q.q;
-            
-            const optsContainer = document.getElementById('l2-options');
-            optsContainer.innerHTML = '';
-            
-            let opts = shuffle([...q.opts]);
-            opts.forEach(opt => {
-                const btn = document.createElement('button');
-                btn.className = "bg-white border-2 border-blue-200 text-blue-600 font-bold py-4 px-4 rounded-2xl shadow-sm hover:bg-blue-50 hover:border-blue-400 transition transform active:scale-95 text-lg";
-                btn.textContent = opt;
-                btn.onclick = () => checkAnswer(opt, q.a, q.exp);
-                optsContainer.appendChild(btn);
-            });
-        }
-
-        function initJerseyGrid() {
-            const grid = document.getElementById('jersey-grid');
-            grid.innerHTML = '';
-            for(let i=1; i<=10; i++) {
-                const card = document.createElement('div');
-                card.className = 'jersey-card';
-                card.id = `jersey-${i}`;
-                card.innerHTML = `
-                    <div class="jersey-icon"><i class="fas fa-gift"></i></div>
-                    <div class="game-font text-xl text-pink-700">${i}</div>
-                `;
-                card.onclick = () => openTypingModal(i-1, card.id);
-                grid.appendChild(card);
-            }
-        }
-
-        let currentCardId = null;
-        function openTypingModal(qIndex, cardId) {
-            const card = document.getElementById(cardId);
-            if(card.classList.contains('solved')) return;
-
-            currentQuestionIndex = qIndex;
-            currentCardId = cardId;
-            const q = levelQuestions[qIndex];
-            
-            document.getElementById('modal-jersey-num').textContent = (qIndex + 1);
-            document.getElementById('modal-question').textContent = q.q;
-            document.getElementById('modal-input').value = '';
-            document.getElementById('typing-modal').classList.remove('hidden');
-            
-            setTimeout(() => document.getElementById('modal-input').focus(), 100);
-        }
-
-        function closeTypingModal() {
-            document.getElementById('typing-modal').classList.add('hidden');
-        }
-
-        function submitTypingAnswer() {
-            const input = document.getElementById('modal-input').value.trim().toLowerCase();
-            if(!input) return;
-            
-            const q = levelQuestions[currentQuestionIndex];
-            closeTypingModal();
-            checkAnswer(input, q.a, q.exp, true);
-        }
-
-        function checkAnswer(selected, correct, explanation, isTyping = false) {
-            let isCorrect = false;
-            
-            if (isTyping) {
-                isCorrect = correct.includes(selected);
-            } else {
-                isCorrect = (selected === correct);
-            }
-
-            if (isCorrect) {
-                scoreCounter++;
-                updateScoreDisplay();
-                playSound('goal');
-                showBigAnimation();
+            if (currentLevel < 3) {
+                opts.classList.remove('hide');
+                opts.classList.add('flex');
+                inp.classList.add('hide');
+                inp.classList.remove('flex');
                 
-                if (currentLevel === 1) {
-                    const ball = document.getElementById('ball');
-                    const p = scoreCounter / 10;
-                    ball.style.left = `${5 + (p * 85)}%`;
-                    ball.style.top = `${60 - (p * 10)}%`;
-                } 
-                else if (currentLevel === 2) {
-                    damPosition++;
-                    placeDamPiece();
-                }
-                else if (currentLevel === 3) {
-                    const card = document.getElementById(currentCardId);
-                    card.classList.add('solved');
-                    card.innerHTML = `<div class="jersey-icon"><i class="fas fa-heart text-white text-3xl mt-2 animate-pop"></i></div>`;
-                }
+                opts.innerHTML = '';
+                q.options.forEach((opt, idx) => {
+                    const btn = document.createElement('button');
+                    btn.className = "w-full text-left p-4 border-2 border-slate-300 bg-white rounded-lg hover:border-ds-dark hover:bg-slate-50 font-bold text-ds-dark transition-all active:scale-[0.98] text-base capitalize shadow-sm";
+                    btn.innerText = opt;
+                    btn.onclick = () => checkAnswer(idx);
+                    opts.appendChild(btn);
+                });
+            } else {
+                opts.classList.add('hide');
+                opts.classList.remove('flex');
+                inp.classList.remove('hide');
+                inp.classList.add('flex');
+                document.getElementById('answerInput').value = '';
+                document.getElementById('answerInput').focus();
+            }
+
+            document.getElementById('quiz-container').classList.remove('translate-y-full');
+            document.getElementById('quiz-container').classList.add('translate-y-0');
+        }
+
+        function checkAnswer(selectedIdx) {
+            const q = levelQuestions[currentQuestionIndex];
+            const isCorrect = (selectedIdx === q.ans);
+            processAnswer(isCorrect, q);
+        }
+
+        function checkSubjectiveAnswer() {
+            const inputVal = document.getElementById('answerInput').value.trim().toLowerCase();
+            const q = levelQuestions[currentQuestionIndex];
+            
+            if(inputVal === "") { showToast("Sila taip jawapan anda dahulu."); return; }
+            
+            const isCorrect = (inputVal === q.ans.toLowerCase());
+            processAnswer(isCorrect, q);
+        }
+
+        function processAnswer(isCorrect, q) {
+            document.getElementById('quiz-container').classList.add('translate-y-full');
+            document.getElementById('quiz-container').classList.remove('translate-y-0');
+
+            const modal = document.getElementById('feedbackModal');
+            const card = document.getElementById('feedbackCard');
+            const icon = document.getElementById('feedbackIcon');
+            const title = document.getElementById('feedbackTitle');
+            const exp = document.getElementById('feedbackExplanation');
+
+            modal.classList.remove('hide');
+            
+            if (isCorrect) {
+                playSound('correct');
+                player['scoreL' + currentLevel]++;
+                if (!player.completed.includes(q.id)) player.completed.push(q.id);
+                
+                icon.innerHTML = '<i class="fa-solid fa-check"></i>';
+                icon.className = "absolute -top-12 left-1/2 transform -translate-x-1/2 w-24 h-24 rounded-full flex items-center justify-center border-4 border-ds-dark shadow-lg text-5xl bg-ds-green";
+                title.innerText = "TEPAT!";
+                title.className = "font-display text-center mb-4 mt-12 text-3xl tracking-widest text-ds-green";
+                
+                triggerVisualReward();
             } else {
                 playSound('wrong');
+                icon.innerHTML = '<i class="fa-solid fa-xmark"></i>';
+                icon.className = "absolute -top-12 left-1/2 transform -translate-x-1/2 w-24 h-24 rounded-full flex items-center justify-center border-4 border-ds-dark shadow-lg text-5xl bg-ds-red";
+                title.innerText = "SUDUAN TERPESONG...";
+                title.className = "font-display text-center mb-4 mt-12 text-2xl tracking-widest text-ds-red";
             }
-
-            showFeedback(isCorrect, explanation);
-        }
-
-        function showBigAnimation() {
-            const overlay = document.getElementById('big-anim-overlay');
-            const textEl = document.getElementById('big-anim-text');
             
-            // Random cute word
-            const word = cuteEncouragements[Math.floor(Math.random() * cuteEncouragements.length)];
-            textEl.textContent = word;
+            let correctIdiom = currentLevel < 3 ? q.options[q.ans] : q.ans;
+            exp.innerHTML = `<span class="uppercase text-ds-dark font-black tracking-wide">${correctIdiom}</span> bermaksud: <br> ${q.exp}`;
             
-            overlay.classList.remove('hidden');
-            
-            // Restart animation
-            textEl.classList.remove('animate-pop');
-            void textEl.offsetWidth; 
-            textEl.classList.add('animate-pop');
-
             setTimeout(() => {
-                overlay.classList.add('hidden');
-            }, 1200);
+                card.classList.remove('scale-90');
+                card.classList.add('scale-100');
+            }, 10);
         }
 
-        function showFeedback(isCorrect, explanation) {
-            const modal = document.getElementById('feedback-modal');
-            const icon = document.getElementById('feedback-icon');
-            const title = document.getElementById('feedback-title');
-            const exp = document.getElementById('feedback-explanation');
-            const box = document.getElementById('feedback-box');
-
-            if (isCorrect) {
-                icon.innerHTML = '<i class="fas fa-star text-yellow-400"></i>';
-                title.textContent = "YAY! BETUL!";
-                title.className = "text-3xl font-black mb-3 game-font text-pink-500";
-                box.className = "bg-white rounded-3xl p-8 w-full max-w-sm animate-pop text-center shadow-2xl border-t-8 border-pink-400";
+        function nextQuestion() {
+            document.getElementById('feedbackModal').classList.add('hide');
+            document.getElementById('feedbackCard').classList.remove('scale-100');
+            document.getElementById('feedbackCard').classList.add('scale-90');
+            
+            currentQuestionIndex++;
+            if (currentLevel < 3) {
+                setTimeout(() => openQuizPanel(), 400); 
             } else {
-                icon.innerHTML = '<i class="fas fa-face-sad-tear text-blue-400"></i>';
-                title.textContent = "ALAMAK, SALAH!";
-                title.className = "text-3xl font-black mb-3 game-font text-blue-500";
-                box.className = "bg-white rounded-3xl p-8 w-full max-w-sm animate-pop text-center shadow-2xl border-t-8 border-blue-400";
-            }
-            exp.textContent = explanation;
-            modal.classList.remove('hidden');
-        }
-
-        function closeFeedbackAndNext() {
-            document.getElementById('feedback-modal').classList.add('hidden');
-            
-            if (currentLevel === 1 || currentLevel === 2) {
-                currentQuestionIndex++;
-                if (currentLevel === 1) loadQuestionLevel1();
-                else loadQuestionLevel2();
-            } else if (currentLevel === 3) {
-                // For level 3, check if all answered
-                let allAnswered = true;
-                for(let i=1; i<=10; i++) {
-                    if(!document.getElementById(`jersey-${i}`).classList.contains('solved')) {
-                        allAnswered = false; break;
-                    }
-                }
-                if(allAnswered) endLevel();
+                if (currentQuestionIndex >= 10) finishLevel();
             }
         }
 
-        function endLevel() {
-            if (currentLevel === 1) window.appState.scores.level1 = Math.max(window.appState.scores.level1, scoreCounter);
-            if (currentLevel === 2) window.appState.scores.level2 = Math.max(window.appState.scores.level2, scoreCounter);
-            if (currentLevel === 3) window.appState.scores.level3 = Math.max(window.appState.scores.level3, scoreCounter);
-            
-            saveUserData();
-            updateMenuLocks();
-            
+        function finishLevel() {
+            playSound('levelComplete');
+            showToast(`ARAS ${currentLevel} TAMAT! Markah: ${player['scoreL' + currentLevel]}/10`);
             setTimeout(() => {
-                showScreen('screen-menu');
-            }, 500);
+                quitLevel();
+            }, 2500);
         }
 
-        // Checklist Logic
-        function renderChecklist() {
-            const container = document.getElementById('checklist-container');
-            container.innerHTML = '';
-            let completed = 0;
-
-            simpulanBahasaList.forEach((item, index) => {
-                if(window.appState.checklist[index]) completed++;
-                
-                const div = document.createElement('div');
-                div.className = "flex items-center p-3 bg-pink-50 rounded-2xl border border-pink-100 cursor-pointer hover:bg-pink-100 transition";
-                div.onclick = () => toggleChecklist(index);
-                
-                const icon = window.appState.checklist[index] 
-                    ? '<i class="fas fa-check-circle text-pink-500 text-xl mr-3"></i>' 
-                    : '<i class="far fa-circle text-gray-300 text-xl mr-3"></i>';
-                
-                div.innerHTML = `${icon} <span class="font-bold ${window.appState.checklist[index] ? 'text-pink-600 line-through opacity-70' : 'text-gray-700'}">${item}</span>`;
-                container.appendChild(div);
-            });
-
-            document.getElementById('checklist-progress-text').textContent = `${completed}/30`;
-            document.getElementById('checklist-progress-bar').style.width = `${(completed/30)*100}%`;
+        function setupLevel1() {
+            document.getElementById('l1ScoreDisplay').innerText = "0";
+            const p = document.getElementById('player-sprite');
+            p.style.left = "5%";
+            p.classList.remove('running');
         }
 
-        function toggleChecklist(index) {
-            window.appState.checklist[index] = !window.appState.checklist[index];
-            renderChecklist();
-            saveUserData();
-        }
+        function triggerVisualReward() {
+            if (currentLevel === 1) {
+                document.getElementById('l1ScoreDisplay').innerText = player.scoreL1;
+                const p = document.getElementById('player-sprite');
+                p.classList.add('running');
+                
+                // Play extra slash sound
+                playSound('slash');
 
-        // Initialize Checklist rendering on load (after data loaded)
-        setInterval(() => {
-            if (document.getElementById('screen-checklist').classList.contains('hidden') === false) {
-                renderChecklist();
+                // Move closer to target
+                p.style.left = (5 + (player.scoreL1 * 8)) + "%";
+                
+                // Show slash effect
+                const slash = document.getElementById('slashEffect');
+                slash.classList.remove('opacity-0');
+                
+                const cheer = document.getElementById('cheerText');
+                // Requested text: "Sorakan GOL!" but modified to fit theme slightly "TEBASAN GOL!" or "SORAKAN GOL!"
+                // I will use "SORAKAN GOL!" to strictly adhere to original prompt request while adapting context
+                cheer.innerText = "SORAKAN GOL!"; 
+                cheer.classList.remove('goal-anim');
+                void cheer.offsetWidth; // trigger reflow
+                cheer.classList.add('goal-anim');
+                
+                setTimeout(() => {
+                    p.classList.remove('running');
+                    slash.classList.add('opacity-0');
+                }, 400);
             }
-        }, 1000); // Check occasionally or just bind to showScreen
+            else if (currentLevel === 2) {
+                document.getElementById('l2ScoreDisplay').innerText = player.scoreL2;
+                moveDamPiece();
+                
+                const cheer = document.getElementById('damCheer');
+                cheer.classList.remove('goal-anim');
+                void cheer.offsetWidth;
+                cheer.classList.add('goal-anim');
+            }
+            else if (currentLevel === 3) {
+                document.getElementById('l3ScoreDisplay').innerText = player.scoreL3;
+                
+                const cheer = document.getElementById('l3Cheer');
+                // Use requested praises randomly
+                cheer.innerText = pujian[Math.floor(Math.random() * pujian.length)];
+                cheer.classList.remove('goal-anim');
+                void cheer.offsetWidth;
+                cheer.classList.add('goal-anim');
+            }
+        }
 
-
-        // Leaderboard Logic
-        async function loadLeaderboard() {
-            const listEl = document.getElementById('leaderboard-list');
-            listEl.innerHTML = '<div class="text-center py-10 text-yellow-400"><i class="fas fa-star fa-spin text-4xl mb-3"></i><p class="font-bold game-font">Mencari kawan...</p></div>';
+        function setupLevel2() {
+            document.getElementById('l2ScoreDisplay').innerText = "0";
+            const board = document.getElementById('checkerboard');
+            const piece = document.getElementById('dam-piece');
+            board.innerHTML = '';
             
-            if (!db) {
-                listEl.innerHTML = '<div class="text-center py-10 text-gray-400">Ranking tidak tersedia (Mod Luar Talian)</div>';
-                return;
-            }
-
-            try {
-                const q = collection(db, 'artifacts', appId, 'public', 'data', 'leaderboard');
-                const querySnapshot = await getDocs(q);
-                let results = [];
-                
-                querySnapshot.forEach((doc) => {
-                    results.push(doc.data());
-                });
-
-                results.sort((a, b) => b.totalScore - a.totalScore);
-                results = results.slice(0, 50); // Top 50
-
-                listEl.innerHTML = '';
-                if(results.length === 0) {
-                    listEl.innerHTML = '<div class="text-center py-10 text-gray-400">Belum ada pemain. Jadilah yang pertama!</div>';
-                    return;
+            // Build classic Dam Haji Black & White 8x8 Board as requested
+            let isBlack = true;
+            for(let r=0; r<8; r++) {
+                for(let c=0; c<8; c++) {
+                    const cell = document.createElement('div');
+                    cell.className = `dam-cell ${isBlack ? 'dam-black' : 'dam-white'}`;
+                    board.appendChild(cell);
+                    isBlack = !isBlack;
                 }
-
-                results.forEach((player, idx) => {
-                    const item = document.createElement('div');
-                    item.className = "flex justify-between items-center bg-white p-3 rounded-2xl shadow-sm border border-yellow-100";
-                    
-                    let rankIcon = `<span class="w-6 h-6 flex items-center justify-center bg-gray-200 text-gray-500 rounded-full text-xs font-bold mr-3">${idx+1}</span>`;
-                    if (idx === 0) rankIcon = `<i class="fas fa-medal text-yellow-400 text-xl mr-3"></i>`;
-                    else if (idx === 1) rankIcon = `<i class="fas fa-medal text-gray-400 text-xl mr-3"></i>`;
-                    else if (idx === 2) rankIcon = `<i class="fas fa-medal text-orange-400 text-xl mr-3"></i>`;
-
-                    item.innerHTML = `
-                        <div class="flex items-center">
-                            ${rankIcon}
-                            <div>
-                                <div class="font-bold text-gray-700">${player.name}</div>
-                                <div class="text-xs text-gray-400">${player.className}</div>
-                            </div>
-                        </div>
-                        <div class="font-black text-pink-500 bg-pink-50 px-3 py-1 rounded-xl text-lg">${player.totalScore}</div>
-                    `;
-                    listEl.appendChild(item);
-                });
-
-            } catch(e) {
-                listEl.innerHTML = '<div class="text-center py-10 text-red-400">Ralat memuatkan ranking.</div>';
+                isBlack = !isBlack; // flip on new row
             }
+            board.appendChild(piece);
+            piece.style.bottom = "0%";
+            piece.style.left = "0%";
+        }
+
+        function moveDamPiece() {
+            const piece = document.getElementById('dam-piece');
+            const pos = player.scoreL2 * 12.5; 
+            piece.style.bottom = pos > 87.5 ? "87.5%" : `${pos}%`;
+            piece.style.left = pos > 87.5 ? "87.5%" : `${pos}%`;
+        }
+
+        let clickedCard = null;
+        function setupLevel3() {
+            document.getElementById('l3ScoreDisplay').innerText = "0";
+            const grid = document.getElementById('mystery-blocks');
+            grid.innerHTML = '';
+            
+            // Build 10 Hanafuda Cards
+            for(let i=0; i<10; i++) {
+                const card = document.createElement('div');
+                card.className = 'pocket-card';
+                card.innerHTML = `<span class="card-number">${i+1}</span>`;
+                card.onclick = () => {
+                    if (card.classList.contains('solved')) return;
+                    clickedCard = card;
+                    currentQuestionIndex = i;
+                    openQuizPanel();
+                };
+                grid.appendChild(card);
+            }
+            
+            // Override processAnswer to visually mark cards as 'solved'
+            const originalProcess = processAnswer;
+            processAnswer = function(isCorrect, q) {
+                originalProcess(isCorrect, q);
+                if(isCorrect && clickedCard) {
+                    clickedCard.classList.add('solved');
+                    clickedCard.innerHTML = "";
+                }
+            };
+        }
+
+        function updateChecklist() {
+            const total = player.completed.length;
+            document.getElementById('progressText').innerText = total;
+            document.getElementById('progressBar').style.width = `${(total/30)*100}%`;
+            
+            const list = document.getElementById('checklistContainer');
+            list.innerHTML = '';
+            
+            allQuestions.forEach(q => {
+                const isDone = player.completed.includes(q.id);
+                const idiomAns = q.options ? q.options[q.ans] : q.ans; 
+
+                const item = document.createElement('div');
+                item.className = `flex items-center p-3 border-b border-slate-200 ${isDone ? 'bg-green-50' : ''}`;
+                item.innerHTML = `
+                    <div class="w-8 h-8 rounded border-2 flex items-center justify-center mr-4 flex-shrink-0 ${isDone ? 'bg-ds-green border-ds-dark text-white shadow-[0_2px_0_0_#111827]' : 'border-slate-300 bg-slate-50 text-transparent'}">
+                        ${isDone ? '<i class="fa-solid fa-check text-sm"></i>' : ''}
+                    </div>
+                    <div>
+                        <p class="font-bold text-ds-dark text-sm leading-tight">${q.exp}</p>
+                        ${isDone ? `<p class="text-[11px] text-ds-green font-black mt-1 uppercase tracking-wide">JAWAPAN: ${idiomAns}</p>` : ''}
+                    </div>
+                `;
+                list.appendChild(item);
+            });
+        }
+
+        function renderLeaderboard() {
+            // Simulated Hashira leaderboard
+            const dummyData = [
+                { name: "Gyomei (Batu)", score: 30 },
+                { name: "Sanemi (Angin)", score: 28 },
+                { name: "Giyu (Air)", score: 25 },
+                { name: "Rengoku (Api)", score: 20 },
+                { name: player.name || "Kadet Baru", score: (player.scoreL1 + player.scoreL2 + player.scoreL3), isCurrent: true }
+            ];
+            
+            dummyData.sort((a,b) => b.score - a.score);
+            
+            const list = document.getElementById('leaderboardList');
+            list.innerHTML = '';
+            
+            dummyData.forEach((d, i) => {
+                const item = document.createElement('div');
+                item.className = `flex justify-between items-center p-4 border-2 rounded-xl transition-all ${d.isCurrent ? 'bg-white border-ds-dark shadow-[0_4px_0_0_#111827] scale-105 font-bold text-ds-dark my-4' : 'bg-slate-50 border-slate-200 text-slate-500'}`;
+                
+                let rankIcon = `<span class="font-display text-lg w-8 text-center text-slate-400">#${i+1}</span>`;
+                if(i === 0) rankIcon = `<div class="w-8 h-8 bg-ds-yellow rounded flex justify-center items-center text-ds-dark border-2 border-ds-dark shadow-[0_2px_0_0_#111827]"><i class="fa-solid fa-star text-sm"></i></div>`;
+                if(i === 1) rankIcon = `<div class="w-8 h-8 bg-slate-300 rounded flex justify-center items-center text-ds-dark border-2 border-ds-dark shadow-[0_2px_0_0_#111827]"><i class="fa-solid fa-star text-sm"></i></div>`;
+                if(i === 2) rankIcon = `<div class="w-8 h-8 bg-orange-600 rounded flex justify-center items-center text-white border-2 border-ds-dark shadow-[0_2px_0_0_#111827]"><i class="fa-solid fa-star text-sm"></i></div>`;
+
+                item.innerHTML = `
+                    <div class="flex items-center">
+                        ${rankIcon}
+                        <span class="font-bold uppercase ml-4 text-sm tracking-widest ${d.isCurrent ? 'text-ds-green' : ''}">${d.name}</span>
+                    </div>
+                    <div class="font-display text-xl ${d.isCurrent ? 'text-ds-red' : 'text-slate-400'}">${d.score} <span class="text-[10px] text-slate-400 font-sans tracking-normal">PTS</span></div>
+                `;
+                list.appendChild(item);
+            });
         }
     </script>
 </body>
