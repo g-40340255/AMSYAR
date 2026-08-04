@@ -1,1090 +1,1525 @@
 <!DOCTYPE html>
-<html lang="ms">
+<html lang="ms" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kuiz Interaktif Super Juara</title>
+    <title>KUIZ MARVEL AVENGERS - SIMPULAN BAHASA</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Outfit:wght@400;600;700;900&family=Rajdhani:wght@600;700;800&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        marvel: {
+                            navy: '#0b1120',
+                            dark: '#111827',
+                            cardBg: '#1a233a',
+                            gold: '#f59e0b',
+                            goldLight: '#fde047',
+                            red: '#ef4444',
+                            crimson: '#dc2626',
+                            cyan: '#06b6d4',
+                            purple: '#8b5cf6',
+                            pink: '#ec4899',
+                            emerald: '#10b981'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Outfit', 'sans-serif'],
+                        display: ['Rajdhani', 'sans-serif'],
+                        comic: ['Bangers', 'cursive']
+                    }
+                }
+            }
+        }
+    </script>
+
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Inter:wght@400;600;800&display=swap');
-        
+        /* Halftone Comic Pattern Background */
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: #5c94fc; /* Mario Sky Blue */
-            background-image: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.2) 0%, transparent 60%);
-            -webkit-tap-highlight-color: transparent;
-            margin: 0;
-            overflow-x: hidden;
-        }
-
-        .font-mario {
-            font-family: 'Press Start 2P', cursive;
-            line-height: 1.5;
-        }
-
-        .mario-panel {
-            background: #fff;
-            border: 4px solid #000;
-            border-radius: 16px;
-            box-shadow: 8px 8px 0px rgba(0,0,0,0.2);
-            position: relative;
-        }
-        
-        .mario-panel-blue {
-            background: #0078d7;
-            color: white;
-            border: 4px solid #000;
-            border-radius: 16px;
-            box-shadow: inset -4px -4px 0px rgba(0,0,0,0.3), 6px 6px 0px rgba(0,0,0,0.2);
-        }
-
-        .btn-mario {
-            background: #e52521; /* Mario Red */
-            color: #fff;
-            font-weight: bold;
-            border: 4px solid #000;
-            border-radius: 8px;
-            text-transform: uppercase;
-            transition: all 0.1s;
-            box-shadow: 0 6px 0px #8b0000, 0 8px 6px rgba(0,0,0,0.3);
-        }
-        
-        .btn-mario:hover, .btn-mario:active {
-            transform: translateY(4px);
-            box-shadow: 0 2px 0px #8b0000, 0 4px 4px rgba(0,0,0,0.3);
-        }
-
-        .btn-mario:disabled {
-            background: #9ca3af;
-            box-shadow: 0 6px 0px #4b5563;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        #mario-stage {
-            background: linear-gradient(to bottom, #5c94fc 70%, #f8d8a0 70%);
-            border: 4px solid #000;
-            border-radius: 8px;
-            position: relative;
-            height: 250px;
-            overflow: hidden;
-        }
-        .mario-ground {
-            position: absolute;
-            bottom: 0;
-            width: 100%;
-            height: 30%;
-            background-color: #c84c0c; /* Brick color */
+            font-family: 'Outfit', sans-serif;
+            background-color: #070b14;
             background-image: 
-                linear-gradient(45deg, #000 25%, transparent 25%, transparent 75%, #000 75%, #000), 
-                linear-gradient(45deg, #000 25%, transparent 25%, transparent 75%, #000 75%, #000);
-            background-size: 20px 20px;
-            background-position: 0 0, 10px 10px;
-            border-top: 4px solid #000;
-        }
-        .mario-pipe {
-            position: absolute;
-            bottom: 30%;
-            right: 10px;
-            width: 60px;
-            height: 80px;
-            background: #00a800;
-            border: 4px solid #000;
-            border-radius: 4px 4px 0 0;
-            box-shadow: inset -10px 0 0 rgba(0,0,0,0.2);
-        }
-        .mario-pipe::before {
-            content: '';
-            position: absolute;
-            top: -10px;
-            left: -5px;
-            width: 70px;
-            height: 20px;
-            background: #00a800;
-            border: 4px solid #000;
-            border-radius: 4px;
-        }
-        #mario-player {
-            position: absolute;
-            bottom: 30%;
-            left: 5%;
-            font-size: 3rem;
-            transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
-            filter: drop-shadow(2px 2px 0px rgba(0,0,0,0.5));
-            z-index: 10;
+                radial-gradient(rgba(245, 158, 11, 0.12) 2px, transparent 2px),
+                radial-gradient(rgba(6, 182, 212, 0.08) 2px, #070b14 2px);
+            background-size: 32px 32px;
+            background-position: 0 0, 16px 16px;
+            color: #f3f4f6;
+            min-height: 100vh;
+            overflow-x: hidden;
+            user-select: none;
         }
 
-        #bowser-castle {
+        /* Bold Comic Panels */
+        .comic-panel {
+            background: linear-gradient(145deg, rgba(26, 35, 58, 0.95), rgba(15, 23, 42, 0.98));
+            border: 3px solid #f59e0b;
+            box-shadow: 6px 6px 0px rgba(239, 68, 68, 0.8), 0 0 25px rgba(245, 158, 11, 0.25);
+            border-radius: 1.25rem;
+        }
+
+        .comic-panel-cyan {
+            background: linear-gradient(145deg, rgba(14, 116, 144, 0.2), rgba(15, 23, 42, 0.98));
+            border: 3px solid #06b6d4;
+            box-shadow: 6px 6px 0px rgba(59, 130, 246, 0.8), 0 0 20px rgba(6, 182, 212, 0.3);
+            border-radius: 1.25rem;
+        }
+
+        .comic-panel-emerald {
+            background: linear-gradient(145deg, rgba(6, 95, 70, 0.25), rgba(15, 23, 42, 0.98));
+            border: 3px solid #10b981;
+            box-shadow: 6px 6px 0px rgba(16, 185, 129, 0.7), 0 0 20px rgba(16, 185, 129, 0.3);
+            border-radius: 1.25rem;
+        }
+
+        .comic-badge {
+            font-family: 'Bangers', cursive;
+            letter-spacing: 0.05em;
+        }
+
+        /* Padamkan text-shadow dari semua teks secara menyeluruh */
+        *, *::before, *::after {
+            text-shadow: none !important;
+        }
+
+        /* Football Pitch BG */
+        .pitch-bg {
+            background: repeating-linear-gradient(
+                90deg,
+                #047857,
+                #047857 40px,
+                #065f46 40px,
+                #065f46 80px
+            );
+        }
+
+        /* Dam Board */
+        .dam-board {
             display: grid;
             grid-template-columns: repeat(8, 1fr);
-            width: 100%;
-            max-width: 320px;
             aspect-ratio: 1;
-            border: 8px solid #4a0000;
-            margin: 0 auto;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
-            background: #2a2a2a;
+            border: 4px solid #f59e0b;
+            box-shadow: 0 0 20px rgba(245, 158, 11, 0.6);
         }
-        .bowser-cell {
-            width: 100%;
-            height: 100%;
-            border: 1px solid #1a1a1a;
+        .dam-cell-white { background-color: #f8fafc; }
+        .dam-cell-black { background-color: #1e1b4b; }
+
+        /* Speech Bubble Tail */
+        .speech-bubble {
+            position: relative;
+            background: #ffffff;
+            color: #0f172a;
+            border-radius: 1rem;
+            border: 3px solid #000;
         }
-        .bowser-dark { background-color: #8b0000; }
-        .bowser-light { background-color: #ff8c00; }
-        .star-piece {
-            width: 80%;
-            height: 80%;
-            margin: 10%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.8rem;
-            filter: drop-shadow(2px 4px 2px rgba(0,0,0,0.5));
-            transition: all 0.4s ease;
-            animation: bounce 1s infinite alternate;
+        .speech-bubble::after {
+            content: '';
+            position: absolute;
+            left: -12px;
+            top: 50%;
+            transform: translateY(-50%);
+            border-width: 8px 12px 8px 0;
+            border-style: solid;
+            border-color: transparent #ffffff transparent transparent;
         }
 
-        .mystery-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 12px;
-            justify-items: center;
-            padding: 10px;
+        /* Animations */
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 6px 6px 0px rgba(239, 68, 68, 0.9), 0 0 20px rgba(245, 158, 11, 0.5); }
+            50% { box-shadow: 8px 8px 0px rgba(6, 182, 212, 0.9), 0 0 35px rgba(245, 158, 11, 0.8); }
         }
-        .mystery-block {
-            width: 60px;
-            height: 60px;
-            background: #f8b800;
-            border: 4px solid #000;
-            box-shadow: inset -4px -4px 0px rgba(220,100,0,1), inset 4px 4px 0px rgba(255,255,200,1);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: transform 0.1s;
+        .pulse-comic { animation: pulseGlow 2.5s infinite; }
+
+        @keyframes bounceGoal {
+            0%, 100% { transform: scale(1) translateY(0); }
+            50% { transform: scale(1.15) translateY(-10px); }
+        }
+        .animate-goal { animation: bounceGoal 0.5s ease-in-out infinite; }
+
+        .jersey-card {
+            transition: all 0.25s ease;
+        }
+        .jersey-card:hover {
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: 0 0 15px rgba(245, 158, 11, 0.8);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #070b14; }
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(to bottom, #ef4444, #f59e0b, #06b6d4);
             border-radius: 4px;
-            font-family: 'Press Start 2P', cursive;
-            color: #b84000;
-        }
-        .mystery-block:active { transform: scale(0.9); }
-        .mystery-done {
-            background: #a05000;
-            box-shadow: inset -4px -4px 0px rgba(0,0,0,0.3);
-            color: #502800;
-            pointer-events: none;
-        }
-
-        @keyframes bounce {
-            0% { transform: translateY(0); }
-            100% { transform: translateY(-10px); }
-        }
-        @keyframes popIn {
-            0% { transform: scale(0.5) translateY(20px); opacity: 0; }
-            100% { transform: scale(1) translateY(0); opacity: 1; }
-        }
-        @keyframes floatUp {
-            0% { transform: translateY(0); opacity: 1; }
-            100% { transform: translateY(-50px); opacity: 0; }
-        }
-        .modal-pop { animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
-        .float-text { animation: floatUp 1s ease-out forwards; }
-
-        .screen { display: none; }
-        .screen.active { display: block; }
-
-        progress::-webkit-progress-bar { background-color: #000; border-radius: 4px; border: 2px solid #fff; }
-        progress::-webkit-progress-value { background-color: #00a800; border-radius: 2px; }
-
-        #fireworksCanvas {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            pointer-events: none;
-            z-index: 9999;
-            display: none;
         }
     </style>
 </head>
-<body class="text-gray-900 h-screen w-full flex justify-center items-start overflow-y-auto pb-10">
+<body class="min-h-screen flex flex-col justify-between text-gray-100">
 
-    <canvas id="fireworksCanvas"></canvas>
+    <header class="sticky top-0 z-40 bg-marvel-navy/95 backdrop-blur-md border-b-4 border-marvel-gold px-4 py-3 shadow-2xl">
+        <div class="max-w-6xl mx-auto flex items-center justify-between">
+            <!-- Brand Logo -->
+            <div class="flex items-center gap-3 cursor-pointer" onclick="goHome()">
+                <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-marvel-red via-marvel-gold to-marvel-cyan p-1 shadow-lg flex items-center justify-center transform hover:rotate-6 transition">
+                    <div class="w-full h-full bg-marvel-navy rounded-xl flex items-center justify-center">
+                        <i class="fa-solid fa-shield-halved text-marvel-gold text-2xl"></i>
+                    </div>
+                </div>
+                <div>
+                    <h1 class="comic-badge text-2xl sm:text-3xl text-transparent bg-clip-text bg-gradient-to-r from-marvel-red via-marvel-gold to-marvel-cyan tracking-widest">
+                        AVENGERS KUIZ
+                    </h1>
+                    <p class="text-[11px] text-emerald-400 font-extrabold tracking-widest uppercase">SIMPULAN BAHASA • EDISI WIRA</p>
+                </div>
+            </div>
 
-    <div class="w-full max-w-md min-h-screen flex flex-col p-4 relative z-10">
-        
-        <!-- Modal Maklum Balas -->
-        <div id="feedback-modal" class="fixed inset-0 bg-black bg-opacity-70 z-50 hidden flex-col items-center justify-center p-4">
-            <div class="mario-panel p-6 w-full max-w-sm text-center modal-pop border-8">
-                <div id="feedback-icon" class="text-6xl mb-4 drop-shadow-md"></div>
-                <h2 id="feedback-title" class="font-mario text-xl mb-4 text-red-600 leading-normal"></h2>
-                <p id="feedback-desc" class="text-lg text-gray-800 font-bold mb-6 bg-gray-100 p-3 rounded-lg border-2 border-gray-300"></p>
-                <button onclick="closeFeedback()" class="btn-mario w-full py-4 text-xl">Teruskan</button>
+            <!-- Header Action Controls -->
+            <div id="navControls" class="hidden flex items-center gap-2 sm:gap-3">
+                <div class="hidden sm:flex items-center gap-2 bg-marvel-dark border-2 border-marvel-gold/60 px-3 py-1.5 rounded-xl text-xs font-bold shadow-md">
+                    <span id="navAvatar" class="text-lg">🦸‍♂️</span>
+                    <span id="navUserName" class="text-marvel-gold">Pemain</span>
+                    <span class="text-gray-500">|</span>
+                    <span id="navUserClass" class="text-marvel-cyan">Kelas</span>
+                </div>
+
+                <!-- Nota Simpulan Bahasa Quick Button -->
+                <button onclick="openNotesModal()" title="Nota Simpulan Bahasa" class="px-3.5 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-500 text-marvel-navy font-black text-xs flex items-center gap-1.5 hover:brightness-110 transition shadow-md border border-white/40">
+                    <i class="fa-solid fa-book-open text-sm"></i>
+                    <span class="hidden md:inline">Nota Idiom</span>
+                </button>
+
+                <button onclick="openChecklistModal()" title="Senarai Semak" class="px-3.5 py-2 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 border border-emerald-400/60 text-white font-black text-xs flex items-center gap-1.5 hover:brightness-110 transition shadow-md">
+                    <i class="fa-solid fa-list-check"></i>
+                    <span class="hidden md:inline">Senarai Semak</span>
+                </button>
+
+                <button onclick="openLeaderboardModal()" title="Kedudukan" class="px-3 py-2 rounded-xl bg-gradient-to-r from-rose-600 to-marvel-red text-white font-bold text-xs flex items-center gap-1.5 hover:brightness-110 transition shadow-md">
+                    <i class="fa-solid fa-trophy text-marvel-gold"></i>
+                    <span class="hidden md:inline">Ranking</span>
+                </button>
             </div>
         </div>
+    </header>
 
-        
-        <div id="screen-login" class="screen active flex flex-col items-center justify-center min-h-[80vh]">
-            <div class="mario-panel p-8 w-full text-center mt-10">
-                <div class="text-7xl mb-4 animate-bounce">🍄</div>
-                <h1 class="font-mario text-2xl text-red-600 mb-2 leading-loose drop-shadow-md">KUIZ SUPER<br>JUARA</h1>
-                <p class="text-sm text-gray-700 mb-8 font-extrabold uppercase bg-yellow-300 inline-block px-3 py-1 border-2 border-black rounded">Misi Simpulan Bahasa</p>
+    <main class="flex-grow max-w-5xl w-full mx-auto p-4 flex flex-col justify-center">
+
+        <section id="screenLogin" class="w-full max-w-md mx-auto my-auto py-4">
+            <div class="comic-panel p-6 sm:p-8 text-center relative overflow-hidden pulse-comic">
                 
-                <div class="space-y-4 text-left">
+                <div class="w-20 h-20 mx-auto mb-3 bg-gradient-to-br from-marvel-red via-marvel-gold to-marvel-purple rounded-2xl p-1 shadow-2xl flex items-center justify-center transform -rotate-3">
+                    <div class="w-full h-full bg-marvel-navy rounded-xl flex items-center justify-center">
+                        <i class="fa-solid fa-mask text-4xl text-marvel-gold"></i>
+                    </div>
+                </div>
+
+                <h2 class="comic-badge text-3xl sm:text-4xl text-marvel-gold tracking-wider uppercase">
+                    DAFTAR WIRA MUDA
+                </h2>
+                <p class="text-xs sm:text-sm text-cyan-200 mt-1 mb-5 font-semibold">
+                    Sila masukkan nama, kelas &amp; pilih wira Avengers anda untuk bermula!
+                </p>
+
+                <form onsubmit="handleLogin(event)" class="space-y-4 text-left">
                     <div>
-                        <label class="block text-sm font-mario text-blue-800 mb-2 text-xs">Nama Pemain:</label>
-                        <input type="text" id="input-nama" class="w-full border-4 border-black rounded p-3 focus:outline-none bg-white text-lg font-bold shadow-[inset_0_4px_0_rgba(0,0,0,0.1)]" placeholder="Mario..." required>
+                        <label class="block text-xs font-black text-marvel-gold uppercase tracking-wider mb-1">
+                            <i class="fa-solid fa-user me-1 text-marvel-cyan"></i> Siapa nama awak?
+                        </label>
+                        <input type="text" id="inputName" required placeholder="Contoh: Ali bin Ahmad"
+                            class="w-full px-4 py-3 rounded-xl bg-marvel-navy border-2 border-marvel-gold/70 text-white placeholder-gray-400 focus:outline-none focus:border-marvel-cyan text-base font-semibold shadow-inner">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-black text-marvel-gold uppercase tracking-wider mb-1">
+                            <i class="fa-solid fa-school me-1 text-marvel-red"></i> Awak kelas mana?
+                        </label>
+                        <input type="text" id="inputClass" required placeholder="Contoh: 5 Cemerlang / 4 Bijak"
+                            class="w-full px-4 py-3 rounded-xl bg-marvel-navy border-2 border-marvel-gold/70 text-white placeholder-gray-400 focus:outline-none focus:border-marvel-cyan text-base font-semibold shadow-inner">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-black text-marvel-gold uppercase tracking-wider mb-2">
+                            <i class="fa-solid fa-mask me-1 text-marvel-cyan"></i> Pilih Wira Pilihan Anda:
+                        </label>
+                        <div class="grid grid-cols-4 gap-2" id="avatarSelector">
+                            <!-- Injected via JS -->
+                        </div>
+                    </div>
+
+                    <button type="submit" class="w-full mt-4 py-4 rounded-xl bg-gradient-to-r from-yellow-400 via-amber-400 to-yellow-500 text-slate-950 comic-badge text-2xl sm:text-3xl tracking-wider uppercase hover:brightness-110 active:scale-[0.98] transition shadow-2xl flex items-center justify-center gap-2 border-2 border-white font-black">
+                        <span>Mula Cabaran Wira</span>
+                        <i class="fa-solid fa-rocket text-xl text-slate-950"></i>
+                    </button>
+                </form>
+            </div>
+        </section>
+
+        <section id="screenDashboard" class="hidden space-y-5 my-auto py-4">
+            
+            <!-- Incentive Reward Banner -->
+            <div class="comic-panel-cyan p-4 flex items-center justify-between gap-4 relative overflow-hidden">
+                <div class="flex items-center gap-3 z-10">
+                    <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-marvel-gold to-amber-600 text-marvel-navy flex items-center justify-center text-3xl font-bold flex-shrink-0 shadow-lg border-2 border-white">
+                        🎁
                     </div>
                     <div>
-                        <label class="block text-sm font-mario text-blue-800 mb-2 text-xs">Kelas:</label>
-                        <input type="text" id="input-kelas" class="w-full border-4 border-black rounded p-3 focus:outline-none bg-white text-lg font-bold shadow-[inset_0_4px_0_rgba(0,0,0,0.1)]" placeholder="1 Cendawan..." required>
+                        <h4 class="comic-badge text-marvel-gold text-lg sm:text-xl tracking-wide uppercase">GANJARAN KHAS WIRA!</h4>
+                        <p class="text-xs sm:text-sm text-gray-100 font-semibold">
+                            Murid yang mendapat <strong class="text-emerald-300 underline font-extrabold"> markah 90% ke atas (9/10+)</strong> berpeluang menerima <strong>Hadiah Menarik</strong> daripada guru!
+                        </p>
                     </div>
-                    <button onclick="mulaLogMasuk()" class="btn-mario w-full py-4 text-xl mt-6">Mula Pengembaraan</button>
-                </div>
-            </div>
-        </div>
-
-        <div id="screen-menu" class="screen">
-            <div class="mario-panel-blue p-4 mb-4 flex justify-between items-center">
-                <div class="text-left">
-                    <h2 class="font-mario text-sm" id="display-nama">Pemain</h2>
-                    <p class="text-xs font-bold text-yellow-300 mt-1" id="display-kelas">Kelas</p>
-                </div>
-                <div class="text-right bg-black bg-opacity-30 p-2 rounded border-2 border-white">
-                    <p class="font-mario text-[10px] text-yellow-300">SKOR</p>
-                    <p class="font-mario text-lg" id="display-total-score">000</p>
                 </div>
             </div>
 
-            <div class="bg-yellow-100 border-4 border-yellow-500 p-3 rounded-lg mb-6 shadow-[4px_4px_0_rgba(0,0,0,0.1)] flex items-center">
-                <span class="text-3xl mr-3">⭐</span>
-                <p class="text-xs font-bold text-yellow-800">Kumpul 90 markah ke atas untuk memenangi hadiah dan melihat bunga api!</p>
+            <!-- Title Header -->
+            <div class="text-center space-y-1">
+                <h2 class="comic-badge text-3xl sm:text-5xl text-transparent bg-clip-text bg-gradient-to-r from-marvel-gold via-pink-400 to-marvel-cyan tracking-widest">
+                    PILIH ARAS PERMAINAN
+                </h2>
+                <p class="text-xs sm:text-sm text-cyan-200 font-bold">
+                    Markah kelayakan sekurang-kurangnya <strong class="text-marvel-gold font-extrabold">8/10 (80%)</strong> untuk membuka aras seterusnya!
+                </p>
             </div>
 
-            <div class="space-y-4">
-                <button onclick="bukaAras(1)" class="w-full mario-panel p-4 flex items-center justify-between hover:bg-gray-50 transition relative overflow-hidden group">
-                    <div class="flex items-center">
-                        <div class="text-4xl mr-4 group-hover:animate-bounce">🏃‍♂️</div>
-                        <div class="text-left">
-                            <h3 class="font-mario text-xs text-green-700 mb-1">Dunia 1</h3>
-                            <p class="text-sm font-bold text-gray-800">Laluan Cendawan (Perlu 8/10)</p>
+            <!-- Grid 3 Level Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                
+                <!-- ARAS 1: MEMBURU GOL -->
+                <div id="cardAras1" class="comic-panel-emerald p-5 flex flex-col justify-between relative overflow-hidden group">
+                    <div>
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="px-3 py-1 rounded-full bg-emerald-500/30 text-emerald-300 font-black text-xs uppercase border border-emerald-400">
+                                Aras Rendah
+                            </span>
+                            <span class="text-xs text-marvel-gold font-extrabold" id="scoreBadge1">Markah: -</span>
+                        </div>
+                        
+                        <div class="flex items-center gap-3 mb-3">
+                            <div class="flex -space-x-3">
+                                <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-emerald-600 to-green-900 p-1 shadow-lg border-2 border-emerald-300 flex items-center justify-center">
+                                    <svg viewBox="0 0 64 64" class="w-full h-full"><circle cx="32" cy="32" r="28" fill="#10b981"/><path d="M14 18c6-8 28-8 36 0-3 10-8 12-18 12S17 28 14 18z" fill="#064e3b"/><circle cx="24" cy="32" r="3" fill="#ffffff"/><circle cx="40" cy="32" r="3" fill="#ffffff"/><circle cx="24" cy="32" r="1.5" fill="#000"/><circle cx="40" cy="32" r="1.5" fill="#000"/><rect x="22" y="40" width="20" height="5" rx="2" fill="#ffffff"/></svg>
+                                </div>
+                                <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-900 p-1 shadow-lg border-2 border-cyan-300 flex items-center justify-center">
+                                    <svg viewBox="0 0 64 64" class="w-full h-full"><circle cx="32" cy="32" r="28" fill="#2563eb"/><path d="M12 24c0-10 8-16 20-16s20 6 20 16v12H12V24z" fill="#1e40af"/><polygon points="32,12 34,16 39,16 35,19 37,24 32,21 27,24 29,19 25,16 30,16" fill="#ffffff"/><rect x="20" y="26" width="8" height="4" fill="#ffffff"/><rect x="36" y="26" width="8" height="4" fill="#ffffff"/></svg>
+                                </div>
+                            </div>
+                            <div>
+                                <span class="text-[10px] font-black tracking-widest text-emerald-400 uppercase">Hulk &amp; Captain America</span>
+                                <h3 class="comic-badge text-2xl text-emerald-300">Memburu Gol ⚽</h3>
+                            </div>
+                        </div>
+                        <p class="text-xs text-gray-200 leading-relaxed mb-4 font-semibold">
+                            Gelecek bola di padang bersama wira! Setiap jawapan betul menggerakkan bola ke gawang gol beserta bunyi sorakan!
+                        </p>
+                    </div>
+                    <button onclick="startLevel(1)" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:brightness-110 text-white comic-badge text-xl uppercase tracking-wider transition shadow-lg flex items-center justify-center gap-2 border-2 border-emerald-300/60">
+                        <i class="fa-solid fa-play"></i>
+                        <span>Main Aras 1</span>
+                    </button>
+                </div>
+
+                <!-- ARAS 2: DAM HAJI -->
+                <div id="cardAras2" class="comic-panel-cyan p-5 flex flex-col justify-between opacity-75 relative overflow-hidden group">
+                    <div>
+                        <div class="flex items-center justify-between mb-3">
+                            <span id="tagAras2" class="px-3 py-1 rounded-full bg-gray-700 text-gray-400 font-bold text-xs uppercase">
+                                Terkunci
+                            </span>
+                            <span class="text-xs text-marvel-gold font-extrabold" id="scoreBadge2">Markah: -</span>
+                        </div>
+                        <div class="flex items-center gap-3 mb-3">
+                            <div class="flex -space-x-3">
+                                <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-cyan-600 to-blue-900 p-1 shadow-lg border-2 border-cyan-300 flex items-center justify-center">
+                                    <svg viewBox="0 0 64 64" class="w-full h-full"><rect x="16" y="10" width="32" height="24" rx="4" fill="#94a3b8" stroke="#38bdf8" stroke-width="2"/><path d="M10 16l8 6M54 16l-8 6" stroke="#fbbf24" stroke-width="3"/><circle cx="24" cy="22" r="3" fill="#ffffff"/><circle cx="40" cy="22" r="3" fill="#ffffff"/><circle cx="24" cy="22" r="1.5" fill="#0284c7"/><circle cx="40" cy="22" r="1.5" fill="#0284c7"/><path d="M22 30c5 3 15 3 20 0" stroke="#fbbf24" stroke-width="2" fill="none"/></svg>
+                                </div>
+                                <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-purple-800 to-slate-950 p-1 shadow-lg border-2 border-purple-400 flex items-center justify-center">
+                                    <svg viewBox="0 0 64 64" class="w-full h-full"><path d="M16 12l8 12h16l8-12v16l-8 20H24L16 28z" fill="#0f172a" stroke="#c084fc" stroke-width="2"/><polygon points="16,12 22,8 24,18" fill="#c084fc"/><polygon points="48,12 42,8 40,18" fill="#c084fc"/><polygon points="20,28 28,30 24,34" fill="#c084fc"/><polygon points="44,28 36,30 40,34" fill="#c084fc"/></svg>
+                                </div>
+                            </div>
+                            <div>
+                                <span class="text-[10px] font-black tracking-widest text-cyan-400 uppercase">Thor &amp; Black Panther</span>
+                                <h3 class="comic-badge text-2xl text-cyan-300">Dam Haji 🏁</h3>
+                            </div>
+                        </div>
+                        <p class="text-xs text-gray-200 leading-relaxed mb-4 font-semibold">
+                            Gerakkan buah Dam Haji di papan kotak hitam putih bagi setiap jawapan yang tepat!
+                        </p>
+                    </div>
+                    <button id="btnLevel2" disabled onclick="startLevel(2)" class="w-full py-3.5 rounded-xl bg-gray-700 text-gray-400 comic-badge text-xl uppercase tracking-wide cursor-not-allowed transition flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-lock" id="iconLevel2"></i>
+                        <span id="textLevel2">Perlu 8/10 Aras 1</span>
+                    </button>
+                </div>
+
+                <!-- ARAS 3: KAD JERSI NOMBOR -->
+                <div id="cardAras3" class="comic-panel p-5 flex flex-col justify-between opacity-75 relative overflow-hidden group">
+                    <div>
+                        <div class="flex items-center justify-between mb-3">
+                            <span id="tagAras3" class="px-3 py-1 rounded-full bg-gray-700 text-gray-400 font-bold text-xs uppercase">
+                                Terkunci
+                            </span>
+                            <span class="text-xs text-marvel-gold font-extrabold" id="scoreBadge3">Markah: -</span>
+                        </div>
+                        <div class="flex items-center gap-3 mb-3">
+                            <div class="flex -space-x-3">
+                                <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-red-600 to-amber-700 p-1 shadow-lg border-2 border-amber-300 flex items-center justify-center">
+                                    <svg viewBox="0 0 64 64" class="w-full h-full"><path d="M16 12h32l6 20-10 24H20L10 32z" fill="#dc2626" stroke="#fbbf24" stroke-width="2"/><path d="M22 22h20l4 14-8 12H26l-8-12z" fill="#fbbf24"/><rect x="22" y="28" width="7" height="3" fill="#06b6d4"/><rect x="35" y="28" width="7" height="3" fill="#06b6d4"/></svg>
+                                </div>
+                                <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-red-600 to-blue-900 p-1 shadow-lg border-2 border-red-400 flex items-center justify-center">
+                                    <svg viewBox="0 0 64 64" class="w-full h-full"><path d="M16 12c10-8 22-8 32 0 8 16 8 32 0 44-10 6-22 6-32 0-8-12-8-28 0-44z" fill="#dc2626" stroke="#1e293b" stroke-width="2"/><path d="M20 26c6-4 10 2 10 8-6 2-10-4-10-8zM44 26c-6-4-10 2-10 8 6 2 10-4 10-8z" fill="#ffffff" stroke="#000000" stroke-width="2"/></svg>
+                                </div>
+                            </div>
+                            <div>
+                                <span class="text-[10px] font-black tracking-widest text-amber-300 uppercase">Iron Man &amp; Spider-Man</span>
+                                <h3 class="comic-badge text-2xl text-amber-300">Kad Jersi 🎽</h3>
+                            </div>
+                        </div>
+                        <p class="text-xs text-gray-200 leading-relaxed mb-4 font-semibold">
+                            Pilih 10 Kad Jersi bernombor dan taip jawapan yang tepat!
+                        </p>
+                    </div>
+                    <button id="btnLevel3" disabled onclick="startLevel(3)" class="w-full py-3.5 rounded-xl bg-gray-700 text-gray-400 comic-badge text-xl uppercase tracking-wide cursor-not-allowed transition flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-lock" id="iconLevel3"></i>
+                        <span id="textLevel3">Perlu 8/10 Aras 2</span>
+                    </button>
+                </div>
+
+            </div>
+
+            <!-- Quick Access Bar for Notes and Checklist -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div class="comic-panel p-4 flex items-center justify-between border-2 border-amber-400">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-amber-500/20 text-marvel-gold flex items-center justify-center text-2xl font-bold border border-amber-400">
+                            📖
+                        </div>
+                        <div>
+                            <h4 class="font-extrabold text-sm text-white">Nota &amp; Rujukan Simpulan Bahasa</h4>
+                            <p class="text-xs text-gray-300">Ulang kaji 30 simpulan bahasa beserta contoh.</p>
                         </div>
                     </div>
-                    <div class="font-mario text-sm bg-gray-200 p-2 border-2 border-black rounded" id="score-aras1">0/10</div>
-                </button>
+                    <button onclick="openNotesModal()" class="px-3.5 py-2 rounded-xl bg-amber-500 text-marvel-navy font-black text-xs uppercase hover:brightness-110">
+                        Buka Nota
+                    </button>
+                </div>
 
-                <button id="btn-aras2" onclick="bukaAras(2)" class="w-full mario-panel p-4 flex items-center justify-between transition opacity-50 bg-gray-300">
-                    <div class="flex items-center">
-                        <div class="text-4xl mr-4 relative">
-                            🏰
-                            <div id="lock-aras2" class="absolute inset-0 flex items-center justify-center text-black text-2xl drop-shadow-md"><i class="fas fa-lock"></i></div>
+                <div class="comic-panel-cyan p-4 flex items-center justify-between border-2 border-cyan-400">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-cyan-500/20 text-marvel-cyan flex items-center justify-center text-2xl font-bold border border-cyan-400">
+                            ✅
                         </div>
-                        <div class="text-left">
-                            <h3 class="font-mario text-xs text-red-700 mb-1">Dunia 2</h3>
-                            <p class="text-sm font-bold text-gray-800">Istana Bowser</p>
-                        </div>
-                    </div>
-                    <div class="font-mario text-sm bg-gray-200 p-2 border-2 border-black rounded" id="score-aras2">0/10</div>
-                </button>
-
-                <button id="btn-aras3" onclick="bukaAras(3)" class="w-full mario-panel p-4 flex items-center justify-between transition opacity-50 bg-gray-300">
-                    <div class="flex items-center">
-                        <div class="text-4xl mr-4 relative">
-                            ❓
-                            <div id="lock-aras3" class="absolute inset-0 flex items-center justify-center text-black text-2xl drop-shadow-md"><i class="fas fa-lock"></i></div>
-                        </div>
-                        <div class="text-left">
-                            <h3 class="font-mario text-xs text-blue-700 mb-1">Dunia 3</h3>
-                            <p class="text-sm font-bold text-gray-800">Blok Misteri</p>
+                        <div>
+                            <h4 class="font-extrabold text-sm text-white">Senarai Semak Penguasaan</h4>
+                            <p class="text-xs text-gray-300">Tanda simpulan bahasa yang telah anda fahami.</p>
                         </div>
                     </div>
-                    <div class="font-mario text-sm bg-gray-200 p-2 border-2 border-black rounded" id="score-aras3">0/10</div>
-                </button>
+                    <button onclick="openChecklistModal()" class="px-3.5 py-2 rounded-xl bg-marvel-cyan text-marvel-navy font-black text-xs uppercase hover:brightness-110">
+                        Buka Semak
+                    </button>
+                </div>
             </div>
+        </section>
 
-            <div class="grid grid-cols-2 gap-4 mt-6">
-                <button onclick="bukaSenaraiSemak()" class="mario-panel p-4 flex flex-col items-center justify-center hover:bg-gray-100 active:bg-gray-200">
-                    <i class="fas fa-list-check text-4xl text-purple-600 mb-3"></i>
-                    <span class="font-mario text-[10px] text-gray-800 text-center leading-normal">Buku<br>Nota</span>
-                </button>
-                <button onclick="bukaRanking()" class="mario-panel p-4 flex flex-col items-center justify-center hover:bg-gray-100 active:bg-gray-200">
-                    <i class="fas fa-trophy text-4xl text-yellow-500 mb-3"></i>
-                    <span class="font-mario text-[10px] text-gray-800 text-center leading-normal">Papan<br>Juara</span>
-                </button>
-            </div>
-        </div>
-
-        <div id="screen-aras1" class="screen">
-            <div class="flex items-center justify-between mb-4 bg-white p-2 border-4 border-black rounded-lg shadow-md">
-                <button onclick="kembaliMenu()" class="text-black hover:text-red-600 text-2xl px-2"><i class="fas fa-arrow-left"></i></button>
-                <h2 class="font-mario text-xs text-green-700">Dunia 1</h2>
-                <div class="bg-black text-white font-mario text-xs px-2 py-1 rounded">Q:<span id="l1-qnum">1</span>/10</div>
-            </div>
-
-            <div class="p-2 mb-4 bg-white border-4 border-black rounded-xl">
-                <div id="mario-stage" class="w-full">
-                    <div class="mario-ground"></div>
-                    <div class="mario-pipe"></div>
-                    <div id="mario-overlay" class="absolute inset-0 bg-black bg-opacity-40 z-20 hidden items-center justify-center flex">
-                        <h1 class="font-mario text-4xl text-yellow-300 drop-shadow-[0_4px_0_rgba(0,0,0,1)] hidden" id="mario-text">YAHOO!</h1>
+        <section id="screenGame" class="hidden space-y-4 my-auto py-2">
+            <!-- Header Status Bar -->
+            <div class="comic-panel p-3 sm:p-4 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <button onclick="confirmExitLevel()" class="w-9 h-9 rounded-xl bg-marvel-navy border-2 border-gray-600 text-gray-300 flex items-center justify-center hover:bg-marvel-red hover:text-white transition">
+                        <i class="fa-solid fa-arrow-left"></i>
+                    </button>
+                    <div>
+                        <span id="gameLevelTitle" class="comic-badge text-xl text-marvel-gold">Aras 1: Memburu Gol ⚽</span>
+                        <div class="text-xs text-gray-300 font-bold">Soalan <span id="gameCurrentNum" class="text-white font-extrabold">1</span> daripada <span id="gameTotalNum">10</span></div>
                     </div>
-                    <div id="mario-player">🚶‍♂️</div>
                 </div>
-            </div>
 
-            <div class="mario-panel p-5">
-                <h3 id="l1-question" class="text-lg font-extrabold text-gray-800 mb-5 text-center leading-snug"></h3>
-                <div id="l1-options" class="space-y-3">
-                    <!-- Options injected via JS -->
-                </div>
-            </div>
-        </div>
-
-        <div id="screen-aras2" class="screen">
-            <div class="flex items-center justify-between mb-4 bg-white p-2 border-4 border-black rounded-lg shadow-md">
-                <button onclick="kembaliMenu()" class="text-black hover:text-red-600 text-2xl px-2"><i class="fas fa-arrow-left"></i></button>
-                <h2 class="font-mario text-xs text-red-700">Dunia 2</h2>
-                <div class="bg-black text-white font-mario text-xs px-2 py-1 rounded">Q:<span id="l2-qnum">1</span>/10</div>
-            </div>
-
-            <div class="mario-panel p-4 mb-4 flex justify-center bg-gray-900 border-8 border-gray-600">
-                <div id="bowser-castle">
-                    <!-- Generated via JS -->
-                </div>
-            </div>
-
-            <div class="mario-panel p-5">
-                <h3 id="l2-question" class="text-lg font-extrabold text-gray-800 mb-5 text-center leading-snug"></h3>
-                <div id="l2-options" class="space-y-3">
-                    <!-- Options injected via JS -->
-                </div>
-            </div>
-        </div>
-
-        <div id="screen-aras3" class="screen">
-            <div class="flex items-center justify-between mb-4 bg-white p-2 border-4 border-black rounded-lg shadow-md">
-                <button onclick="kembaliMenu()" class="text-black hover:text-red-600 text-2xl px-2"><i class="fas fa-arrow-left"></i></button>
-                <h2 class="font-mario text-xs text-blue-700">Dunia 3</h2>
-                <div class="bg-black text-white font-mario text-xs px-2 py-1 rounded">SKOR:<span id="l3-score-display">0</span></div>
-            </div>
-
-            <div class="mario-panel p-4 mb-4 bg-sky-200">
-                <p class="text-sm font-bold text-center text-blue-900 mb-4 bg-white p-2 border-2 border-black rounded">Pecahkan blok misteri dan taip jawapan yang betul!</p>
-                <div class="mystery-grid" id="mystery-grid">
-                    <!-- Generated via JS -->
-                </div>
-            </div>
-
-            <!-- Modal Soalan L3 -->
-            <div id="modal-l3" class="fixed inset-0 bg-black bg-opacity-80 z-40 hidden flex-col items-center justify-center p-4">
-                <div class="mario-panel p-6 w-full max-w-md modal-pop border-8">
-                    <div class="flex justify-between items-center mb-4 border-b-4 border-gray-200 pb-2">
-                        <h3 class="font-mario text-sm text-yellow-600">BLOK <span id="l3-current-jersey"></span></h3>
-                        <button onclick="tutupModalL3()" class="text-red-600 font-black text-2xl hover:scale-110"><i class="fas fa-times"></i></button>
+                <div class="flex items-center gap-3">
+                    <div class="w-24 sm:w-36 bg-gray-900 h-3.5 rounded-full overflow-hidden border-2 border-gray-700">
+                        <div id="gameProgressBar" class="bg-gradient-to-r from-emerald-400 via-marvel-gold to-marvel-cyan h-full w-0 transition-all duration-300"></div>
                     </div>
-                    <p id="l3-question-text" class="text-xl font-extrabold text-gray-900 mb-6 text-center leading-tight"></p>
-                    <input type="text" id="l3-answer-input" class="w-full border-4 border-black rounded-lg p-4 focus:outline-none bg-yellow-50 text-xl mb-6 text-center font-bold shadow-[inset_0_4px_0_rgba(0,0,0,0.1)]" placeholder="Taip jawapan...">
-                    <button onclick="semakJawapanL3()" class="btn-mario w-full py-4 text-xl">Hantar</button>
+                    <div class="text-right">
+                        <span class="text-[10px] text-gray-400 uppercase font-black block">Markah</span>
+                        <span id="gameScoreText" class="comic-badge text-xl text-emerald-400">0 / 10</span>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div id="screen-checklist" class="screen">
-            <div class="flex items-center justify-between mb-4 bg-white p-2 border-4 border-black rounded-lg shadow-md">
-                <button onclick="kembaliMenu()" class="text-black hover:text-red-600 text-2xl px-2"><i class="fas fa-arrow-left"></i></button>
-                <h2 class="font-mario text-[10px] text-purple-700">Buku Nota</h2>
-                <div class="w-8"></div>
+            <!-- LEVEL 1 VISUAL MINIGAME: SOCCER PITCH -->
+            <div id="minigameLevel1" class="comic-panel-emerald p-3.5 overflow-hidden">
+                <div class="pitch-bg rounded-xl h-24 relative flex items-center justify-between px-4 border-2 border-emerald-300/50 shadow-inner">
+                    <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-14 h-14 border-2 border-white/30 rounded-full"></div>
+                    <div class="absolute left-1/2 top-0 bottom-0 w-0.5 bg-white/30"></div>
+                    
+                    <div class="z-10 flex flex-col items-center">
+                        <span class="text-xl">🏃</span>
+                        <span class="text-[9px] bg-black/80 px-1.5 py-0.5 rounded text-white font-bold">MULA</span>
+                    </div>
+
+                    <div class="absolute left-8 right-12 h-1 bg-white/30 top-1/2 -translate-y-1/2">
+                        <div id="soccerBall" class="absolute -top-3 left-0 transition-all duration-500 text-2xl filter drop-shadow">
+                            ⚽
+                        </div>
+                    </div>
+
+                    <div class="z-10 flex flex-col items-center">
+                        <div class="w-7 h-10 border-2 border-l-0 border-white bg-white/20 rounded-r flex items-center justify-center text-xs">
+                            🥅
+                        </div>
+                        <span class="text-[9px] bg-emerald-950 px-1.5 py-0.5 rounded text-emerald-300 font-bold mt-0.5">GOL</span>
+                    </div>
+                </div>
             </div>
 
-            <div class="mario-panel p-4 mb-4 sticky top-4 z-10">
-                <p class="font-mario text-[10px] text-gray-800 mb-3 text-center leading-loose">Koleksi 30 Simpulan Bahasa</p>
+            <!-- LEVEL 2 VISUAL MINIGAME: DAM HAJI BOARD -->
+            <div id="minigameLevel2" class="hidden comic-panel-cyan p-4">
                 <div class="flex items-center justify-between mb-2">
-                    <span class="font-mario text-[8px] text-gray-600">KEMAJUAN</span>
-                    <span class="font-mario text-[8px] text-green-600" id="checklist-progress-text">0/30</span>
+                    <span class="text-xs text-cyan-300 font-extrabold"><i class="fa-solid fa-chess-board me-1"></i> PAPAN DAM HAJI AVENGERS</span>
+                    <span id="damStatusText" class="comic-badge text-marvel-gold">Langkah: 0/10</span>
                 </div>
-                <progress id="checklist-progress" value="0" max="30" class="w-full h-4"></progress>
-            </div>
-
-            <div class="mario-panel p-2 h-[55vh] overflow-y-auto bg-gray-100">
-                <ul id="checklist-container" class="space-y-2 p-2">
+                <div class="max-w-[260px] mx-auto dam-board rounded-xl relative overflow-hidden" id="damBoardGrid">
                     <!-- Injected via JS -->
-                </ul>
+                </div>
             </div>
+
+            <!-- LEVEL 3 VISUAL MINIGAME: KAD JERSI NOMBOR -->
+            <div id="minigameLevel3" class="hidden comic-panel p-4">
+                <div class="text-center mb-2">
+                    <span class="comic-badge text-amber-300 text-sm tracking-wider">
+                        <i class="fa-solid fa-shirt me-1"></i> PILIH KAD JERSI NOMBOR SECARA RAWAK
+                    </span>
+                </div>
+                <div class="grid grid-cols-5 sm:grid-cols-10 gap-1.5" id="jerseyCardsGrid">
+                    <!-- Injected via JS -->
+                </div>
+            </div>
+
+            <!-- QUESTION CARD WITH ACTIVE AVENGERS COMPANION -->
+            <div class="comic-panel p-5 sm:p-6 relative shadow-2xl">
+                <!-- Companion Speech Bubble Header -->
+                <div class="flex items-center gap-3 mb-4 bg-marvel-dark/80 p-3 rounded-2xl border-2 border-marvel-gold/60">
+                    <div id="heroCompanionAvatar" class="w-12 h-12 flex-shrink-0 bg-marvel-navy rounded-xl p-1 border-2 border-marvel-cyan flex items-center justify-center">
+                        <!-- Dynamic SVG Hero avatar -->
+                    </div>
+                    <div class="speech-bubble px-3 py-1.5 text-xs font-bold text-gray-900 flex-grow">
+                        <span id="heroCompanionName" class="font-extrabold text-marvel-crimson uppercase block text-[10px]">CAPTAIN AMERICA SAYS:</span>
+                        <span id="heroCompanionQuote">"Fahami maksud simpulan bahasa di bawah dengan teliti!"</span>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <span class="inline-block px-3 py-1 rounded-full bg-gradient-to-r from-marvel-gold via-amber-500 to-rose-500 text-marvel-navy text-xs font-black uppercase mb-2 shadow">
+                        Soalan Kuiz
+                    </span>
+                    <h3 id="questionText" class="text-lg sm:text-2xl font-black text-white leading-snug">
+                        Apakah maksud simpulan bahasa bagi "Ada bakat"?
+                    </h3>
+                </div>
+
+                <!-- Multiple Choice Options (For Level 1 & 2) -->
+                <div id="containerMultipleChoice" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <!-- Injected via JS -->
+                </div>
+
+                <!-- Text Input Answer (For Level 3) -->
+                <div id="containerTextInput" class="hidden space-y-3">
+                    <div class="p-3 bg-marvel-navy rounded-xl border border-marvel-gold/60 text-xs text-amber-300 font-semibold">
+                        <i class="fa-solid fa-lightbulb text-marvel-gold me-1"></i> Petunjuk: <span id="hintText">Petunjuk soalan akan dipaparkan di sini.</span>
+                    </div>
+                    <div class="flex gap-2">
+                        <input type="text" id="inputAnswerText" placeholder="Taip jawapan simpulan bahasa di sini..." 
+                            class="flex-grow px-4 py-3 rounded-xl bg-marvel-navy border-2 border-marvel-gold text-white placeholder-gray-400 focus:outline-none focus:border-marvel-cyan text-base font-bold shadow-inner">
+                        <button onclick="submitTextAnswer()" class="px-6 py-3 rounded-xl bg-gradient-to-r from-marvel-gold via-amber-500 to-rose-500 text-marvel-navy comic-badge text-xl hover:brightness-110 active:scale-95 transition shadow-lg border-2 border-white">
+                            Hantar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="screenResult" class="hidden space-y-6 max-w-lg mx-auto my-auto py-6">
+            <div class="comic-panel p-6 sm:p-8 text-center relative shadow-2xl">
+                <div id="resultIcon" class="w-24 h-24 mx-auto mb-4 rounded-3xl bg-gradient-to-tr from-marvel-red via-marvel-gold to-marvel-cyan text-marvel-navy flex items-center justify-center text-5xl font-black shadow-2xl pulse-comic border-2 border-white">
+                    🏆
+                </div>
+
+                <h2 id="resultTitle" class="comic-badge text-4xl text-marvel-gold tracking-wide uppercase">
+                    TAHNIAH, WIRA!
+                </h2>
+                <p id="resultSubtitle" class="text-sm text-cyan-200 mt-1 mb-5 font-bold">Anda telah menyelesaikan kuiz ini.</p>
+
+                <!-- Score Board -->
+                <div class="bg-marvel-navy p-4 rounded-2xl border-2 border-marvel-gold mb-5 flex justify-around items-center shadow-inner">
+                    <div>
+                        <span class="text-xs text-marvel-gold block font-black uppercase tracking-wider">MARKAH AKHIR</span>
+                        <span id="resultScore" class="comic-badge text-4xl text-white">8/10</span>
+                    </div>
+                    <div class="h-10 w-0.5 bg-marvel-gold/50"></div>
+                    <div>
+                        <span class="text-xs text-emerald-400 block font-black uppercase tracking-wider">PERATUSAN</span>
+                        <span id="resultPercent" class="comic-badge text-4xl text-emerald-400">80%</span>
+                    </div>
+                </div>
+
+                <!-- Status Badge -->
+                <div id="resultStatusBox" class="p-4 rounded-2xl mb-5 bg-emerald-500/20 border-2 border-emerald-400 text-emerald-300 font-extrabold text-sm shadow">
+                    ✅ KELAYAKAN DICAPAI! Aras seterusnya telah dibuka.
+                </div>
+
+                <!-- Reward Banner (scored >= 90%) -->
+                <div id="resultRewardBanner" class="hidden comic-panel p-4 text-center mb-5 border-2 border-marvel-gold bg-marvel-gold/20">
+                    <div class="text-3xl mb-1 animate-bounce">🎁 🎉</div>
+                    <h4 class="comic-badge text-marvel-gold text-xl uppercase">TAHNIAH! ANDA LAYAK MENERIMA HADIAH!</h4>
+                    <p class="text-xs text-gray-100 font-bold mt-0.5">Sila tunjukkan skrin markah ini kepada guru anda untuk menuntut hadiah!</p>
+                </div>
+
+                <div class="flex flex-col sm:flex-row gap-3">
+                    <button onclick="goHome()" class="flex-1 py-3 rounded-xl bg-gray-800 hover:bg-gray-700 text-gray-200 comic-badge text-xl uppercase transition shadow-md border-2 border-gray-600">
+                        <i class="fa-solid fa-house me-1"></i> Menu Utama
+                    </button>
+                    <button id="btnResultNext" onclick="proceedNextLevel()" class="flex-1 py-3 rounded-xl bg-gradient-to-r from-marvel-red via-marvel-gold to-emerald-500 text-marvel-navy comic-badge text-xl uppercase hover:brightness-110 transition shadow-xl border-2 border-white">
+                        Aras Seterusnya <i class="fa-solid fa-arrow-right ms-1"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FEEDBACK MODAL -->
+    <div id="modalFeedback" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 hidden">
+        <div class="comic-panel max-w-md w-full p-6 text-center relative shadow-2xl">
+            <div id="feedbackIconBox" class="w-16 h-16 mx-auto mb-2 rounded-2xl bg-emerald-500/20 text-emerald-400 border-2 border-emerald-400 flex items-center justify-center text-3xl shadow-lg">
+                <i class="fa-solid fa-check"></i>
+            </div>
+
+            <!-- Marvel High Cheer Praise Animation Title -->
+            <h3 id="feedbackPraise" class="comic-badge text-3xl text-marvel-gold tracking-wide uppercase mb-1">
+                ANDA HEBAT!
+            </h3>
+
+            <p id="feedbackStatusText" class="text-xs font-black text-emerald-400 uppercase tracking-widest mb-3">
+                Jawapan Anda Sangat Tepat!
+            </p>
+
+            <div class="bg-marvel-navy p-4 rounded-2xl border-2 border-marvel-gold text-left mb-4 shadow-inner">
+                <div class="text-xs text-marvel-gold font-black uppercase mb-1 flex items-center gap-1.5">
+                    <i class="fa-solid fa-book-open text-marvel-cyan"></i> Maksud Simpulan Bahasa:
+                </div>
+                <div id="feedbackIdiomName" class="font-extrabold text-lg text-white mb-1">Ada bakat</div>
+                <p id="feedbackIdiomMeaning" class="text-xs text-gray-200 leading-relaxed font-semibold">
+                    Mempunyai kebolehan atau keupayaan semula jadi dalam sesuatu bidang.
+                </p>
+            </div>
+
+            <button onclick="closeFeedbackModal()" class="w-full py-3 rounded-xl bg-gradient-to-r from-marvel-gold via-amber-500 to-rose-500 text-marvel-navy comic-badge text-xl uppercase hover:brightness-110 transition shadow-xl border-2 border-white">
+                Teruskan Soalan <i class="fa-solid fa-forward ms-1"></i>
+            </button>
         </div>
+    </div>
 
-        <div id="screen-ranking" class="screen">
-            <div class="flex items-center justify-between mb-4 bg-white p-2 border-4 border-black rounded-lg shadow-md">
-                <button onclick="kembaliMenu()" class="text-black hover:text-red-600 text-2xl px-2"><i class="fas fa-arrow-left"></i></button>
-                <h2 class="font-mario text-[10px] text-yellow-600">Papan Juara</h2>
-                <div class="w-8"></div>
+    <!-- SOCCER GOAL CHEER ANIMATION OVERLAY -->
+    <div id="overlayGoalCheer" class="fixed inset-0 z-50 bg-black/80 flex flex-col items-center justify-center hidden pointer-events-none">
+        <div class="text-center animate-goal">
+            <div class="text-7xl sm:text-9xl mb-2">⚽ 🥅</div>
+            <h1 class="comic-badge text-6xl sm:text-8xl text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-marvel-gold to-emerald-400">
+                SORAKAN GOL!
+            </h1>
+            <p class="text-emerald-300 font-extrabold text-xl sm:text-2xl mt-1 tracking-widest uppercase">
+                Hebat! Bola berjaya dimasukkan ke gawang!
+            </p>
+        </div>
+    </div>
+
+    <div id="modalNotes" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 hidden">
+        <div class="comic-panel max-w-3xl w-full p-6 border-2 border-amber-400 flex flex-col max-h-[85vh]">
+            <div class="flex items-center justify-between pb-3 border-b-2 border-gray-700">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-amber-500/20 text-marvel-gold border border-amber-400 flex items-center justify-center text-2xl font-bold">
+                        📖
+                    </div>
+                    <div>
+                        <h3 class="comic-badge text-2xl text-white">Nota &amp; Rujukan Simpulan Bahasa</h3>
+                        <p class="text-xs text-gray-300 font-semibold">Panduan rujukan 30 Simpulan Bahasa Bahasa Melayu</p>
+                    </div>
+                </div>
+                <button onclick="closeNotesModal()" class="w-8 h-8 rounded-lg bg-gray-800 text-gray-400 hover:text-white flex items-center justify-center">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
             </div>
 
-            <div class="mario-panel p-4 min-h-[70vh] bg-sky-100">
-                <div class="flex items-center justify-center mb-6">
-                    <span class="text-6xl drop-shadow-lg">👑</span>
-                </div>
-                
-                <div id="ranking-list" class="space-y-3">
-                    <div class="text-center text-gray-800 py-10 font-bold"><i class="fas fa-spinner fa-spin text-3xl mb-3"></i><br>Mencari Juara...</div>
-                </div>
+            <!-- Search Bar inside Notes -->
+            <div class="py-3">
+                <input type="text" id="inputSearchNotes" oninput="filterNotes()" placeholder="Cari simpulan bahasa atau maksud..." 
+                    class="w-full px-4 py-2.5 rounded-xl bg-marvel-navy border-2 border-marvel-gold/60 text-white placeholder-gray-400 text-sm focus:outline-none focus:border-marvel-cyan font-semibold">
+            </div>
+
+            <!-- Scrollable Notes List -->
+            <div id="notesContainer" class="flex-grow overflow-y-auto space-y-3 pr-1 my-2">
+                <!-- Injected via JS -->
+            </div>
+
+            <div class="pt-3 border-t border-gray-800 flex justify-end">
+                <button onclick="closeNotesModal()" class="px-5 py-2.5 rounded-xl bg-marvel-gold text-marvel-navy comic-badge text-lg uppercase hover:brightness-110">
+                    Tutup Nota
+                </button>
             </div>
         </div>
     </div>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, getDoc, setDoc, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+    <div id="modalChecklist" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 hidden">
+        <div class="comic-panel-cyan max-w-2xl w-full p-6 border-2 border-cyan-400 flex flex-col max-h-[85vh]">
+            <div class="flex items-center justify-between pb-3 border-b-2 border-gray-700">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 border border-emerald-400 flex items-center justify-center text-xl">
+                        <i class="fa-solid fa-list-check"></i>
+                    </div>
+                    <div>
+                        <h3 class="comic-badge text-2xl text-white">Senarai Semak Simpulan Bahasa</h3>
+                        <p class="text-xs text-gray-300 font-semibold">Tanda item yang telah anda kuasai (30 Item)</p>
+                    </div>
+                </div>
+                <button onclick="closeChecklistModal()" class="w-8 h-8 rounded-lg bg-gray-800 text-gray-400 hover:text-white flex items-center justify-center">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
 
-        // Konfigurasi Firebase
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'mario-kuiz-app';
-        let firebaseConfig = {};
-        try {
-            if(typeof __firebase_config !== 'undefined') {
-                firebaseConfig = JSON.parse(__firebase_config);
-            }
-        } catch(e) { console.error("Firebase config error", e); }
+            <div class="py-3 border-b border-gray-800">
+                <div class="flex justify-between items-center text-xs font-bold mb-1">
+                    <span class="text-marvel-gold">Kemajuan Penguasaan Anda:</span>
+                    <span id="checklistProgressText" class="text-emerald-400 font-extrabold">0 / 30 (0%)</span>
+                </div>
+                <div class="w-full bg-gray-900 h-3 rounded-full overflow-hidden border border-gray-700">
+                    <div id="checklistProgressBar" class="bg-gradient-to-r from-emerald-500 to-marvel-gold h-full w-0 transition-all duration-300"></div>
+                </div>
+            </div>
 
-        let app, db, auth, userId;
-        
-        let profile = {
-            name: '',
-            kelas: '',
-            scores: { l1: 0, l2: 0, l3: 0 },
-            checklist: Array(30).fill(false)
-        };
+            <div class="py-3">
+                <input type="text" id="inputSearchChecklist" oninput="filterChecklist()" placeholder="Cari simpulan bahasa..." 
+                    class="w-full px-4 py-2 rounded-xl bg-marvel-navy border border-gray-700 text-white placeholder-gray-500 text-sm focus:outline-none focus:border-marvel-gold font-semibold">
+            </div>
 
-        // Data Soalan (Dikekalkan dari logik asal, cuma dibungkus dengan tema)
-        const soalans = {
-            l1: [
-                { q: "Apakah maksud 'Kaki bangku'?", opts: ["Tidak pandai main bola", "Suka duduk di bangku", "Membuat bangku kayu", "Orang yang malas"], a: 0, exp: "Kaki bangku merujuk kepada orang yang tidak pandai bersukan terutamanya bola sepak." },
-                { q: "Maksud 'Mandi peluh' ialah...", opts: ["Mandi air hujan", "Bekerja kuat atau bersungguh-sungguh", "Terlalu panas", "Bermain air"], a: 1, exp: "Mandi peluh bermaksud bekerja dengan kuat dan bersungguh-sungguh hingga berpeluh." },
-                { q: "'Ayam tambatan' membawa maksud...", opts: ["Orang harapan dalam pasukan", "Ayam yang diikat", "Orang yang suka makan ayam", "Pemain simpanan"], a: 0, exp: "Ayam tambatan ialah orang yang menjadi harapan di dalam sesebuah pasukan." },
-                { q: "Pilih maksud yang betul bagi 'Batu api'.", opts: ["Batu yang panas", "Orang yang menghasut", "Orang yang rajin", "Pemetik api"], a: 1, exp: "Batu api ialah orang yang suka menghasut orang lain supaya bergaduh." },
-                { q: "'Berat tulang' bermaksud...", opts: ["Tulang yang besar", "Orang yang malas bekerja", "Orang yang kuat", "Tulang yang patah"], a: 1, exp: "Berat tulang membawa maksud orang yang malas bekerja." },
-                { q: "Apakah maksud 'Ulat buku'?", opts: ["Ulat dalam buku", "Orang yang suka membaca", "Buku yang rosak", "Orang yang rabun"], a: 1, exp: "Ulat buku ialah orang yang sangat suka membaca buku." },
-                { q: "'Kacang hantu' ialah...", opts: ["Sejenis kacang", "Hantu yang makan kacang", "Kanak-kanak yang nakal", "Orang yang penakut"], a: 2, exp: "Kacang hantu bermaksud kanak-kanak atau orang muda yang nakal dan suka mengganggu orang." },
-                { q: "Maksud 'Ringan tulang' ialah...", opts: ["Rajin bekerja", "Orang yang kurus", "Tulang yang kecil", "Suka melompat"], a: 0, exp: "Ringan tulang ialah orang yang rajin bekerja dan suka menolong." },
-                { q: "'Putih mata' bermaksud...", opts: ["Mata yang buta", "Sakit mata", "Kecewa kerana tidak dapat sesuatu", "Mata yang cantik"], a: 2, exp: "Putih mata bermaksud mengalami kekecewaan kerana terlepas peluang." },
-                { q: "Maksud 'Anak emas' ialah...", opts: ["Anak yang kaya", "Orang yang disayangi oleh ketua/ibu bapa", "Patung emas", "Anak yang nakal"], a: 1, exp: "Anak emas ialah orang yang sangat disayangi." }
-            ],
-            l2: [
-                { q: "'Lipas kudung' bermaksud membuat kerja dengan...", opts: ["Sangat lambat", "Sangat pantas", "Berhati-hati", "Cuai"], a: 1, exp: "Lipas kudung bermaksud membuat sesuatu kerja dengan sangat pantas." },
-                { q: "'Kepala angin' merujuk kepada orang yang...", opts: ["Suka duduk di tempat berangin", "Mempunyai rambut panjang", "Kelakuannya sering berubah-ubah", "Cepat pening lalat"], a: 2, exp: "Kepala angin ialah orang yang perangainya sering berubah-ubah tanpa sebab." },
-                { q: "Maksud 'Telinga kuali' ialah...", opts: ["Orang yang pekak", "Orang yang tahan dimarahi", "Telinga yang besar", "Kuali yang berlubang"], a: 1, exp: "Telinga kuali ialah orang yang tahan menerima teguran atau kemarahan." },
-                { q: "Pilih simpulan bahasa untuk 'berasa marah'.", opts: ["Naik darah", "Darah manis", "Mata duitan", "Keras kepala"], a: 0, exp: "Naik darah membawa maksud menjadi terlalu marah." },
-                { q: "Maksud 'Tanda mata' ialah...", opts: ["Mata yang cacat", "Hadiah kenang-kenangan", "Cermin mata", "Kesan lebam"], a: 1, exp: "Tanda mata ialah hadiah sebagai kenang-kenangan." },
-                { q: "'Mata duitan' bermaksud...", opts: ["Orang yang kaya", "Orang yang mementingkan wang sahaja", "Syiling lama", "Orang yang berjimat"], a: 1, exp: "Mata duitan ialah orang yang sangat mementingkan wang dan harta." },
-                { q: "Apakah maksud 'Makan suap'?", opts: ["Disuap makanan", "Menerima rasuah", "Makan bersendirian", "Makan terlalu banyak"], a: 1, exp: "Makan suap bermaksud menerima rasuah." },
-                { q: "'Muka tembok' merujuk kepada orang yang...", opts: ["Tidak tahu malu", "Muka yang keras", "Pandai berhias", "Mempunyai parut"], a: 0, exp: "Muka tembok bermaksud orang yang tidak berasa malu." },
-                { q: "'Kaki botol' bermaksud...", opts: ["Suka mengumpul botol", "Orang yang suka minum arak", "Kaki yang cedera", "Botol minuman"], a: 1, exp: "Kaki botol ialah orang yang suka meminum minuman keras." },
-                { q: "Maksud 'Hidung tinggi' ialah...", opts: ["Sombong", "Hidung yang mancung", "Suka mencampuri urusan orang", "Pemalu"], a: 0, exp: "Hidung tinggi bermaksud orang yang sombong atau bongkak." }
-            ],
-            l3: [
-                { q: "Orang yang kedekut dipanggil tangkai...", a: "jering", exp: "Tangkai jering merujuk kepada orang yang sangat kedekut." },
-                { q: "Orang yang cepat meresap dan pandai disebut terang...", a: "hati", exp: "Terang hati bermaksud orang yang mudah memahami apa yang diajar." },
-                { q: "Suka bercakap besar tetapi tiada hasil dipanggil tin...", a: "kosong", exp: "Tin kosong bermaksud orang yang suka bercakap besar tetapi tidak tahu apa-apa." },
-                { q: "Berjalan tanpa memakai kasut dipanggil kaki...", a: "ayam", exp: "Kaki ayam bermaksud tidak memakai alas kaki." },
-                { q: "Orang yang sangat banyak bercakap dipanggil mulut...", a: "murai", exp: "Mulut murai bermaksud orang yang tidak berhenti bercakap." },
-                { q: "Mendapat keuntungan atau rezeki secara tiba-tiba dipanggil durian...", a: "runtuh", exp: "Durian runtuh bermaksud mendapat keuntungan secara tiba-tiba." },
-                { q: "Mengambil tahu dan mencampuri urusan orang lain dipanggil jaga _____ kain orang.", a: "tepi", exp: "Jaga tepi kain orang bermaksud mencampuri hal peribadi orang lain." },
-                { q: "Orang yang degil dan tidak mahu mendengar nasihat dipanggil keras...", a: "kepala", exp: "Keras kepala bermaksud orang yang sangat degil." },
-                { q: "Orang yang pandai mengambil hati orang lain dipanggil mulut...", a: "manis", exp: "Mulut manis bermaksud orang yang pandai berkata-kata untuk mengambil hati." },
-                { q: "Melarikan diri kerana ketakutan dipanggil cabut...", a: "lari", exp: "Cabut lari bermaksud melarikan diri dengan lintang-pukang." }
-            ]
-        };
+            <div id="checklistItemsContainer" class="flex-grow overflow-y-auto space-y-2 pr-1 my-2">
+                <!-- Injected via JS -->
+            </div>
 
-        const senaraiSemakItems = [
-            "Ada hati", "Anak emas", "Ayam tambatan", "Batu api", "Berat tulang", 
-            "Bekas tangan", "Cahaya mata", "Cari jalan", "Durian runtuh", "Geli hati", 
-            "Hidung tinggi", "Ikat perut", "Jalan buntu", "Kacang hantu", "Kaki ayam", 
-            "Kaki bangku", "Keras kepala", "Khabar angin", "Langkah kanan", "Lipas kudung", 
-            "Makan suap", "Mata duitan", "Muka tembok", "Mulut murai", "Naik darah", 
-            "Otak cair", "Putih mata", "Ringan tulang", "Telinga kuali", "Ulat buku"
+            <div class="pt-3 border-t border-gray-800 flex justify-end">
+                <button onclick="closeChecklistModal()" class="px-5 py-2.5 rounded-xl bg-marvel-cyan text-marvel-navy comic-badge text-lg uppercase hover:brightness-110">
+                    Tutup
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="modalLeaderboard" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 hidden">
+        <div class="comic-panel max-w-lg w-full p-6 border-2 border-rose-500 flex flex-col max-h-[80vh]">
+            <div class="flex items-center justify-between pb-3 border-b-2 border-gray-700">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-amber-500/20 text-marvel-gold border border-amber-400 flex items-center justify-center text-xl">
+                        <i class="fa-solid fa-trophy"></i>
+                    </div>
+                    <div>
+                        <h3 class="comic-badge text-2xl text-white">Kedudukan Papan Skor (Ranking)</h3>
+                        <p class="text-xs text-gray-300 font-semibold">Senarai wira yang berjaya menjawab soalan</p>
+                    </div>
+                </div>
+                <button onclick="closeLeaderboardModal()" class="w-8 h-8 rounded-lg bg-gray-800 text-gray-400 hover:text-white flex items-center justify-center">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div id="leaderboardList" class="flex-grow overflow-y-auto my-3 space-y-2 pr-1">
+                <!-- Injected via JS -->
+            </div>
+
+            <div class="pt-3 border-t border-gray-800 flex justify-between items-center">
+                <button onclick="clearLeaderboard()" class="text-xs text-red-400 hover:underline font-bold">
+                    Padam Rekod Saya
+                </button>
+                <button onclick="closeLeaderboardModal()" class="px-5 py-2.5 rounded-xl bg-marvel-gold text-marvel-navy comic-badge text-lg uppercase hover:brightness-110">
+                    Tutup
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="bg-marvel-navy/90 border-t-2 border-gray-800 py-3 text-center text-xs text-gray-400 font-bold">
+        <p>© Marvel Avengers Quiz Web App - Simpulan Bahasa Bahasa Melayu</p>
+    </footer>
+
+    <script>
+        /* 45 Idioms Dataset (15 Level 1, 15 Level 2, 15 Level 3) to ensure rich non-repeating gameplay */
+        const SIMPULAN_DATA = [
+            // Level 1: Memburu Gol (15 Questions)
+            { id: 1, level: 1, term: "Ada bakat", options: ["Mempunyai kebolehan semula jadi", "Suka makan makanan manis", "Sangat sombong dan bongkak", "Cepat marah"], correct: 0, hint: "Mempunyai kebolehan" },
+            { id: 2, level: 1, term: "Ada hati", options: ["Berkeinginan terhadap sesuatu", "Sakit dada yang kronik", "Murah hati suka menderma", "Suka bercakap bohong"], correct: 0, hint: "Mempunyai keinginan" },
+            { id: 3, level: 1, term: "Alas perut", options: ["Makan sedikit untuk menahan lapar", "Memakai kain lapik di dada", "Tidur di atas lantai lapang", "Bekerja tanpa henti"], correct: 0, hint: "Makan sedikit" },
+            { id: 4, level: 1, term: "Ambil berat", options: ["Memberi perhatian dan ambil tahu", "Membawa barang yang amat berat", "Menjadi marah secara tiba-tiba", "Kedekut mengeluarkan wang"], correct: 0, hint: "Memberi perhatian" },
+            { id: 5, level: 1, term: "Anak emas", options: ["Anak kesayangan ibu bapa/majikan", "Anak yang memakai baju emas", "Anak bongsu dalam keluarga", "Anak yang sangat kaya"], correct: 0, hint: "Anak kesayangan" },
+            { id: 6, level: 1, term: "Ayam tambatan", options: ["Orang yang menjadi harapan pasukan", "Ayam yang diikat di tiang", "Penakut dalam pertempuran", "Orang yang suka makan ayam"], correct: 0, hint: "Orang harapan" },
+            { id: 7, level: 1, term: "Bekas tangan", options: ["Hasil kerja tangan seseorang", "Kesan pukulan di tangan", "Cincin di jari manis", "Tangan yang kotor"], correct: 0, hint: "Hasil buatan tangan" },
+            { id: 8, level: 1, term: "Berat tulang", options: ["Malas bekerja atau bergerak", "Tulang yang sangat besar", "Sangat kuat mengangkat barang", "Sakit sendi dan tulang"], correct: 0, hint: "Sifat malas" },
+            { id: 9, level: 1, term: "Besar kepala", options: ["Sombong dan degil", "Kepala berukuran besar", "Sangat bijak pandai", "Suka berfikir panjang"], correct: 0, hint: "Sombong / degil" },
+            { id: 10, level: 1, term: "Buah tangan", options: ["Hadiah yang dibawa semasa melawat", "Buah-buahan yang dipetik", "Hasil lukisan di tangan", "Makanan percuma"], correct: 0, hint: "Hadiah pelawatan" },
+            { id: 31, level: 1, term: "Khabar angin", options: ["Berita yang belum tentu benarnya", "Udara yang berhembus kencang", "Ramalan cuaca harian", "Pesan suara yang merdu"], correct: 0, hint: "Berita belum pasti" },
+            { id: 32, level: 1, term: "Mandi peluh", options: ["Bekerja keras dengan bersungguh-sungguh", "Mandi di kolam renang", "Berdiri di bawah hujan panas", "Mandi menggunakan air suam"], correct: 0, hint: "Bekerja sangat keras" },
+            { id: 33, level: 1, term: "Kaki bangku", options: ["Orang yang tidak pandai bermain bola", "Bangku yang ada empat kaki", "Tukang kayu yang cekap", "Orang yang suka berjalan kaki"], correct: 0, hint: "Tidak pandai main bola" },
+            { id: 34, level: 1, term: "Batu api", options: ["Penyebab pergaduhan atau permusuhan", "Batu yang sangat panas", "Unggun api di dalam hutan", "Senjata purba yang tajam"], correct: 0, hint: "Penyebab pergaduhan" },
+            { id: 35, level: 1, term: "Cepat tangan", options: ["Suka mencuri barang orang", "Tangan yang bergerak laju", "Tukang masak yang pantas", "Suka bersalaman"], correct: 0, hint: "Suka mencuri" },
+
+            // Level 2: Dam Haji (15 Questions)
+            { id: 11, level: 2, term: "Cakar ayam", options: ["Tulisan yang sangat buruk", "Ayam yang mencakar tanah", "Cakar burung elang", "Luka di tapak kaki"], correct: 0, hint: "Tulisan buruk" },
+            { id: 12, level: 2, term: "Cari jalan", options: ["Berusaha mengatasi masalah", "Berjalan di lorong gelap", "Mencari peta jalan raya", "Berlari mengelak musuh"], correct: 0, hint: "Berusaha atasi masalah" },
+            { id: 13, level: 2, term: "Otak cair", options: ["Sangat cerdik dan cepat faham", "Kepala yang panas", "Sering lupa jawapan", "Suka berkhayal"], correct: 0, hint: "Sangat cerdik" },
+            { id: 14, level: 2, term: "Darah daging", options: ["Kaum kerabat atau anak kandung", "Daging lembu segar", "Penyakit darah tinggi", "Luka yang berdarah"], correct: 0, hint: "Anak / kerabat sendiri" },
+            { id: 15, level: 2, term: "Durian runtuh", options: ["Keuntungan besar tanpa disangka", "Buah durian jatuh dari pokok", "Nasib ditimpa kemalangan", "Mendapat kebun durian"], correct: 0, hint: "Keuntungan mengejut" },
+            { id: 16, level: 2, term: "Ikat perut", options: ["Mengurangkan makan kerana jimat", "Memakai tali pinggang ketat", "Sakit perut kerana lapar", "Pembedahan perut"], correct: 0, hint: "Berjimat makan" },
+            { id: 17, level: 2, term: "Jejak langkah", options: ["Meniru perbuatan baik orang terdahulu", "Tapak kaki di atas lumpur", "Berjalan tanpa arah tujuan", "Mengejar pencuri"], correct: 0, hint: "Meneladani orang lain" },
+            { id: 18, level: 2, term: "Kaki ayam", options: ["Berjalan tanpa memakai kasut", "Kaki ayam goreng", "Lari dengan sangat laju", "Kaki yang pendek"], correct: 0, hint: "Tanpa kasut" },
+            { id: 19, level: 2, term: "Lipas kudung", options: ["Bergerak atau bekerja dengan cepat", "Serangga lipas tanpa kaki", "Sangat kotor dan busuk", "Tidur dengan nyenyak"], correct: 0, hint: "Bergerak cepat" },
+            { id: 20, level: 2, term: "Ulat buku", options: ["Orang yang sangat rajin membaca buku", "Ulat yang makan kertas", "Buku yang telah rosak", "Buku cerita kartun"], correct: 0, hint: "Rajin membaca" },
+            { id: 36, level: 2, term: "Bercakap besar", options: ["Suka meninggi diri atau berbangga", "Bercakap dengan suara yang lantang", "Menggunakan pembesar suara", "Bercakap dengan orang dewasa"], correct: 0, hint: "Suka berbangga / mendabik dada" },
+            { id: 37, level: 2, term: "Muka tembok", options: ["Orang yang tidak tahu malu", "Muka yang keras seperti simen", "Topeng muka daripada batu", "Muka yang pucat lesu"], correct: 0, hint: "Tidak tahu malu" },
+            { id: 38, level: 2, term: "Kaki cuci", options: ["Menerima sesuatu dengan bersih/mudah", "Tukang cuci kasut", "Suka membersihkan kaki", "Mandi sungai"], correct: 0, hint: "Menerima kerja yang sudah siap" },
+            { id: 39, level: 2, term: "Titik peluh", options: ["Hasil usaha sendiri yang gigih", "Titisan air hujan", "Peluh yang berbau busuk", "Gaji bulanan tambahan"], correct: 0, hint: "Hasil usaha gigih" },
+            { id: 40, level: 2, term: "Kerap kepala", options: ["Degil dan susah mendengar nasihat", "Sakit kepala melampau", "Topi yang keras", "Rambut yang tebal"], correct: 0, hint: "Degil / keras kepala" },
+
+            // Level 3: Kad Jersi Nombor (15 Questions)
+            { id: 21, level: 3, term: "Makan angin", answer: "makan angin", hint: "Maksud: Bersiaran atau melancong ke tempat lain untuk berehat." },
+            { id: 22, level: 3, term: "Murah hati", answer: "murah hati", hint: "Maksud: Suka memberi derma atau tidak kedekut." },
+            { id: 23, level: 3, term: "Panjang tangan", answer: "panjang tangan", hint: "Maksud: Suka mencuri barang orang lain." },
+            { id: 24, level: 3, term: "Pasang telinga", answer: "pasang telinga", hint: "Maksud: Mendengar perbualan dengan teliti dan cermat." },
+            { id: 25, level: 3, term: "Putih tulang", answer: "putih tulang", hint: "Maksud: Rela mati daripada menanggung malu." },
+            { id: 26, level: 3, term: "Ringan tulang", answer: "ringan tulang", hint: "Maksud: Rajin bekerja dan membantu orang lain." },
+            { id: 27, level: 3, term: "Telinga lintah", answer: "telinga lintah", hint: "Maksud: Tajam pendengaran dan mudah mendengar walaupun perlahan." },
+            { id: 28, level: 3, term: "Buah mulut", answer: "buah mulut", hint: "Maksud: Percakapan atau bahan perbualan orang ramai." },
+            { id: 29, level: 3, term: "Tangan terbuka", answer: "tangan terbuka", hint: "Maksud: Menerima kedatangan seseorang dengan senang hati." },
+            { id: 30, level: 3, term: "Cepat tangan", answer: "cepat tangan", hint: "Maksud: Cekap mengambil atau mencuri kesempatan." },
+            { id: 41, level: 3, term: "Otak udang", answer: "otak udang", hint: "Maksud: Bebal atau bodoh." },
+            { id: 42, level: 3, term: "Kaki bangku", answer: "kaki bangku", hint: "Maksud: Tidak tahu bermain bola." },
+            { id: 43, level: 3, term: "Khabar angin", answer: "khabar angin", hint: "Maksud: Berita yang belum tentu benar." },
+            { id: 44, level: 3, term: "Mandi peluh", answer: "mandi peluh", hint: "Maksud: Bekerja dengan kuat dan bersungguh-sungguh." },
+            { id: 45, level: 3, term: "Batu api", answer: "batu api", hint: "Maksud: Penghasut yang menyebabkan pergaduhan." }
         ];
 
-        let l1State = { current: 0, score: 0 };
-        let l2State = { current: 0, score: 0, pos: 0 };
-        let l3State = { done: [], score: 0, currentQ: -1 };
-        
-        let audioInit = false;
+        /* Marvel Heroes Avatars Data */
+        const AVATARS = [
+            { id: 'ironman', name: 'Iron Man', quote: '"Gunakan kepandaian anda untuk memilih jawapan tepat!"', svg: `<svg viewBox="0 0 64 64" class="w-8 h-8"><path d="M16 12h32l6 20-10 24H20L10 32z" fill="#dc2626" stroke="#fbbf24" stroke-width="2"/><path d="M22 22h20l4 14-8 12H26l-8-12z" fill="#fbbf24"/><rect x="22" y="28" width="7" height="3" fill="#06b6d4"/><rect x="35" y="28" width="7" height="3" fill="#06b6d4"/></svg>` },
+            { id: 'cap', name: 'Captain America', quote: '"Fahami maksud simpulan bahasa ini dengan teliti wira!"', svg: `<svg viewBox="0 0 64 64" class="w-8 h-8"><circle cx="32" cy="32" r="30" fill="#2563eb" stroke="#fbbf24" stroke-width="2"/><circle cx="32" cy="32" r="22" fill="#ef4444"/><circle cx="32" cy="32" r="14" fill="#ffffff"/><polygon points="32,22 35,28 41,28 36,32 38,38 32,34 26,38 28,32 23,28 29,28" fill="#2563eb"/></svg>` },
+            { id: 'thor', name: 'Thor', quote: '"Tunjukkan kekuatan petir minda anda!"', svg: `<svg viewBox="0 0 64 64" class="w-8 h-8"><rect x="18" y="14" width="28" height="20" rx="4" fill="#38bdf8" stroke="#ffffff" stroke-width="2"/><rect x="29" y="34" width="6" height="22" rx="2" fill="#d97706"/><path d="M12 24l8-6M52 24l-8-6" stroke="#fbbf24" stroke-width="3" stroke-linecap="round"/></svg>` },
+            { id: 'hulk', name: 'Hulk', quote: '"HULK SMASH SOALAN KUIZ INI DENGAN JAWAPAN BETUL!"', svg: `<svg viewBox="0 0 64 64" class="w-8 h-8"><circle cx="32" cy="32" r="28" fill="#10b981" stroke="#047857" stroke-width="3"/><path d="M16 20c8-6 24-6 32 0-2 8-6 10-16 10S18 28 16 20z" fill="#064e3b"/><rect x="22" y="38" width="20" height="6" rx="2" fill="#ffffff"/><path d="M22 38h20v2H22z" fill="#10b981"/></svg>` },
+            { id: 'spidey', name: 'Spider-Man', quote: '"Pilihan jawapan yang tepat seperti deria lelabah!"', svg: `<svg viewBox="0 0 64 64" class="w-8 h-8"><path d="M16 12c10-8 22-8 32 0 8 16 8 32 0 44-10 6-22 6-32 0-8-12-8-28 0-44z" fill="#dc2626" stroke="#1e293b" stroke-width="2"/><path d="M20 26c6-4 10 2 10 8-6 2-10-4-10-8zM44 26c-6-4-10 2-10 8 6 2 10-4 10-8z" fill="#ffffff" stroke="#000000" stroke-width="2"/></svg>` },
+            { id: 'panther', name: 'Black Panther', quote: '"Wakanda Forever! Fokus pada jawapan betul!"', svg: `<svg viewBox="0 0 64 64" class="w-8 h-8"><path d="M16 12l8 12h16l8-12v16l-8 20H24L16 28z" fill="#0f172a" stroke="#c084fc" stroke-width="2"/><polygon points="16,12 22,8 24,18" fill="#c084fc"/><polygon points="48,12 42,8 40,18" fill="#c084fc"/><polygon points="20,28 28,30 24,34" fill="#c084fc"/><polygon points="44,28 36,30 40,34" fill="#c084fc"/></svg>` },
+            { id: 'wanda', name: 'Scarlet Witch', quote: '"Gunakan kuasa ilmu anda sekarang!"', svg: `<svg viewBox="0 0 64 64" class="w-8 h-8"><path d="M16 18l16-10 16 10-6 16H22z" fill="#dc2626" stroke="#ec4899" stroke-width="2"/><circle cx="32" cy="36" r="14" fill="#ec4899" opacity="0.6"/><path d="M12 40c10-6 30-6 40 0" stroke="#f43f5e" stroke-width="3"/></svg>` },
+            { id: 'thanos', name: 'Thanos', quote: '"Dapatkan jawapan sempurna untuk kemenangan!"', svg: `<svg viewBox="0 0 64 64" class="w-8 h-8"><rect x="14" y="14" width="36" height="36" rx="10" fill="#a855f7" stroke="#fbbf24" stroke-width="3"/><rect x="22" y="10" width="20" height="8" rx="2" fill="#fbbf24"/><circle cx="24" cy="28" r="3" fill="#06b6d4"/><circle cx="40" cy="28" r="3" fill="#06b6d4"/><path d="M24 40h16" stroke="#fbbf24" stroke-width="3"/></svg>` }
+        ];
 
-        async function initFirebase() {
-            if(Object.keys(firebaseConfig).length > 0) {
-                app = initializeApp(firebaseConfig);
-                db = getFirestore(app);
-                auth = getAuth(app);
+        let currentUser = {
+            name: '',
+            class: '',
+            avatar: AVATARS[0].name,
+            avatarSvg: AVATARS[0].svg
+        };
 
-                const initialToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
-                
-                try {
-                    if (initialToken) {
-                        await signInWithCustomToken(auth, initialToken);
-                    } else {
-                        await signInAnonymously(auth);
-                    }
-                    userId = auth.currentUser.uid;
-                    listenToLeaderboard();
-                } catch(e) { console.error("Auth error", e); }
-            } else {
-                renderLeaderboard([]);
+        let userProgress = {
+            level1Score: null,
+            level2Score: null,
+            level3Score: null,
+            checklist: {}
+        };
+
+        let currentGame = {
+            level: 1,
+            currentIndex: 0,
+            score: 0,
+            questions: []
+        };
+
+        let audioCtx = null;
+        function getAudioContext() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
             }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+            return audioCtx;
         }
-        initFirebase();
 
-        async function playSound(type) {
-            if(!audioInit) {
-                await Tone.start();
-                audioInit = true;
-            }
+        function playSound(type) {
             try {
-                const synth = new Tone.Synth().toDestination();
-                const poly = new Tone.PolySynth(Tone.Synth).toDestination();
-                
-                if(type === 'coin') {
-                    // Mario coin style
-                    synth.triggerAttackRelease("B5", "32n");
-                    setTimeout(() => synth.triggerAttackRelease("E6", "8n"), 100);
-                } else if(type === 'powerup') {
-                    // Mario powerup style (fast arpeggio)
-                    const now = Tone.now();
-                    synth.triggerAttackRelease("G4", "32n", now);
-                    synth.triggerAttackRelease("C5", "32n", now + 0.1);
-                    synth.triggerAttackRelease("E5", "32n", now + 0.2);
-                    synth.triggerAttackRelease("G5", "32n", now + 0.3);
-                    synth.triggerAttackRelease("C6", "16n", now + 0.4);
-                } else if(type === 'wrong') {
-                    // Mario bump/buzz style
-                    synth.triggerAttackRelease("C3", "8n");
-                    setTimeout(() => synth.triggerAttackRelease("G2", "4n"), 150);
-                } else if(type === 'win') {
-                    // Level clear vibe
-                    const now = Tone.now();
-                    poly.triggerAttackRelease(["G4", "C5", "E5"], "8n", now);
-                    poly.triggerAttackRelease(["A4", "D5", "F5"], "8n", now + 0.2);
-                    poly.triggerAttackRelease(["B4", "E5", "G5"], "4n", now + 0.4);
-                    poly.triggerAttackRelease(["C5", "F5", "A5", "C6"], "2n", now + 0.7);
+                const ctx = getAudioContext();
+                if (type === 'correct') {
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(523.25, ctx.currentTime); // C5
+                    osc.frequency.setValueAtTime(659.25, ctx.currentTime + 0.1); // E5
+                    osc.frequency.setValueAtTime(783.99, ctx.currentTime + 0.2); // G5
+                    gain.gain.setValueAtTime(0.2, ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.5);
+                    osc.start();
+                    osc.stop(ctx.currentTime + 0.5);
+                } else if (type === 'wrong') {
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(200, ctx.currentTime);
+                    osc.frequency.setValueAtTime(140, ctx.currentTime + 0.15);
+                    gain.gain.setValueAtTime(0.2, ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.4);
+                    osc.start();
+                    osc.stop(ctx.currentTime + 0.4);
+                } else if (type === 'goal') {
+                    // Simulated crowd cheer noise + fan fare
+                    const now = ctx.currentTime;
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(440, now);
+                    osc.frequency.setValueAtTime(554.37, now + 0.1);
+                    osc.frequency.setValueAtTime(659.25, now + 0.2);
+                    osc.frequency.setValueAtTime(880, now + 0.3);
+                    gain.gain.setValueAtTime(0.3, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 1.2);
+                    osc.start(now);
+                    osc.stop(now + 1.2);
                 }
-            } catch(e) { console.log("Audio limited"); }
-        }
-
-        window.switchScreen = function(screenId) {
-            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            document.getElementById(screenId).classList.add('active');
-        }
-
-        window.mulaLogMasuk = async function() {
-            const n = document.getElementById('input-nama').value.trim();
-            const k = document.getElementById('input-kelas').value.trim();
-            if(!n || !k) {
-                showFeedback("Sila Lengkapkan", "Masukkan nama dan kelas untuk memulakan pengembaraan.", "error");
-                return;
-            }
-            profile.name = n;
-            profile.kelas = k;
-            
-            if(db && userId) {
-                try {
-                    const docRef = doc(db, 'artifacts', appId, 'users', userId, 'profile');
-                    const snap = await getDoc(docRef);
-                    if(snap.exists()) {
-                        let data = snap.data();
-                        profile.scores = data.scores || profile.scores;
-                        profile.checklist = data.checklist || profile.checklist;
-                    }
-                } catch(e) { console.error("Error loading profile"); }
-            }
-            
-            updateMenuUI();
-            switchScreen('screen-menu');
-        }
-
-        window.kembaliMenu = function() {
-            updateMenuUI();
-            switchScreen('screen-menu');
-            saveProgress();
-            
-            // Check for fireworks condition (Score >= 90)
-            const tScore = (profile.scores.l1*10) + (profile.scores.l2*10) + (profile.scores.l3*10);
-            if (tScore >= 90 && l3State.done.length === 10) {
-                // If just finished L3 and score is good, or returning to menu with high score
-                triggerFireworks();
+            } catch (e) {
+                console.log('Audio playback initialized');
             }
         }
 
-        async function saveProgress() {
-            if(!db || !userId) return;
-            const totalScore = (profile.scores.l1*10) + (profile.scores.l2*10) + (profile.scores.l3*10);
-            
-            try {
-                const profileRef = doc(db, 'artifacts', appId, 'users', userId, 'profile');
-                await setDoc(profileRef, profile, { merge: true });
-                
-                const lbRef = doc(db, 'artifacts', appId, 'public', 'data', 'leaderboard', userId);
-                await setDoc(lbRef, {
-                    name: profile.name,
-                    kelas: profile.kelas,
-                    score: totalScore,
-                    timestamp: Date.now()
-                });
-            } catch(e) { console.error("Save error"); }
-        }
+        window.onload = function() {
+            renderAvatarSelector();
+            initChecklistData();
+            loadUserData();
+        };
 
-        function updateMenuUI() {
-            document.getElementById('display-nama').innerText = profile.name;
-            document.getElementById('display-kelas').innerText = profile.kelas;
-            const tScore = (profile.scores.l1*10) + (profile.scores.l2*10) + (profile.scores.l3*10);
-            document.getElementById('display-total-score').innerText = tScore.toString().padStart(3, '0');
-
-            document.getElementById('score-aras1').innerText = `${profile.scores.l1}/10`;
-            document.getElementById('score-aras2').innerText = `${profile.scores.l2}/10`;
-            document.getElementById('score-aras3').innerText = `${profile.scores.l3}/10`;
-
-            const btn2 = document.getElementById('btn-aras2');
-            const lock2 = document.getElementById('lock-aras2');
-            if(profile.scores.l1 >= 8) {
-                btn2.classList.remove('opacity-50', 'bg-gray-300');
-                btn2.classList.add('bg-white', 'hover:bg-gray-50');
-                lock2.classList.add('hidden');
-            }
-
-            const btn3 = document.getElementById('btn-aras3');
-            const lock3 = document.getElementById('lock-aras3');
-            if(profile.scores.l2 >= 8) {
-                btn3.classList.remove('opacity-50', 'bg-gray-300');
-                btn3.classList.add('bg-white', 'hover:bg-gray-50');
-                lock3.classList.add('hidden');
-            }
-            
-            renderChecklist();
-        }
-
-        window.bukaAras = function(aras) {
-            if(aras === 2 && profile.scores.l1 < 8) {
-                showFeedback("Dunia Dikunci", "Anda perlukan skor 8/10 di Dunia 1 untuk membuka dunia ini.", "error");
-                return;
-            }
-            if(aras === 3 && profile.scores.l2 < 8) {
-                showFeedback("Dunia Dikunci", "Anda perlukan skor 8/10 di Dunia 2 untuk membuka dunia ini.", "error");
-                return;
-            }
-
-            if(aras === 1) {
-                l1State = { current: 0, score: 0 };
-                document.getElementById('mario-player').style.left = '5%';
-                document.getElementById('mario-player').innerText = '🏃‍♂️';
-                switchScreen('screen-aras1');
-                renderL1();
-            } else if (aras === 2) {
-                l2State = { current: 0, score: 0, pos: 0 };
-                initBowserCastle();
-                switchScreen('screen-aras2');
-                renderL2();
-            } else if (aras === 3) {
-                l3State = { done: [], score: 0, currentQ: -1 };
-                initMysteryBlocks();
-                switchScreen('screen-aras3');
-                updateL3Score();
-            }
-        }
-
-        let feedbackCallback = null;
-        function showFeedback(title, desc, type="info", callback=null) {
-            const m = document.getElementById('feedback-modal');
-            const icon = document.getElementById('feedback-icon');
-            const t = document.getElementById('feedback-title');
-            document.getElementById('feedback-desc').innerText = desc;
-            
-            if(type === 'correct') {
-                icon.innerHTML = '🌟';
-                t.innerText = title || "Hebat!";
-                t.className = "font-mario text-lg mb-4 text-green-600 leading-normal";
-            } else if (type === 'error' || type === 'wrong') {
-                icon.innerHTML = '💥';
-                t.innerText = title || "Alamak!";
-                t.className = "font-mario text-lg mb-4 text-red-600 leading-normal";
-            } else {
-                icon.innerHTML = '🍄';
-                t.innerText = title || "Maklumat";
-                t.className = "font-mario text-lg mb-4 text-blue-600 leading-normal";
-            }
-            
-            feedbackCallback = callback;
-            m.classList.remove('hidden');
-            m.classList.add('flex');
-        }
-
-        window.closeFeedback = function() {
-            const m = document.getElementById('feedback-modal');
-            m.classList.add('hidden');
-            m.classList.remove('flex');
-            if(feedbackCallback) feedbackCallback();
-        }
-
-        function renderL1() {
-            if(l1State.current >= 10) {
-                profile.scores.l1 = Math.max(profile.scores.l1, l1State.score);
-                let msg = l1State.score >= 8 ? "Hebat! Anda berjaya membuka Dunia 2." : "Cuba kumpul lebih banyak markah (8/10 diperlukan).";
-                showFeedback("Misi Selesai!", `Skor: ${l1State.score}/10. ${msg}`, l1State.score>=8?"correct":"info", () => kembaliMenu());
-                return;
-            }
-            
-            document.getElementById('l1-qnum').innerText = l1State.current + 1;
-            let qData = soalans.l1[l1State.current];
-            document.getElementById('l1-question').innerText = qData.q;
-            
-            let optsHtml = '';
-            qData.opts.forEach((o, i) => {
-                optsHtml += `<button onclick="jawabL1(${i})" class="w-full text-left p-4 rounded-xl border-4 border-gray-300 bg-white hover:border-blue-500 hover:bg-blue-50 font-bold text-gray-800 transition active:scale-95 shadow-sm">${o}</button>`;
+        function renderAvatarSelector() {
+            const container = document.getElementById('avatarSelector');
+            container.innerHTML = '';
+            AVATARS.forEach((av, idx) => {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.title = av.name;
+                btn.className = `p-2 rounded-xl bg-marvel-navy border flex flex-col items-center justify-center transition hover:scale-105 ${idx === 0 ? 'border-marvel-gold bg-marvel-gold/20 ring-2 ring-marvel-gold' : 'border-gray-700'}`;
+                btn.innerHTML = `${av.svg}<span class="text-[9px] font-bold text-gray-300 mt-1 whitespace-nowrap overflow-hidden text-ellipsis max-w-full">${av.name.split(' ')[0]}</span>`;
+                btn.onclick = () => {
+                    Array.from(container.children).forEach(c => c.className = 'p-2 rounded-xl bg-marvel-navy border border-gray-700 flex flex-col items-center justify-center transition hover:scale-105');
+                    btn.className = 'p-2 rounded-xl bg-marvel-navy border-2 border-marvel-gold bg-marvel-gold/20 ring-2 ring-marvel-gold flex flex-col items-center justify-center transition hover:scale-105';
+                    currentUser.avatarSvg = av.svg;
+                    currentUser.avatar = av.name;
+                };
+                container.appendChild(btn);
             });
-            document.getElementById('l1-options').innerHTML = optsHtml;
+            if (!currentUser.avatarSvg) currentUser.avatarSvg = AVATARS[0].svg;
         }
 
-        window.jawabL1 = function(idx) {
-            let qData = soalans.l1[l1State.current];
-            if(idx === qData.a) {
-                l1State.score++;
-                
-                let player = document.getElementById('mario-player');
-                let progress = ((l1State.current + 1) / 10) * 100;
-                player.style.left = `${5 + (progress * 0.75)}%`; // Move towards pipe
-                player.innerText = '🏃‍♂️'; 
-                
-                playSound('coin');
-                
-                let golOverlay = document.getElementById('mario-overlay');
-                let golText = document.getElementById('mario-text');
-                golOverlay.classList.remove('hidden');
-                golText.classList.remove('hidden');
-                golText.innerText = ["YAHOO!", "MANTAP!", "HEBAT!", "SUPER!"][Math.floor(Math.random()*4)];
-                
-                setTimeout(() => {
-                    golOverlay.classList.add('hidden');
-                    golText.classList.add('hidden');
-                    showFeedback("Betul!", qData.exp, "correct", () => {
-                        l1State.current++;
-                        renderL1();
-                    });
-                }, 800);
+        function loadUserData() {
+            const savedUser = localStorage.getItem('marvel_quiz_user');
+            if (savedUser) {
+                currentUser = JSON.parse(savedUser);
+            }
+            const savedProgress = localStorage.getItem('marvel_quiz_progress');
+            if (savedProgress) {
+                userProgress = JSON.parse(savedProgress);
+            }
+
+            if (currentUser.name) {
+                document.getElementById('navControls').classList.remove('hidden');
+                document.getElementById('navAvatar').innerHTML = currentUser.avatarSvg || '🦸‍♂️';
+                document.getElementById('navUserName').innerText = currentUser.name;
+                document.getElementById('navUserClass').innerText = currentUser.class;
+                showScreen('screenDashboard');
             } else {
-                playSound('wrong');
-                document.getElementById('mario-player').innerText = '😵'; // Hit state
-                showFeedback("Salah", qData.exp, "wrong", () => {
-                    document.getElementById('mario-player').innerText = '🏃‍♂️';
-                    l1State.current++;
-                    renderL1();
-                });
+                showScreen('screenLogin');
             }
         }
 
-        function initBowserCastle() {
-            let board = document.getElementById('bowser-castle');
-            let html = '';
-            for(let i=0; i<64; i++) {
-                let row = Math.floor(i/8);
-                let col = i%8;
-                let isDark = (row+col)%2 === 1;
-                let id = `bcell-${row}-${col}`;
-                html += `<div id="${id}" class="bowser-cell ${isDark ? 'bowser-dark' : 'bowser-light'} relative"></div>`;
-            }
-            board.innerHTML = html;
-            updateStarPos();
+        function handleLogin(e) {
+            e.preventDefault();
+            const name = document.getElementById('inputName').value.trim();
+            const cls = document.getElementById('inputClass').value.trim();
+            if (!name || !cls) return;
+
+            currentUser.name = name;
+            currentUser.class = cls;
+
+            localStorage.setItem('marvel_quiz_user', JSON.stringify(currentUser));
+
+            document.getElementById('navControls').classList.remove('hidden');
+            document.getElementById('navAvatar').innerHTML = currentUser.avatarSvg || '🦸‍♂️';
+            document.getElementById('navUserName').innerText = currentUser.name;
+            document.getElementById('navUserClass').innerText = currentUser.class;
+
+            showScreen('screenDashboard');
+            updateDashboardUI();
         }
 
-        function updateStarPos() {
-            let ex = document.querySelector('.star-piece');
-            if(ex) ex.remove();
-
-            let pos = l2State.pos; 
-            const path = [
-                [7,0], [7,2], [6,3], [6,5], [5,4], [5,6], [4,5], [4,7], [3,6], [2,7], [1,6]
-            ];
-            let cellCoord = path[Math.min(pos, path.length-1)];
-            let cell = document.getElementById(`bcell-${cellCoord[0]}-${cellCoord[1]}`);
-            
-            if(cell) {
-                cell.innerHTML = '<div class="star-piece">🌟</div>';
-            }
-        }
-
-        function renderL2() {
-            if(l2State.current >= 10) {
-                profile.scores.l2 = Math.max(profile.scores.l2, l2State.score);
-                let msg = l2State.score >= 8 ? "Luar biasa! Dunia 3 telah dibuka." : "Perlukan sekurang-kurangnya 8/10 untuk ke Dunia 3.";
-                showFeedback("Istana Ditawan!", `Skor: ${l2State.score}/10. ${msg}`, l2State.score>=8?"correct":"info", () => kembaliMenu());
-                return;
-            }
-            
-            document.getElementById('l2-qnum').innerText = l2State.current + 1;
-            let qData = soalans.l2[l2State.current];
-            document.getElementById('l2-question').innerText = qData.q;
-            
-            let optsHtml = '';
-            qData.opts.forEach((o, i) => {
-                optsHtml += `<button onclick="jawabL2(${i})" class="w-full text-left p-4 rounded-xl border-4 border-gray-300 bg-white hover:border-red-500 hover:bg-red-50 font-bold text-gray-800 transition active:scale-95 shadow-sm">${o}</button>`;
-            });
-            document.getElementById('l2-options').innerHTML = optsHtml;
-        }
-
-        window.jawabL2 = function(idx) {
-            let qData = soalans.l2[l2State.current];
-            if(idx === qData.a) {
-                l2State.score++;
-                l2State.pos++;
-                updateStarPos();
-                playSound('powerup');
-                showFeedback("Berjaya Mengelak Perangkap!", qData.exp, "correct", () => {
-                    l2State.current++;
-                    renderL2();
-                });
-            } else {
-                playSound('wrong');
-                showFeedback("Kena Api Bowser!", qData.exp, "wrong", () => {
-                    l2State.current++;
-                    renderL2();
-                });
-            }
-        }
-
-        function initMysteryBlocks() {
-            let grid = document.getElementById('mystery-grid');
-            let html = '';
-            for(let i=1; i<=10; i++) {
-                let isDone = l3State.done.includes(i-1);
-                html += `<div onclick="pilihBlok(${i-1})" class="mystery-block ${isDone ? 'mystery-done' : ''}" id="blok-${i-1}">
-                            ${isDone ? '' : '?'}
-                         </div>`;
-            }
-            grid.innerHTML = html;
-        }
-
-        window.pilihBlok = function(idx) {
-            if(l3State.done.includes(idx)) return;
-            l3State.currentQ = idx;
-            document.getElementById('l3-current-jersey').innerText = idx + 1;
-            document.getElementById('l3-question-text').innerText = soalans.l3[idx].q;
-            document.getElementById('l3-answer-input').value = '';
-            document.getElementById('modal-l3').classList.remove('hidden');
-            document.getElementById('modal-l3').classList.add('flex');
-            setTimeout(() => document.getElementById('l3-answer-input').focus(), 100);
-        }
-
-        window.tutupModalL3 = function() {
-            document.getElementById('modal-l3').classList.add('hidden');
-            document.getElementById('modal-l3').classList.remove('flex');
-        }
-
-        window.semakJawapanL3 = function() {
-            let ans = document.getElementById('l3-answer-input').value.trim().toLowerCase();
-            if(!ans) return;
-            
-            let qData = soalans.l3[l3State.currentQ];
-            tutupModalL3();
-
-            if(ans === qData.a) {
-                l3State.score++;
-                l3State.done.push(l3State.currentQ);
-                updateL3Score();
-                initMysteryBlocks();
-                playSound('coin');
-                
-                const pujian = ["Anda Hebat!", "Anda Cemerlang!", "Anda Terbaik!", "Super Mario!"];
-                const randPuji = pujian[Math.floor(Math.random()*pujian.length)];
-                
-                showFeedback(randPuji, qData.exp, "correct", checkL3End);
-            } else {
-                playSound('wrong');
-                l3State.done.push(l3State.currentQ);
-                initMysteryBlocks();
-                showFeedback("Tersasar", `Jawapan tepat: ${qData.a.toUpperCase()}. ${qData.exp}`, "wrong", checkL3End);
-            }
-        }
-
-        function updateL3Score() {
-            document.getElementById('l3-score-display').innerText = (l3State.score * 10).toString().padStart(3,'0');
-        }
-
-        function checkL3End() {
-            if(l3State.done.length >= 10) {
-                profile.scores.l3 = Math.max(profile.scores.l3, l3State.score);
-                const tScore = (profile.scores.l1*10) + (profile.scores.l2*10) + (profile.scores.l3*10);
-                
-                if (tScore >= 90) {
-                    playSound('win');
-                    triggerFireworks();
-                    showFeedback("Tahniah Super Juara!", `Anda telah menamatkan kesemua dunia! Skor keseluruhan anda sangat membanggakan.`, "correct", () => kembaliMenu());
+        function showScreen(screenId) {
+            ['screenLogin', 'screenDashboard', 'screenGame', 'screenResult'].forEach(id => {
+                const el = document.getElementById(id);
+                if (id === screenId) {
+                    el.classList.remove('hidden');
                 } else {
-                    showFeedback("Tamat Dunia 3", `Usaha yang baik, tetapi markah belum cukup untuk melihat bunga api.`, "info", () => kembaliMenu());
+                    el.classList.add('hidden');
                 }
-            }
+            });
         }
 
-        let fwParticles = [];
-        let fwAnimationId = null;
-        
-        function createFirework(x, y) {
-            const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#ffffff'];
-            const c = colors[Math.floor(Math.random()*colors.length)];
-            for(let i=0; i<40; i++) {
-                fwParticles.push({
-                    x: x, y: y,
-                    vx: (Math.random()-0.5)*12,
-                    vy: (Math.random()-0.5)*12,
-                    life: 1,
-                    color: c
-                });
-            }
-        }
-
-        function animateFireworks() {
-            const canvas = document.getElementById('fireworksCanvas');
-            const ctx = canvas.getContext('2d');
-            
-            if(fwParticles.length > 0 || Math.random() < 0.05) { // Random chance to spawn new ones if active
-                canvas.style.display = 'block';
-                canvas.width = window.innerWidth;
-                canvas.height = window.innerHeight;
-                
-                // Randomly spawn new fireworks while active
-                if(Math.random() < 0.08 && fwParticles.length < 150) {
-                    createFirework(Math.random()*canvas.width, Math.random()*(canvas.height/2));
-                }
-
-                ctx.fillStyle = 'rgba(0,0,0,0.2)';
-                ctx.fillRect(0,0,canvas.width,canvas.height);
-                
-                for(let i = fwParticles.length - 1; i >= 0; i--) {
-                    let p = fwParticles[i];
-                    p.x += p.vx;
-                    p.y += p.vy;
-                    p.vy += 0.15; // Gravity
-                    p.life -= 0.02;
-                    
-                    ctx.fillStyle = p.color;
-                    ctx.beginPath();
-                    ctx.arc(p.x, p.y, Math.max(0.1, p.life*4), 0, Math.PI*2);
-                    ctx.fill();
-                    
-                    if(p.life <= 0) fwParticles.splice(i, 1);
-                }
-                fwAnimationId = requestAnimationFrame(animateFireworks);
+        function goHome() {
+            if (currentUser.name) {
+                showScreen('screenDashboard');
+                updateDashboardUI();
             } else {
-                ctx.clearRect(0,0,canvas.width,canvas.height);
-                canvas.style.display = 'none';
+                showScreen('screenLogin');
             }
         }
 
-        function triggerFireworks() {
-            if(fwAnimationId) cancelAnimationFrame(fwAnimationId);
-            fwParticles = [];
-            
-            // Initial bursts
-            setTimeout(() => createFirework(window.innerWidth*0.3, window.innerHeight*0.3), 100);
-            setTimeout(() => createFirework(window.innerWidth*0.7, window.innerHeight*0.4), 600);
-            setTimeout(() => createFirework(window.innerWidth*0.5, window.innerHeight*0.2), 1100);
-            
-            animateFireworks();
-            
-            // Stop spawning after 6 seconds
+        function updateDashboardUI() {
+            const s1 = userProgress.level1Score;
+            document.getElementById('scoreBadge1').innerText = s1 !== null ? `Markah: ${s1}/10` : 'Markah: -';
+
+            // Level 2 Lock Logic (Requires 8/10 on Level 1)
+            const card2 = document.getElementById('cardAras2');
+            const btn2 = document.getElementById('btnLevel2');
+            const tag2 = document.getElementById('tagAras2');
+            const icon2 = document.getElementById('iconLevel2');
+            const text2 = document.getElementById('textLevel2');
+            const s2 = userProgress.level2Score;
+            document.getElementById('scoreBadge2').innerText = s2 !== null ? `Markah: ${s2}/10` : 'Markah: -';
+
+            if (s1 !== null && s1 >= 8) {
+                card2.classList.remove('opacity-75');
+                btn2.disabled = false;
+                btn2.className = "w-full py-3.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:brightness-110 text-white comic-badge text-xl uppercase tracking-wider transition shadow-lg flex items-center justify-center gap-2 border-2 border-cyan-300/60";
+                tag2.className = "px-3 py-1 rounded-full bg-cyan-500/30 text-cyan-300 font-black text-xs uppercase border border-cyan-400";
+                tag2.innerText = "Aras Sederhana";
+                icon2.className = "fa-solid fa-play";
+                text2.innerText = "Main Aras 2";
+            } else {
+                card2.classList.add('opacity-75');
+                btn2.disabled = true;
+                btn2.className = "w-full py-3.5 rounded-xl bg-gray-700 text-gray-400 comic-badge text-xl uppercase tracking-wide cursor-not-allowed flex items-center justify-center gap-2";
+                tag2.className = "px-3 py-1 rounded-full bg-gray-700 text-gray-400 font-bold text-xs uppercase";
+                tag2.innerText = "Terkunci";
+                icon2.className = "fa-solid fa-lock";
+                text2.innerText = "Perlu 8/10 Aras 1";
+            }
+
+            // Level 3 Lock Logic (Requires 8/10 on Level 2)
+            const card3 = document.getElementById('cardAras3');
+            const btn3 = document.getElementById('btnLevel3');
+            const tag3 = document.getElementById('tagAras3');
+            const icon3 = document.getElementById('iconLevel3');
+            const text3 = document.getElementById('textLevel3');
+            const s3 = userProgress.level3Score;
+            document.getElementById('scoreBadge3').innerText = s3 !== null ? `Markah: ${s3}/10` : 'Markah: -';
+
+            if (s2 !== null && s2 >= 8) {
+                card3.classList.remove('opacity-75');
+                btn3.disabled = false;
+                btn3.className = "w-full py-3.5 rounded-xl bg-gradient-to-r from-marvel-gold via-amber-500 to-rose-500 hover:brightness-110 text-marvel-navy comic-badge text-xl uppercase tracking-wider transition shadow-lg flex items-center justify-center gap-2 border-2 border-white";
+                tag3.className = "px-3 py-1 rounded-full bg-amber-500/30 text-amber-300 font-black text-xs uppercase border border-amber-400";
+                tag3.innerText = "Aras Tinggi";
+                icon3.className = "fa-solid fa-play";
+                text3.innerText = "Main Aras 3";
+            } else {
+                card3.classList.add('opacity-75');
+                btn3.disabled = true;
+                btn3.className = "w-full py-3.5 rounded-xl bg-gray-700 text-gray-400 comic-badge text-xl uppercase tracking-wide cursor-not-allowed flex items-center justify-center gap-2";
+                tag3.className = "px-3 py-1 rounded-full bg-gray-700 text-gray-400 font-bold text-xs uppercase";
+                tag3.innerText = "Terkunci";
+                icon3.className = "fa-solid fa-lock";
+                text3.innerText = "Perlu 8/10 Aras 2";
+            }
+        }
+
+        function startLevel(lvl) {
+            currentGame.level = lvl;
+            currentGame.currentIndex = 0;
+            currentGame.score = 0;
+
+            // Filter pool for selected level and shuffle non-overlapping 10 questions per run
+            const pool = SIMPULAN_DATA.filter(q => q.level === lvl);
+            const shuffled = [...pool].sort(() => Math.random() - 0.5);
+            currentGame.questions = shuffled.slice(0, 10);
+
+            const titles = {
+                1: "Aras 1: Memburu Gol ⚽",
+                2: "Aras 2: Dam Haji 🏁",
+                3: "Aras 3: Kad Jersi Nombor 🎽"
+            };
+            document.getElementById('gameLevelTitle').innerText = titles[lvl];
+
+            document.getElementById('minigameLevel1').classList.toggle('hidden', lvl !== 1);
+            document.getElementById('minigameLevel2').classList.toggle('hidden', lvl !== 2);
+            document.getElementById('minigameLevel3').classList.toggle('hidden', lvl !== 3);
+
+            if (lvl === 2) {
+                renderDamBoard();
+            } else if (lvl === 3) {
+                renderJerseyCards();
+            }
+
+            showScreen('screenGame');
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            const q = currentGame.questions[currentGame.currentIndex];
+            document.getElementById('gameCurrentNum').innerText = currentGame.currentIndex + 1;
+            document.getElementById('gameTotalNum').innerText = currentGame.questions.length;
+
+            const pct = (currentGame.currentIndex / currentGame.questions.length) * 100;
+            document.getElementById('gameProgressBar').style.width = pct + '%';
+            document.getElementById('gameScoreText').innerText = `${currentGame.score} / ${currentGame.questions.length}`;
+
+            if (currentGame.level === 1) {
+                const ballPct = (currentGame.currentIndex / currentGame.questions.length) * 85;
+                document.getElementById('soccerBall').style.left = ballPct + '%';
+            }
+
+            // Update Random Avenger Companion for each question
+            const hero = AVATARS[Math.floor(Math.random() * AVATARS.length)];
+            document.getElementById('heroCompanionAvatar').innerHTML = hero.svg;
+            document.getElementById('heroCompanionName').innerText = `${hero.name} SAYS:`;
+            document.getElementById('heroCompanionQuote').innerText = hero.quote;
+
+            const isTextLevel = (currentGame.level === 3);
+            document.getElementById('containerMultipleChoice').classList.toggle('hidden', isTextLevel);
+            document.getElementById('containerTextInput').classList.toggle('hidden', !isTextLevel);
+
+            if (!isTextLevel) {
+                document.getElementById('questionText').innerText = `Apakah maksud simpulan bahasa bagi "${q.term}"?`;
+
+                const optionsContainer = document.getElementById('containerMultipleChoice');
+                optionsContainer.innerHTML = '';
+
+                let optionIndices = [0, 1, 2, 3];
+                optionIndices.sort(() => Math.random() - 0.5);
+
+                optionIndices.forEach(optIdx => {
+                    const btn = document.createElement('button');
+                    btn.className = "p-4 rounded-xl bg-marvel-navy border-2 border-gray-700 text-left font-bold text-sm hover:border-marvel-gold hover:bg-marvel-dark transition flex items-center gap-3 group active:scale-95 shadow-md";
+                    btn.innerHTML = `
+                        <span class="w-8 h-8 rounded-lg bg-gray-800 text-marvel-gold font-extrabold flex items-center justify-center text-xs group-hover:bg-marvel-gold group-hover:text-marvel-navy">
+                            ${String.fromCharCode(65 + optionIndices.indexOf(optIdx))}
+                        </span>
+                        <span class="text-gray-100">${q.options[optIdx]}</span>
+                    `;
+                    btn.onclick = () => answerMultipleChoice(optIdx);
+                    optionsContainer.appendChild(btn);
+                });
+            } else {
+                document.getElementById('questionText').innerText = `Nyatakan simpulan bahasa yang tepat untuk: "${q.term}"`;
+                document.getElementById('hintText').innerText = q.hint;
+                document.getElementById('inputAnswerText').value = '';
+                document.getElementById('inputAnswerText').focus();
+            }
+        }
+
+        function renderDamBoard() {
+            const board = document.getElementById('damBoardGrid');
+            board.innerHTML = '';
+            const step = currentGame.currentIndex;
+            document.getElementById('damStatusText').innerText = `Langkah Haji: ${step}/10`;
+
+            for (let r = 0; r < 8; r++) {
+                for (let c = 0; c < 8; c++) {
+                    const isBlack = (r + c) % 2 === 1;
+                    const cell = document.createElement('div');
+                    cell.className = `w-full h-full ${isBlack ? 'dam-cell-black' : 'dam-cell-white'} flex items-center justify-center relative`;
+
+                    const pathRow = 7 - Math.floor((step / 10) * 7);
+                    const pathCol = Math.floor((step / 10) * 7);
+
+                    if (r === pathRow && c === pathCol) {
+                        const piece = document.createElement('div');
+                        piece.className = "w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-gradient-to-tr from-marvel-gold to-amber-600 border-2 border-white shadow-lg flex items-center justify-center text-marvel-navy font-black text-[10px] animate-pulse";
+                        piece.innerHTML = step >= 8 ? "👑" : "🔴";
+                        cell.appendChild(piece);
+                    }
+
+                    board.appendChild(cell);
+                }
+            }
+        }
+
+        function renderJerseyCards() {
+            const grid = document.getElementById('jerseyCardsGrid');
+            grid.innerHTML = '';
+
+            currentGame.questions.forEach((q, idx) => {
+                const isCurrent = idx === currentGame.currentIndex;
+                const isDone = idx < currentGame.currentIndex;
+
+                const card = document.createElement('div');
+                card.className = `jersey-card p-2 rounded-xl text-center border-2 cursor-pointer transition ${
+                    isDone ? 'bg-emerald-900/40 border-emerald-500 text-emerald-300' :
+                    isCurrent ? 'bg-marvel-gold text-marvel-navy border-white shadow-lg pulse-comic scale-105' :
+                    'bg-marvel-navy border-gray-700 text-gray-400'
+                }`;
+
+                card.innerHTML = `
+                    <div class="text-xl mb-0.5">🎽</div>
+                    <div class="comic-badge text-xs sm:text-sm">#${idx + 1}</div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function answerMultipleChoice(selectedIndex) {
+            const q = currentGame.questions[currentGame.currentIndex];
+            const isCorrect = (selectedIndex === q.correct);
+
+            if (isCorrect) {
+                currentGame.score++;
+                playSound('correct');
+                if (currentGame.level === 1) {
+                    triggerGoalCheer();
+                }
+            } else {
+                playSound('wrong');
+            }
+
+            if (isCorrect && !userProgress.checklist[q.id]) {
+                userProgress.checklist[q.id] = true;
+                saveChecklistData();
+            }
+
+            showFeedback(isCorrect, q);
+        }
+
+        function submitTextAnswer() {
+            const rawInput = document.getElementById('inputAnswerText').value.trim().toLowerCase();
+            const cleanInput = rawInput.replace(/\s+/g, ' ');
+            const q = currentGame.questions[currentGame.currentIndex];
+            const targetAnswer = q.answer.toLowerCase().trim();
+
+            // Strict exact match without partial key overlapping bugs
+            const isCorrect = cleanInput.length > 0 && (cleanInput === targetAnswer);
+
+            if (isCorrect) {
+                currentGame.score++;
+                playSound('correct');
+            } else {
+                playSound('wrong');
+            }
+
+            if (isCorrect && !userProgress.checklist[q.id]) {
+                userProgress.checklist[q.id] = true;
+                saveChecklistData();
+            }
+
+            showFeedback(isCorrect, q);
+        }
+
+        function triggerGoalCheer() {
+            playSound('goal');
+            const overlay = document.getElementById('overlayGoalCheer');
+            overlay.classList.remove('hidden');
             setTimeout(() => {
-                cancelAnimationFrame(fwAnimationId);
-                document.getElementById('fireworksCanvas').style.display = 'none';
-            }, 6000);
+                overlay.classList.add('hidden');
+            }, 1200);
         }
 
+        function showFeedback(isCorrect, q) {
+            const iconBox = document.getElementById('feedbackIconBox');
+            const praiseText = document.getElementById('feedbackPraise');
+            const statusText = document.getElementById('feedbackStatusText');
 
-        window.bukaSenaraiSemak = function() {
-            renderChecklist();
-            switchScreen('screen-checklist');
-        }
-        
-        window.bukaRanking = function() {
-            switchScreen('screen-ranking');
+            if (isCorrect) {
+                iconBox.className = "w-16 h-16 mx-auto mb-2 rounded-2xl bg-emerald-500/30 text-emerald-300 border-2 border-emerald-400 flex items-center justify-center text-3xl shadow-xl";
+                iconBox.innerHTML = '<i class="fa-solid fa-check"></i>';
+
+                // Requested high praise marvel phrases
+                const praises = ["ANDA HEBAT!", "ANDA CEMERLANG!", "ANDA TERBAIK!", "WIRA SEJATI!"];
+                praiseText.innerText = praises[Math.floor(Math.random() * praises.length)];
+                praiseText.className = "comic-badge text-3xl text-marvel-gold tracking-wide uppercase mb-1";
+
+                statusText.innerText = "Jawapan Anda Sangat Tepat!";
+                statusText.className = "text-xs font-black text-emerald-400 uppercase tracking-widest mb-3";
+            } else {
+                iconBox.className = "w-16 h-16 mx-auto mb-2 rounded-2xl bg-red-500/30 text-red-400 border-2 border-red-400 flex items-center justify-center text-3xl shadow-xl";
+                iconBox.innerHTML = '<i class="fa-solid fa-xmark"></i>';
+
+                praiseText.innerText = "CUBA LAGI!";
+                praiseText.className = "comic-badge text-3xl text-red-400 tracking-wide uppercase mb-1";
+
+                statusText.innerText = "Jawapan Kurang Tepat";
+                statusText.className = "text-xs font-black text-red-400 uppercase tracking-widest mb-3";
+            }
+
+            document.getElementById('feedbackIdiomName').innerText = q.term;
+            document.getElementById('feedbackIdiomMeaning').innerText = q.hint || q.options[q.correct];
+
+            document.getElementById('modalFeedback').classList.remove('hidden');
         }
 
-        function renderChecklist() {
-            const container = document.getElementById('checklist-container');
-            let html = '';
-            let count = 0;
-            senaraiSemakItems.forEach((item, i) => {
-                const checked = profile.checklist[i];
-                if(checked) count++;
-                html += `
-                    <div class="flex items-center bg-white p-3 rounded-lg border-2 border-gray-300 shadow-sm transition hover:bg-yellow-50 cursor-pointer" onclick="toggleCheck(${i})">
-                        <div class="w-6 h-6 rounded border-2 border-black flex items-center justify-center mr-4 ${checked ? 'bg-green-500' : 'bg-white'}">
-                            ${checked ? '<i class="fas fa-check text-white text-xs"></i>' : ''}
+        function closeFeedbackModal() {
+            document.getElementById('modalFeedback').classList.add('hidden');
+            currentGame.currentIndex++;
+
+            if (currentGame.level === 2) {
+                renderDamBoard();
+            } else if (currentGame.level === 3) {
+                renderJerseyCards();
+            }
+
+            if (currentGame.currentIndex < currentGame.questions.length) {
+                loadQuestion();
+            } else {
+                finishLevel();
+            }
+        }
+
+        function finishLevel() {
+            const score = currentGame.score;
+            const lvl = currentGame.level;
+            const pct = Math.round((score / currentGame.questions.length) * 100);
+
+            if (lvl === 1) userProgress.level1Score = score;
+            if (lvl === 2) userProgress.level2Score = score;
+            if (lvl === 3) userProgress.level3Score = score;
+
+            localStorage.setItem('marvel_quiz_progress', JSON.stringify(userProgress));
+            saveToLeaderboard(lvl, score, pct);
+
+            document.getElementById('resultScore').innerText = `${score} / 10`;
+            document.getElementById('resultPercent').innerText = `${pct}%`;
+
+            const statusBox = document.getElementById('resultStatusBox');
+            const btnNext = document.getElementById('btnResultNext');
+            const rewardBanner = document.getElementById('resultRewardBanner');
+
+            if (pct >= 90) {
+                rewardBanner.classList.remove('hidden');
+            } else {
+                rewardBanner.classList.add('hidden');
+            }
+
+            if (score >= 8) {
+                statusBox.className = "p-4 rounded-2xl mb-5 bg-emerald-500/20 border-2 border-emerald-400 text-emerald-300 font-extrabold text-sm shadow";
+                statusBox.innerHTML = '✅ KELAYAKAN DICAPAI! Aras seterusnya telah dibuka.';
+                btnNext.classList.remove('hidden');
+            } else {
+                statusBox.className = "p-4 rounded-2xl mb-5 bg-amber-500/20 border-2 border-amber-400 text-amber-300 font-extrabold text-sm shadow";
+                statusBox.innerHTML = '⚠️ Perlu minima 8/10 (80%) untuk membuka aras seterusnya. Sila cuba lagi!';
+                btnNext.classList.add('hidden');
+            }
+
+            showScreen('screenResult');
+        }
+
+        function proceedNextLevel() {
+            if (currentGame.level < 3) {
+                startLevel(currentGame.level + 1);
+            } else {
+                goHome();
+            }
+        }
+
+        function confirmExitLevel() {
+            showScreen('screenDashboard');
+            updateDashboardUI();
+        }
+
+        function saveToLeaderboard(lvl, score, pct) {
+            let leaderboard = JSON.parse(localStorage.getItem('marvel_quiz_leaderboard') || '[]');
+            
+            const entry = {
+                name: currentUser.name,
+                class: currentUser.class,
+                avatar: currentUser.avatar,
+                level: lvl,
+                score: score,
+                percent: pct,
+                date: new Date().toLocaleDateString('ms-MY')
+            };
+
+            leaderboard.push(entry);
+            leaderboard.sort((a, b) => b.percent - a.percent);
+            localStorage.setItem('marvel_quiz_leaderboard', JSON.stringify(leaderboard));
+        }
+
+        function openNotesModal() {
+            renderNotesItems();
+            document.getElementById('modalNotes').classList.remove('hidden');
+        }
+
+        function closeNotesModal() {
+            document.getElementById('modalNotes').classList.add('hidden');
+        }
+
+        function renderNotesItems() {
+            const container = document.getElementById('notesContainer');
+            container.innerHTML = '';
+
+            SIMPULAN_DATA.forEach((item, idx) => {
+                const div = document.createElement('div');
+                div.className = "p-3.5 rounded-xl bg-marvel-navy border-2 border-marvel-gold/40 hover:border-marvel-gold transition shadow-md";
+
+                const meaning = item.hint || item.options[item.correct];
+
+                div.innerHTML = `
+                    <div class="flex items-center justify-between mb-1">
+                        <span class="comic-badge text-lg text-marvel-gold">${idx + 1}. ${item.term}</span>
+                        <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-400/50">Aras ${item.level}</span>
+                    </div>
+                    <p class="text-xs text-gray-200 leading-relaxed font-semibold mb-1"><strong class="text-marvel-cyan">Maksud:</strong> ${meaning}</p>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function filterNotes() {
+            const term = document.getElementById('inputSearchNotes').value.toLowerCase();
+            const items = document.getElementById('notesContainer').children;
+            Array.from(items).forEach((el) => {
+                const text = el.innerText.toLowerCase();
+                el.style.display = text.includes(term) ? 'block' : 'none';
+            });
+        }
+
+        function initChecklistData() {
+            const saved = localStorage.getItem('marvel_quiz_checklist');
+            if (saved) {
+                userProgress.checklist = JSON.parse(saved);
+            }
+        }
+
+        function saveChecklistData() {
+            localStorage.setItem('marvel_quiz_checklist', JSON.stringify(userProgress.checklist));
+        }
+
+        function openChecklistModal() {
+            renderChecklistItems();
+            document.getElementById('modalChecklist').classList.remove('hidden');
+        }
+
+        function closeChecklistModal() {
+            document.getElementById('modalChecklist').classList.add('hidden');
+        }
+
+        function renderChecklistItems() {
+            const container = document.getElementById('checklistItemsContainer');
+            container.innerHTML = '';
+
+            let countChecked = 0;
+
+            SIMPULAN_DATA.forEach((item, idx) => {
+                const isChecked = !!userProgress.checklist[item.id];
+                if (isChecked) countChecked++;
+
+                const div = document.createElement('div');
+                div.className = `p-3 rounded-xl border flex items-start gap-3 cursor-pointer transition ${
+                    isChecked ? 'bg-emerald-900/30 border-emerald-400' : 'bg-marvel-navy border-gray-800'
+                }`;
+
+                div.onclick = () => toggleChecklistItem(item.id);
+
+                div.innerHTML = `
+                    <input type="checkbox" ${isChecked ? 'checked' : ''} class="mt-1 w-4 h-4 accent-marvel-gold rounded cursor-pointer">
+                    <div class="flex-grow">
+                        <div class="flex items-center justify-between">
+                            <span class="font-extrabold text-sm ${isChecked ? 'text-emerald-300' : 'text-white'}">${idx + 1}. ${item.term}</span>
+                            <span class="text-[10px] px-2 py-0.5 rounded bg-gray-800 text-gray-300 font-bold">Aras ${item.level}</span>
                         </div>
-                        <span class="font-bold ${checked ? 'text-gray-400 line-through' : 'text-gray-800'} text-sm">${item}</span>
+                        <p class="text-xs text-gray-300 font-semibold mt-0.5">${item.hint || item.options[item.correct]}</p>
                     </div>
                 `;
+                container.appendChild(div);
             });
-            container.innerHTML = html;
-            
-            document.getElementById('checklist-progress').value = count;
-            document.getElementById('checklist-progress-text').innerText = `${count}/30`;
+
+            const total = SIMPULAN_DATA.length;
+            const pct = Math.round((countChecked / total) * 100);
+            document.getElementById('checklistProgressText').innerText = `${countChecked} / ${total} (${pct}%)`;
+            document.getElementById('checklistProgressBar').style.width = pct + '%';
         }
 
-        window.toggleCheck = function(idx) {
-            profile.checklist[idx] = !profile.checklist[idx];
-            renderChecklist();
-            saveProgress();
+        function toggleChecklistItem(id) {
+            userProgress.checklist[id] = !userProgress.checklist[id];
+            saveChecklistData();
+            renderChecklistItems();
         }
 
-        function listenToLeaderboard() {
-            if(!db) return;
-            const lbRef = collection(db, 'artifacts', appId, 'public', 'data', 'leaderboard');
-            onSnapshot(lbRef, (snapshot) => {
-                let data = [];
-                snapshot.forEach(doc => {
-                    data.push({ id: doc.id, ...doc.data() });
-                });
-                renderLeaderboard(data);
-            }, (error) => {
-                document.getElementById('ranking-list').innerHTML = `<p class="text-center font-bold text-red-600">Gagal memuat turun data.</p>`;
+        function filterChecklist() {
+            const term = document.getElementById('inputSearchChecklist').value.toLowerCase();
+            const items = document.getElementById('checklistItemsContainer').children;
+            Array.from(items).forEach((el) => {
+                const text = el.innerText.toLowerCase();
+                el.style.display = text.includes(term) ? 'flex' : 'none';
             });
         }
 
-        function renderLeaderboard(data) {
-            const list = document.getElementById('ranking-list');
-            if(data.length === 0) {
-                list.innerHTML = `<p class="text-center text-gray-700 py-10 font-bold bg-white rounded-lg border-2 border-black">Belum ada Super Juara dijumpai.</p>`;
+        function openLeaderboardModal() {
+            renderLeaderboard();
+            document.getElementById('modalLeaderboard').classList.remove('hidden');
+        }
+
+        function closeLeaderboardModal() {
+            document.getElementById('modalLeaderboard').classList.add('hidden');
+        }
+
+        function renderLeaderboard() {
+            const container = document.getElementById('leaderboardList');
+            container.innerHTML = '';
+
+            const list = JSON.parse(localStorage.getItem('marvel_quiz_leaderboard') || '[]');
+
+            if (list.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-8 text-gray-400 text-xs font-bold">
+                        Belum ada rekod kedudukan. Selesaikan soalan untuk muncul di sini!
+                    </div>
+                `;
                 return;
             }
 
-            data.sort((a, b) => {
-                if(b.score !== a.score) return b.score - a.score;
-                return a.timestamp - b.timestamp;
-            });
+            list.forEach((item, idx) => {
+                const isTop3 = idx < 3;
+                const badges = ["🥇", "🥈", "🥉"];
 
-            let html = '';
-            data.forEach((p, i) => {
-                let medal = '';
-                let bg = 'bg-white';
-                if(i === 0) { medal = '👑'; bg = 'bg-yellow-200 border-yellow-500'; }
-                else if (i === 1) { medal = '🥈'; bg = 'bg-gray-200 border-gray-400'; }
-                else if (i === 2) { medal = '🥉'; bg = 'bg-orange-200 border-orange-400'; }
-                else medal = `<span class="font-mario text-[10px] text-gray-500 w-6 text-center">${i+1}</span>`;
+                const div = document.createElement('div');
+                div.className = `p-3 rounded-xl border-2 flex items-center justify-between ${
+                    isTop3 ? 'bg-amber-500/10 border-amber-400' : 'bg-marvel-navy border-gray-800'
+                }`;
 
-                html += `
-                    <div class="flex items-center justify-between p-3 rounded-lg border-4 shadow-sm mb-3 ${bg} ${i > 2 ? 'border-gray-300' : ''}">
-                        <div class="flex items-center w-3/4 overflow-hidden">
-                            <div class="mr-3 w-8 flex justify-center text-2xl">${medal}</div>
-                            <div class="truncate">
-                                <p class="font-bold text-gray-900 text-sm truncate uppercase">${p.name}</p>
-                                <p class="font-mario text-[8px] text-gray-600 mt-1">${p.kelas}</p>
-                            </div>
-                        </div>
-                        <div class="bg-black text-white font-mario text-xs px-3 py-2 rounded">
-                            ${p.score}
+                div.innerHTML = `
+                    <div class="flex items-center gap-3">
+                        <span class="w-7 text-center comic-badge text-lg text-marvel-gold">
+                            ${isTop3 ? badges[idx] : `#${idx + 1}`}
+                        </span>
+                        <div>
+                            <div class="font-extrabold text-sm text-white">${item.name}</div>
+                            <div class="text-[10px] font-bold text-gray-400">${item.class} • Aras ${item.level}</div>
                         </div>
                     </div>
+                    <div class="text-right">
+                        <div class="comic-badge text-xl text-emerald-400">${item.percent}%</div>
+                        <div class="text-[10px] font-bold text-gray-500">${item.date}</div>
+                    </div>
                 `;
+                container.appendChild(div);
             });
-            list.innerHTML = html;
         }
 
+        function clearLeaderboard() {
+            localStorage.removeItem('marvel_quiz_leaderboard');
+            renderLeaderboard();
+        }
     </script>
 </body>
 </html>
