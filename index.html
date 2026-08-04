@@ -3,1085 +3,1061 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Kuiz Interaktif Juara - Edisi Kraf</title>
+    <title>Kuiz Comel Bahasa</title>
     
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- FontAwesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- Google Fonts: Inter for text, Press Start 2P for Pixel/Minecraft vibe -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Press+Start+2P&display=swap" rel="stylesheet">
-    
-    <!-- Tone.js for Sound Effects -->
+    <!-- Menggunakan font yang lebih comel dan bulat -->
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800;900&family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
-
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                        pixel: ['"Press Start 2P"', 'cursive'], // Pixel font
-                    },
-                    colors: {
-                        'juara-blue': '#1E3A8A', // Modern Deep Blue
-                        'juara-gold': '#FBBF24', // Sporty Gold
-                        'juara-green': '#16A34A', // Field Green
-                        'mc-dirt': '#8B4513',
-                        'mc-stone': '#787878'
-                    }
-                }
-            }
-        }
-    </script>
-
+    
     <style>
         body {
-            background-color: #F1F5F9;
-            overflow-x: hidden;
+            font-family: 'Nunito', sans-serif;
+            background-color: #fff0f5; /* Soft pastel pink background */
             touch-action: manipulation;
         }
-
-        /* Minecraft / Blocky styling */
-        .btn-mc {
-            background-color: #787878;
-            border: 4px solid #333;
-            border-top-color: #a8a8a8;
-            border-left-color: #a8a8a8;
-            border-bottom-color: #4a4a4a;
-            border-right-color: #4a4a4a;
-            color: white;
-            transition: transform 0.1s;
-        }
-        .btn-mc:active {
-            border-top-color: #4a4a4a;
-            border-left-color: #4a4a4a;
-            border-bottom-color: #a8a8a8;
-            border-right-color: #a8a8a8;
-            transform: scale(0.98);
-        }
-
-        .btn-primary {
-            background: #1E3A8A;
-            color: white;
-            border-radius: 12px;
-            border-bottom: 6px solid #172554;
-            transition: all 0.1s ease;
-        }
-        .btn-primary:active {
-            transform: translateY(4px);
-            border-bottom-width: 2px;
-            margin-bottom: 4px;
-        }
-
+        
+        .game-font { font-family: 'Fredoka', sans-serif; }
+        
         /* Animations */
         @keyframes popIn {
-            0% { transform: scale(0.8); opacity: 0; }
-            100% { transform: scale(1); opacity: 1; }
-        }
-        .animate-pop-in { animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
-
-        @keyframes booyahAnim {
             0% { transform: scale(0.5) rotate(-10deg); opacity: 0; }
-            50% { transform: scale(1.3) rotate(5deg); opacity: 1; }
-            100% { transform: scale(1) rotate(0deg); opacity: 1; }
+            70% { transform: scale(1.1) rotate(5deg); }
+            100% { transform: scale(1) rotate(0); opacity: 1; }
         }
-        .anim-booyah { animation: booyahAnim 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+        .animate-pop { animation: popIn 0.5s ease-out forwards; }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        .animate-float { animation: float 3s ease-in-out infinite; }
 
-        @keyframes floatUp {
-            0% { transform: translateY(0) scale(1); opacity: 1; }
-            100% { transform: translateY(-60px) scale(1.3); opacity: 0; }
+        @keyframes pulse-fast {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
         }
-        .float-text { 
-            animation: floatUp 1.5s ease-out forwards; 
-            position: absolute; 
-            font-weight: 800; 
-            font-size: 1.5rem; 
-            text-shadow: 2px 2px 0px #000; 
+        .animate-pulse-fast { animation: pulse-fast 1s infinite; }
+
+        /* Level 1: Kumpul Epal */
+        #field-container {
+            position: relative;
+            background: linear-gradient(to bottom, #a1c4fd 0%, #c2e9fb 100%); /* Cloud sky */
+            border: 4px solid #ffb7b2;
+            border-radius: 20px;
+            overflow: hidden;
+            height: 250px;
+            box-shadow: inset 0 0 20px rgba(255,255,255,0.8);
+        }
+        .cloud-decor {
+            position: absolute;
+            background: white;
+            border-radius: 50px;
+            opacity: 0.7;
+        }
+        #ball {
+            position: absolute;
+            transition: all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+            font-size: 2.5rem;
+            z-index: 10;
+        }
+        #goal {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 3.5rem;
+            color: #ff6b6b;
+        }
+
+        /* Level 2: Lompat Awan (Dam Haji) */
+        .checkers-board {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            width: 100%;
+            max-width: 400px;
+            aspect-ratio: 1/1;
+            margin: 0 auto;
+            border: 6px solid #ffb7b2;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        .checkers-cell {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .cell-black { background-color: #ffccd5; } /* Pastel pink */
+        .cell-white { background-color: #ffffff; }
+        .dam-piece {
+            width: 80%;
+            height: 80%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: #fcd34d; /* Yellow star */
+            filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.2));
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        /* Level 3: Kotak Hadiah */
+        .jersey-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 12px;
+        }
+        @media (max-width: 640px) {
+            .jersey-grid { grid-template-columns: repeat(3, 1fr); }
+        }
+        .jersey-card {
+            background-color: #ffb7b2;
+            color: white;
+            border-radius: 15px;
+            padding: 15px 5px;
+            text-align: center;
+            cursor: pointer;
+            box-shadow: 0 6px 0 #ff9a9e;
+            transition: all 0.1s;
+            position: relative;
+            border: 2px solid white;
+        }
+        .jersey-card:active { 
+            transform: translateY(4px); 
+            box-shadow: 0 2px 0 #ff9a9e; 
+        }
+        .jersey-card.solved {
+            background-color: #a1c4fd;
+            box-shadow: 0 4px 0 #89b4f8;
+            cursor: not-allowed;
+            opacity: 0.9;
+        }
+        .jersey-icon { font-size: 2.2rem; margin-bottom: 5px; text-shadow: 1px 1px 0 rgba(0,0,0,0.1); }
+
+        /* UI Overlays */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(255,204,213,0.8);
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
             z-index: 50;
+            padding: 20px;
         }
-
-        @keyframes zombieHit {
-            0% { transform: translateX(0) rotate(0deg); filter: hue-rotate(0deg); }
-            25% { transform: translateX(-10px) rotate(-10deg); filter: hue-rotate(90deg) brightness(2); }
-            50% { transform: translateX(10px) rotate(10deg); filter: hue-rotate(90deg) brightness(2); }
-            100% { transform: translateX(0) rotate(0deg); filter: hue-rotate(0deg); }
-        }
-        .anim-zombie-hit { animation: zombieHit 0.3s ease-in-out; }
-
-        /* Hidden Class */
         .hidden { display: none !important; }
+        
+        .huge-text {
+            font-size: 4rem;
+            font-weight: 900;
+            font-family: 'Fredoka', sans-serif;
+            color: #ff6b81;
+            text-shadow: 3px 3px 0 #fff, -2px -2px 0 #fff, 2px -2px 0 #fff, -2px 2px 0 #fff, 2px 2px 0 #fff;
+            filter: drop-shadow(0 10px 10px rgba(255,107,129,0.3));
+        }
     </style>
-</head>
-<body class="text-slate-800 antialiased h-screen flex flex-col">
-
-    <div class="max-w-md mx-auto w-full h-full flex flex-col relative bg-white shadow-2xl">
-        
-        <!-- Header -->
-        <header class="bg-juara-blue text-white p-4 flex justify-between items-center shadow-md shrink-0 z-10 border-b-4 border-blue-900">
-            <div>
-                <h1 class="font-pixel text-sm text-juara-gold tracking-wide"><i class="fa-solid fa-cube mr-2"></i>KUIZ JUARA</h1>
-                <p id="header-user-info" class="text-xs opacity-80 hidden mt-1">Kembali, <span id="header-name" class="font-bold"></span></p>
-            </div>
-            <button id="btn-home" class="hidden text-white hover:text-juara-gold text-2xl p-2 bg-blue-800 rounded-lg border-b-4 border-blue-900 active:border-b-0 active:translate-y-1 transition-all" onclick="showView('dashboard')">
-                <i class="fa-solid fa-house"></i>
-            </button>
-        </header>
-
-        <!-- Main Content Area -->
-        <main class="flex-grow overflow-y-auto relative bg-slate-50 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]">
-            
-            <!-- VIEW: LOGIN -->
-            <div id="view-login" class="p-6 h-full flex flex-col justify-center items-center">
-                <div class="bg-white p-8 rounded-3xl w-full max-w-sm text-center shadow-xl border-4 border-slate-200">
-                    <div class="w-24 h-24 bg-juara-green text-white rounded-xl border-4 border-green-700 flex items-center justify-center mx-auto mb-6 shadow-lg">
-                        <i class="fa-solid fa-hammer text-4xl"></i>
-                    </div>
-                    <h2 class="text-xl font-pixel mb-6 text-juara-blue leading-relaxed">Log Masuk</h2>
-                    
-                    <input type="text" id="input-name" placeholder="Siapa nama awak?" class="w-full p-4 mb-4 rounded-xl border-2 border-slate-300 focus:border-juara-blue focus:outline-none text-lg font-semibold bg-slate-100">
-                    <input type="text" id="input-class" placeholder="Awak kelas mana?" class="w-full p-4 mb-6 rounded-xl border-2 border-slate-300 focus:border-juara-blue focus:outline-none text-lg font-semibold bg-slate-100">
-                    
-                    <button onclick="login()" class="btn-primary w-full p-4 font-bold text-lg text-white">
-                        Mula Bermain <i class="fa-solid fa-play ml-2"></i>
-                    </button>
-                </div>
-            </div>
-
-            <!-- VIEW: DASHBOARD -->
-            <div id="view-dashboard" class="hidden p-6">
-                <div class="bg-juara-blue rounded-2xl p-6 text-white shadow-lg mb-6 border-b-4 border-blue-900 relative overflow-hidden">
-                    <div class="absolute top-0 right-0 opacity-10 text-9xl -mt-4 -mr-4">
-                        <i class="fa-solid fa-gem"></i>
-                    </div>
-                    <h2 class="text-2xl font-bold mb-1" id="dash-name">Nama</h2>
-                    <p class="text-juara-gold font-semibold mb-4"><i class="fa-solid fa-school mr-2"></i>Kelas: <span id="dash-class">Kelas</span></p>
-                    
-                    <div class="flex justify-between items-end">
-                        <div>
-                            <p class="text-sm opacity-80 mb-1 font-pixel text-xs">Markah</p>
-                            <p class="text-4xl font-black" id="dash-score">0</p>
-                        </div>
-                        <div id="prize-badge" class="hidden bg-juara-gold text-juara-blue text-xs font-bold px-3 py-1 rounded-full animate-pulse border-2 border-yellow-600">
-                            Layak Hadiah! 🎁
-                        </div>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 gap-4 mb-6">
-                    <!-- Level 1: Zombie -->
-                    <button onclick="startLevel(1)" class="btn-primary rounded-2xl p-5 flex items-center justify-between group">
-                        <div class="flex items-center text-left">
-                            <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center mr-4 text-2xl border-2 border-white/30">🧟</div>
-                            <div>
-                                <h3 class="font-bold text-lg">Aras Rendah</h3>
-                                <p class="text-sm opacity-80">Lawan Zombie</p>
-                            </div>
-                        </div>
-                        <div class="text-juara-gold font-bold text-lg bg-black/20 px-3 py-1 rounded-lg" id="score-badge-1">0/10</div>
-                    </button>
-
-                    <!-- Level 2: Builder -->
-                    <button onclick="startLevel(2)" id="btn-lvl-2" class="bg-slate-300 rounded-2xl p-5 flex items-center justify-between text-slate-500 border-b-4 border-slate-400 transition-all duration-300">
-                        <div class="flex items-center text-left">
-                            <div class="w-12 h-12 bg-black/10 rounded-xl flex items-center justify-center mr-4 text-2xl border-2 border-slate-400">🧱</div>
-                            <div>
-                                <h3 class="font-bold text-lg">Aras Sederhana</h3>
-                                <p class="text-sm opacity-80">Bina Rumah (Perlu 8/10)</p>
-                            </div>
-                        </div>
-                        <div id="lock-lvl-2"><i class="fa-solid fa-lock text-xl"></i></div>
-                        <div class="text-juara-blue font-bold text-lg hidden bg-white px-3 py-1 rounded-lg border-2 border-slate-200" id="score-badge-2">0/10</div>
-                    </button>
-
-                    <!-- Level 3: Escape -->
-                    <button onclick="startLevel(3)" id="btn-lvl-3" class="bg-slate-300 rounded-2xl p-5 flex items-center justify-between text-slate-500 border-b-4 border-slate-400 transition-all duration-300">
-                        <div class="flex items-center text-left">
-                            <div class="w-12 h-12 bg-black/10 rounded-xl flex items-center justify-center mr-4 text-2xl border-2 border-slate-400">🚪</div>
-                            <div>
-                                <h3 class="font-bold text-lg">Aras Tinggi</h3>
-                                <p class="text-sm opacity-80">Lari dari Creeper (Perlu 8/10)</p>
-                            </div>
-                        </div>
-                        <div id="lock-lvl-3"><i class="fa-solid fa-lock text-xl"></i></div>
-                        <div class="text-juara-blue font-bold text-lg hidden bg-white px-3 py-1 rounded-lg border-2 border-slate-200" id="score-badge-3">0/10</div>
-                    </button>
-                </div>
-
-                <div class="grid grid-cols-2 gap-4">
-                    <button onclick="showView('checklist')" class="bg-white rounded-2xl p-4 flex flex-col items-center justify-center text-juara-blue font-bold border-b-4 border-blue-200 active:border-b-0 active:translate-y-1 transition-all">
-                        <i class="fa-solid fa-list-check text-3xl mb-2 text-juara-green"></i>
-                        <span>Senarai Semak</span>
-                    </button>
-                    <button onclick="showView('leaderboard')" class="bg-white rounded-2xl p-4 flex flex-col items-center justify-center text-juara-blue font-bold border-b-4 border-yellow-200 active:border-b-0 active:translate-y-1 transition-all">
-                        <i class="fa-solid fa-ranking-star text-3xl mb-2 text-juara-gold"></i>
-                        <span>Ranking</span>
-                    </button>
-                </div>
-                
-                <div class="mt-6 text-center text-sm font-semibold text-juara-blue bg-blue-100 p-3 rounded-xl border-2 border-blue-200">
-                    💡 Kumpul markah keseluruhan 27+ (90%) untuk memenangi HADIAH MENARIK!
-                </div>
-            </div>
-
-            <!-- VIEW: LEVEL 1 -->
-            <div id="view-level1" class="hidden p-4 h-full flex flex-col">
-                <div class="flex justify-between items-center mb-4">
-                    <h2 class="font-bold text-xl text-juara-blue"><i class="fa-solid fa-sword mr-2"></i>Lawan Zombie</h2>
-                    <div class="bg-juara-gold text-juara-blue font-bold px-4 py-1 rounded-lg border-2 border-yellow-600 shadow-sm">
-                        Soalan <span id="l1-q-num">1</span>/10
-                    </div>
-                </div>
-
-                <!-- Zombie Battle Visual -->
-                <div class="w-full bg-juara-green border-4 border-green-800 rounded-xl shadow-inner mb-6 relative overflow-hidden flex flex-col p-4 items-center justify-center">
-                    <!-- Health Bar -->
-                    <div class="w-full bg-black/30 h-4 rounded-full mb-4 border border-black overflow-hidden relative">
-                        <div id="l1-zombie-hp" class="bg-red-500 h-full w-full transition-all duration-300"></div>
-                    </div>
-                    <div class="flex justify-around w-full items-end pb-2">
-                        <div class="text-6xl" id="l1-player">🧑‍🌾</div>
-                        <div class="text-3xl text-yellow-400 font-pixel hidden absolute" id="l1-slash">/</div>
-                        <div class="text-6xl" id="l1-zombie">🧟</div>
-                    </div>
-                </div>
-
-                <!-- Question Area -->
-                <div class="bg-white p-6 rounded-2xl border-4 border-slate-200 flex-grow flex flex-col">
-                    <p id="l1-question" class="text-xl font-bold mb-6 text-center text-slate-800 flex-grow flex items-center justify-center"></p>
-                    <div id="l1-options" class="grid grid-cols-1 gap-3">
-                        <!-- Options generated dynamically -->
-                    </div>
-                </div>
-            </div>
-
-            <!-- VIEW: LEVEL 2 -->
-            <div id="view-level2" class="hidden p-4 h-full flex flex-col">
-                <div class="flex justify-between items-center mb-4">
-                    <h2 class="font-bold text-xl text-juara-blue"><i class="fa-solid fa-hammer mr-2"></i>Bina Rumah</h2>
-                    <div class="bg-juara-gold text-juara-blue font-bold px-4 py-1 rounded-lg border-2 border-yellow-600 shadow-sm">
-                        Soalan <span id="l2-q-num">1</span>/10
-                    </div>
-                </div>
-
-                <!-- Builder Visual (Grid of Blocks) -->
-                <div class="flex justify-center mb-4 bg-sky-200 p-4 rounded-xl border-4 border-sky-400 relative">
-                    <!-- The sun -->
-                    <div class="absolute top-2 right-2 text-4xl text-yellow-400">☀️</div>
-                    <!-- Building Grid (3 cols, 4 rows roughly) -->
-                    <div id="builder-grid" class="grid grid-cols-3 gap-1 content-end h-32 w-32 mt-8">
-                        <!-- Filled by JS -->
-                    </div>
-                </div>
-
-                <!-- Question Area -->
-                <div class="bg-white p-6 rounded-2xl border-4 border-slate-200 flex-grow flex flex-col">
-                    <p id="l2-question" class="text-lg font-bold mb-6 text-center text-slate-800 flex-grow flex items-center justify-center"></p>
-                    <div id="l2-options" class="grid grid-cols-1 gap-3">
-                        <!-- Options generated dynamically -->
-                    </div>
-                </div>
-            </div>
-
-            <!-- VIEW: LEVEL 3 -->
-            <div id="view-level3" class="hidden p-4 h-full flex flex-col relative overflow-hidden">
-                <div class="flex justify-between items-center mb-4">
-                    <h2 class="font-bold text-xl text-juara-blue"><i class="fa-solid fa-person-running mr-2"></i>Lari Bebas!</h2>
-                    <div class="bg-juara-gold text-juara-blue font-bold px-4 py-1 rounded-lg border-2 border-yellow-600 shadow-sm">
-                        Markah <span id="l3-score-display">0</span>/10
-                    </div>
-                </div>
-
-                <p class="text-center text-sm font-semibold text-slate-600 mb-4 bg-slate-200 p-2 rounded-lg">Pilih laluan pelarian. Hati-hati ada musuh!</p>
-
-                <!-- Escape Doors Grid -->
-                <div class="grid grid-cols-2 gap-4 flex-grow content-start pb-6" id="escape-grid">
-                    <!-- Cards generated dynamically -->
-                </div>
-
-                <!-- Floating Anim Container -->
-                <div id="float-container" class="absolute inset-0 pointer-events-none overflow-hidden z-50"></div>
-            </div>
-
-            <!-- Level 3 Typing Modal -->
-            <div id="modal-l3-type" class="hidden absolute inset-0 bg-black/80 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
-                <div class="bg-white rounded-2xl p-6 w-full max-w-sm border-4 border-slate-300 animate-pop-in relative text-center">
-                    <div class="text-center mb-4 text-7xl" id="modal-l3-enemy">
-                        🟩
-                    </div>
-                    <div class="bg-red-500 text-white font-pixel text-xs p-2 rounded mb-4 inline-block shadow-[2px_2px_0px_#000]">BAHAYA!</div>
-                    <p id="modal-l3-question" class="text-lg font-bold mb-6 text-slate-800"></p>
-                    
-                    <input type="text" id="modal-l3-input" placeholder="Taip jawapan..." class="w-full p-4 mb-4 rounded-xl border-4 border-slate-200 focus:border-juara-blue focus:outline-none text-xl font-bold text-center bg-slate-100" autocomplete="off">
-                    
-                    <div class="flex gap-2">
-                        <button onclick="closeL3Modal()" class="w-1/3 bg-slate-300 text-slate-700 font-bold p-3 rounded-xl border-b-4 border-slate-400 active:border-b-0 active:translate-y-1">Batal</button>
-                        <button onclick="submitL3Answer()" class="w-2/3 bg-juara-green text-white font-bold p-3 rounded-xl border-b-4 border-green-800 active:border-b-0 active:translate-y-1">Serang & Lari</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- VIEW: CHECKLIST -->
-            <div id="view-checklist" class="hidden h-full flex flex-col bg-white">
-                <div class="p-4 border-b-4 border-slate-200 bg-slate-50">
-                    <h2 class="font-bold text-xl text-juara-blue mb-2"><i class="fa-solid fa-list-check mr-2"></i>Senarai Semak 30 Simpulan Bahasa</h2>
-                    
-                    <!-- Progress Bar -->
-                    <div class="flex justify-between text-sm font-bold text-slate-600 mb-1">
-                        <span>Kemajuan</span>
-                        <span id="checklist-progress-text">0/30</span>
-                    </div>
-                    <div class="w-full bg-slate-200 rounded-full h-4 mb-2 border-2 border-slate-300">
-                        <div id="checklist-progress-bar" class="bg-juara-green h-full rounded-full transition-all duration-500 relative overflow-hidden">
-                            <!-- Striped effect -->
-                            <div class="absolute inset-0 bg-white/20" style="background-image: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,255,255,0.2) 10px, rgba(255,255,255,0.2) 20px);"></div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="flex-grow overflow-y-auto p-4 bg-slate-100">
-                    <ul id="checklist-items" class="space-y-3 pb-8">
-                        <!-- Items generated in JS -->
-                    </ul>
-                </div>
-            </div>
-
-            <!-- VIEW: LEADERBOARD -->
-            <div id="view-leaderboard" class="hidden h-full flex flex-col bg-juara-blue text-white">
-                <div class="p-6 pb-4 text-center border-b-4 border-blue-900 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]">
-                    <h2 class="font-pixel text-xl text-juara-gold mb-2 leading-relaxed"><i class="fa-solid fa-trophy mr-2"></i>Kedudukan Juara</h2>
-                    <p class="opacity-90 text-sm font-semibold">Senarai pembina terhebat!</p>
-                </div>
-                
-                <div class="flex-grow bg-slate-50 mt-2 p-4 overflow-y-auto text-slate-800">
-                    <div id="leaderboard-list" class="space-y-3 pb-8">
-                        <div class="text-center text-slate-400 py-10 font-bold"><i class="fa-solid fa-spinner fa-spin text-3xl mb-3"></i><br>Memuatkan data...</div>
-                    </div>
-                </div>
-            </div>
-
-        </main>
-
-        <!-- Immediate Feedback Modal -->
-        <div id="modal-feedback" class="hidden absolute inset-0 bg-black/60 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
-            <div id="modal-feedback-content" class="bg-white rounded-2xl p-6 w-full max-w-sm border-4 border-slate-300 animate-pop-in text-center shadow-[0_10px_0px_rgba(0,0,0,0.2)]">
-                <div id="feedback-icon" class="text-6xl mb-4"></div>
-                <h3 id="feedback-title" class="font-pixel text-lg mb-4 leading-relaxed"></h3>
-                <p id="feedback-desc" class="text-slate-700 mb-6 bg-slate-100 p-4 rounded-xl border-2 border-slate-200 font-semibold"></p>
-                <button onclick="nextQuestion()" class="btn-primary w-full p-4 font-bold text-lg">Seterusnya</button>
-            </div>
-        </div>
-
-        <!-- Booyah Animation Overlay -->
-        <div id="overlay-goal" class="hidden absolute inset-0 bg-juara-green/95 z-[60] flex flex-col items-center justify-center p-4">
-            <div class="anim-booyah text-center">
-                <h1 class="text-5xl font-pixel text-white mb-6 text-shadow-[4px_4px_0px_#000]" style="text-shadow: 4px 4px 0 #14532d;">BOOYAH!</h1>
-                <div class="text-8xl mb-8">🏆</div>
-                <p class="text-white text-xl font-bold mb-8 bg-black/20 p-4 rounded-xl border-2 border-white/30">Tahniah! Level Selesai!</p>
-                <button onclick="endLevel()" class="bg-juara-gold text-juara-blue px-8 py-4 rounded-xl font-black text-xl border-b-4 border-yellow-600 active:border-b-0 active:translate-y-1">Teruskan</button>
-            </div>
-        </div>
-        
-    </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc, getDoc, collection, query, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, doc, getDoc, setDoc, onSnapshot, collection, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // Firebase Config setup based on prompt rules
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'kuiz-juara-app';
-        let firebaseConfig = {};
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'kuiz-sanrio-app';
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
+        const initialToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+
+        let app, db, auth, userId;
         try {
-            if(typeof __firebase_config !== 'undefined') {
-                firebaseConfig = JSON.parse(__firebase_config);
-            }
-        } catch(e) { console.warn("Firebase config error, using local state only."); }
-
-        let app, db, auth;
-        let userId = null;
-        let useFirebase = Object.keys(firebaseConfig).length > 0;
-
-        if (useFirebase) {
             app = initializeApp(firebaseConfig);
             db = getFirestore(app);
             auth = getAuth(app);
+        } catch(e) {
+            console.warn("Firebase offline mod.", e);
         }
 
-        // --- GLOBAL STATE ---
-        window.state = {
-            name: '',
-            kelas: '',
-            scores: { l1: 0, l2: 0, l3: 0 },
+        // Global State
+        window.appState = {
+            user: { name: '', className: '' },
+            scores: { level1: 0, level2: 0, level3: 0 },
             checklist: Array(30).fill(false),
-            currentLevel: 0,
-            currentQ: 0,
-            levelScore: 0,
-            l3Answered: [], 
-            totalScore: function() { return this.scores.l1 + this.scores.l2 + this.scores.l3; }
+            isLoggedIn: false
         };
 
-        // --- AUDIO SETUP (Tone.js) ---
-        let synth = null;
-        let noiseSynth = null;
-        let playSound = (type) => {
-            if(!synth) {
-                synth = new Tone.PolySynth(Tone.Synth).toDestination();
-                synth.volume.value = -8;
-                noiseSynth = new Tone.MembraneSynth().toDestination();
-                noiseSynth.volume.value = -5;
-            }
-            Tone.start();
-            
-            const now = Tone.now();
-            if(type === 'correct') {
-                synth.triggerAttackRelease(["E5", "G5"], "8n", now);
-            } else if (type === 'wrong') {
-                noiseSynth.triggerAttackRelease("G2", "8n", now);
-            } else if (type === 'zombie-hit') {
-                // Thud sound for zombie
-                noiseSynth.triggerAttackRelease("C2", "8n", now);
-            } else if (type === 'booyah') {
-                // Victory theme
-                synth.triggerAttackRelease(["C4", "E4", "G4"], "8n", now);
-                synth.triggerAttackRelease(["E4", "G4", "C5"], "8n", now + 0.15);
-                synth.triggerAttackRelease(["G4", "C5", "E5"], "4n", now + 0.3);
-            }
-        };
-
-        // --- DATA: SOALAN & SENARAI SEMAK ---
-        const checklistItems = [
-            "Anak emas (Orang kesayangan)", "Ulat buku (Suka membaca)", "Kaki bangku (Tidak pandai main bola)", 
-            "Mandi peluh (Bekerja kuat)", "Makan angin (Bersiar-siar)", "Panjang tangan (Suka mencuri)", 
-            "Ringan tulang (Rajin bekerja)", "Berat tulang (Malas bekerja)", "Hati batu (Degil)", 
-            "Kepala batu (Sukar menerima nasihat)", "Alas perut (Makan sedikit)", "Ikat perut (Menahan lapar / berjimat)", 
-            "Buah tangan (Hadiah)", "Cahaya mata (Anak)", "Cakar ayam (Tulisan buruk)", 
-            "Durian runtuh (Keuntungan mengejut)", "Gaji buta (Gaji tanpa bekerja kuat)", "Harga mati (Harga tetap)", 
-            "Hidung tinggi (Sombong)", "Iri hati (Dengki)", "Jalan buntu (Tiada penyelesaian)", 
-            "Kacang hantu (Orang jahat/nakal)", "Langkah kanan (Nasib baik)", "Lipas kudung (Buat kerja cepat)", 
-            "Lintah darat (Ceti haram/menindas)", "Mulut murai (Banyak cakap)", "Nyawa-nyawa ikan (Hampir mati)", 
-            "Otak cair (Pintar/cerdik)", "Puteri lilin (Tidak tahan panas)", "Rabun ayam (Kurang jelas waktu senja)"
-        ];
-
-        const questionsL1 = [
-            { q: "Ahmad sentiasa disayangi oleh guru kelasnya kerana dia sangat rajin. Ahmad digelar...", opts: ["Anak emas", "Kaki bangku", "Ulat buku", "Hati batu"], a: 0, desc: "'Anak emas' bermaksud orang yang sangat disayangi oleh seseorang." },
-            { q: "Raju tidak pandai bermain bola sepak dan sering ditertawakan rakan-rakannya. Raju seorang...", opts: ["Ringan tulang", "Kaki bangku", "Otak cair", "Langkah kanan"], a: 1, desc: "'Kaki bangku' merujuk kepada seseorang yang tidak pandai bermain bola." },
-            { q: "Aminah menghabiskan masa lapangnya di perpustakaan. Dia ibarat...", opts: ["Puteri lilin", "Kacang hantu", "Ulat buku", "Makan angin"], a: 2, desc: "'Ulat buku' bermaksud orang yang rajin dan suka membaca buku." },
-            { q: "Pekerja itu sanggup ________ di bawah terik matahari untuk menyara keluarga.", opts: ["Makan angin", "Mandi peluh", "Gaji buta", "Ikat perut"], a: 1, desc: "'Mandi peluh' bermaksud bekerja dengan kuat dan bersungguh-sungguh." },
-            { q: "Cuti sekolah ini, kami sekeluarga akan pergi ________ di Pulau Langkawi.", opts: ["Makan angin", "Jalan buntu", "Langkah kanan", "Buah tangan"], a: 0, desc: "'Makan angin' bermaksud bersiar-siar untuk berehat." },
-            { q: "Berhati-hati dengan budak itu, dia tu ________ dan suka mencuri barang kawan.", opts: ["Panjang tangan", "Ringan tulang", "Mulut murai", "Hidung tinggi"], a: 0, desc: "'Panjang tangan' bermaksud suka mencuri barang orang lain." },
-            { q: "Semua orang suka akan Siti kerana dia ________ dan sering menolong cikgu.", opts: ["Berat tulang", "Hati batu", "Ringan tulang", "Lipas kudung"], a: 2, desc: "'Ringan tulang' bermaksud orang yang rajin bekerja dan suka menolong." },
-            { q: "Abang membawa ________ dari luar negara untuk kami sekeluarga.", opts: ["Cahaya mata", "Harga mati", "Buah tangan", "Durian runtuh"], a: 2, desc: "'Buah tangan' bermaksud hadiah yang dibawa apabila melawat seseorang." },
-            { q: "Tulisan adik sangat buruk seperti ________.", opts: ["Cakar ayam", "Rabun ayam", "Kaki bangku", "Otak cair"], a: 0, desc: "'Cakar ayam' bermaksud tulisan yang sangat buruk dan sukar dibaca." },
-            { q: "Pakcik kaya itu memenangi loteri dan mendapat ________.", opts: ["Jalan buntu", "Gaji buta", "Durian runtuh", "Iri hati"], a: 2, desc: "'Durian runtuh' bermaksud keuntungan yang datang secara tiba-tiba." }
-        ];
-
-        const questionsL2 = [
-            { q: "Orang yang sombong dipanggil...", opts: ["Hati batu", "Hidung tinggi", "Kepala batu", "Otak cair"], a: 1, desc: "Hidung tinggi bermaksud orang yang sombong atau bongkak." },
-            { q: "Jika tiada penyelesaian bagi masalah itu, ia menemui...", opts: ["Jalan buntu", "Harga mati", "Gaji buta", "Langkah kanan"], a: 0, desc: "Jalan buntu bermaksud tiada cara lagi untuk menyelesaikan sesuatu masalah." },
-            { q: "Perempuan itu tidak tahan cuaca panas, kawan-kawannya memanggilnya...", opts: ["Mulut murai", "Puteri lilin", "Rabun ayam", "Nyawa ikan"], a: 1, desc: "Puteri lilin ialah kiasan bagi orang yang tidak tahan panas matahari." },
-            { q: "Amin dapat menjawab soalan Matematik dengan cepat. Dia...", opts: ["Kepala batu", "Kacang hantu", "Otak cair", "Lintah darat"], a: 2, desc: "Otak cair merujuk kepada individu yang sangat pandai dan cerdik." },
-            { q: "Makcik Kiah asyik bercakap tanpa henti di kenduri itu. Dia seperti...", opts: ["Mulut murai", "Iri hati", "Panjang tangan", "Lipas kudung"], a: 0, desc: "Mulut murai bermaksud orang yang suka bercakap banyak." },
-            { q: "Jangan jadi ________, mengambil keuntungan berlipat ganda dari orang miskin.", opts: ["Lintah darat", "Kacang hantu", "Paku belanda", "Hati batu"], a: 0, desc: "Lintah darat ialah orang yang meminjamkan wang dengan bunga yang terlalu tinggi." },
-            { q: "Kerana mahu menyimpan duit membeli basikal, Ali sanggup ________.", opts: ["Mandi peluh", "Alas perut", "Ikat perut", "Makan angin"], a: 2, desc: "Ikat perut bermaksud menahan lapar untuk berjimat cermat." },
-            { q: "Ibu makan sekeping roti sekadar ________ sebelum ke tempat kerja.", opts: ["Ikat perut", "Alas perut", "Harga mati", "Buah tangan"], a: 1, desc: "Alas perut bermaksud makan sedikit supaya tidak terlalu lapar." },
-            { q: "Nasib mangsa kemalangan itu ________ di unit rawatan rapi.", opts: ["Langkah kanan", "Durian runtuh", "Nyawa-nyawa ikan", "Jalan buntu"], a: 2, desc: "Nyawa-nyawa ikan bermaksud dalam keadaan hampir mati." },
-            { q: "Pekerja yang cepat melakukan kerjanya diibaratkan seperti...", opts: ["Cakar ayam", "Lipas kudung", "Ringan tulang", "Ulat buku"], a: 1, desc: "Lipas kudung membawa maksud membuat kerja dengan sangat pantas." }
-        ];
-
-        const questionsL3 = [
-            { q: "Orang yang malas bekerja dipanggil _______ tulang.", a: "berat", desc: "Berat tulang bermaksud malas bekerja." },
-            { q: "Simpulan bahasa bagi anak ialah cahaya _______.", a: "mata", desc: "Cahaya mata bermaksud anak." },
-            { q: "Kalau asyik cemburu dengan kejayaan orang, itu tandanya ada sifat iri _______.", a: "hati", desc: "Iri hati bermaksud cemburu atau dengki." },
-            { q: "Harga barang ini sudah ditetapkan dan tidak boleh ditawar lagi. Ini harga _______.", a: "mati", desc: "Harga mati bermaksud harga tetap." },
-            { q: "Budak nakal yang selalu mengganggu orang digelar kacang _______.", a: "hantu", desc: "Kacang hantu merujuk kepada orang jahat atau nakal." },
-            { q: "Kita datang tepat pada masanya sewaktu jamuan bermula. Memang langkah _______.", a: "kanan", desc: "Langkah kanan bermaksud bernasib baik." },
-            { q: "Pekerja yang tidak buat kerja tapi dapat gaji dipanggil makan gaji _______.", a: "buta", desc: "Gaji buta bermaksud mendapat gaji tanpa perlu bekerja kuat." },
-            { q: "Oleh kerana degil, dia sukar menerima nasihat. Dia ber kepala _______.", a: "batu", desc: "Kepala batu bermaksud degil dan tidak mahu dengar nasihat." },
-            { q: "Penglihatan atuk kurang jelas waktu senja kerana menghidap rabun _______.", a: "ayam", desc: "Rabun ayam bermaksud kurang jelas penglihatan pada waktu senja." },
-            { q: "Orang yang tetap pendirian dan tiada belas kasihan dipanggil hati _______.", a: "batu", desc: "Hati batu bermaksud degil atau keras hati." }
-        ];
-
-        window.onload = async () => {
-            initChecklistUI();
-            
-            if (useFirebase) {
-                try {
-                    let authToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
-                    if (authToken) {
-                        await signInWithCustomToken(auth, authToken);
-                    } else {
-                        await signInAnonymously(auth);
-                    }
-                    
-                    onAuthStateChanged(auth, async (user) => {
-                        if (user) {
-                            userId = user.uid;
-                            await loadUserData();
-                            loadLeaderboard();
-                        }
-                    });
-                } catch (e) {
-                    console.error("Auth error:", e);
-                    showView('login');
-                }
-            } else {
-                showView('login');
-            }
-        };
-
-        window.showView = (viewId) => {
-            document.querySelectorAll('main > div').forEach(el => el.classList.add('hidden'));
-            
-            let targetId = viewId.startsWith('view-') ? viewId : `view-${viewId}`;
-            let el = document.getElementById(targetId);
-            if(el) {
-                el.classList.remove('hidden');
-                el.classList.add('animate-pop-in');
-            }
-
-            const btnHome = document.getElementById('btn-home');
-            const userInf = document.getElementById('header-user-info');
-            if (viewId === 'login') {
-                btnHome.classList.add('hidden');
-                userInf.classList.add('hidden');
-            } else {
-                if(state.name) {
-                    userInf.classList.remove('hidden');
-                    document.getElementById('header-name').innerText = state.name;
-                }
-                if (viewId === 'dashboard') {
-                    btnHome.classList.add('hidden');
+        async function initAuth() {
+            if (!auth) return;
+            try {
+                if (initialToken) {
+                    await signInWithCustomToken(auth, initialToken);
                 } else {
-                    btnHome.classList.remove('hidden');
+                    await signInAnonymously(auth);
                 }
+            } catch(error) {
+                console.error("Auth error:", error);
             }
-        };
+        }
 
-        window.login = async () => {
-            const n = document.getElementById('input-name').value.trim();
-            const c = document.getElementById('input-class').value.trim();
-            
-            if(!n || !c) {
-                alertCustom("Sila isi", "Sila masukkan nama dan kelas anda untuk mula mengkraf.", "fa-solid fa-circle-exclamation text-juara-gold", "text-juara-gold");
-                return;
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                userId = user.uid;
+                loadUserData();
             }
-
-            state.name = n;
-            state.kelas = c;
-            
-            await saveUserData();
-            updateDashboardUI();
-            showView('dashboard');
-        };
+        });
 
         async function saveUserData() {
-            if(!useFirebase || !userId) return;
+            if (!db || !userId) return;
             try {
-                await setDoc(doc(db, 'artifacts', appId, 'users', userId, 'profile'), {
-                    name: state.name,
-                    kelas: state.kelas,
-                    scores: state.scores,
-                    checklist: state.checklist,
-                    updatedAt: new Date()
+                const totalScore = window.appState.scores.level1 + window.appState.scores.level2 + window.appState.scores.level3;
+                
+                const userDocRef = doc(db, 'artifacts', appId, 'users', userId, 'profile');
+                await setDoc(userDocRef, {
+                    name: window.appState.user.name,
+                    className: window.appState.user.className,
+                    scores: window.appState.scores,
+                    checklist: window.appState.checklist,
+                    totalScore: totalScore,
+                    updatedAt: new Date().toISOString()
                 });
 
-                await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'leaderboard', userId), {
-                    name: state.name,
-                    kelas: state.kelas,
-                    totalScore: state.totalScore(),
-                    timestamp: new Date()
+                const publicDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'leaderboard', userId);
+                await setDoc(publicDocRef, {
+                    name: window.appState.user.name,
+                    className: window.appState.user.className,
+                    totalScore: totalScore,
+                    updatedAt: new Date().toISOString()
                 });
-            } catch (e) { console.error("Save error:", e); }
+            } catch (e) {
+                console.error("Ralat menyimpan data:", e);
+            }
         }
 
         async function loadUserData() {
-            if(!useFirebase || !userId) return;
+            if (!db || !userId) return;
             try {
-                const docSnap = await getDoc(doc(db, 'artifacts', appId, 'users', userId, 'profile'));
+                const userDocRef = doc(db, 'artifacts', appId, 'users', userId, 'profile');
+                const docSnap = await getDoc(userDocRef);
                 if (docSnap.exists()) {
                     const data = docSnap.data();
-                    state.name = data.name || '';
-                    state.kelas = data.kelas || '';
-                    state.scores = data.scores || {l1:0, l2:0, l3:0};
-                    state.checklist = data.checklist || Array(30).fill(false);
+                    window.appState.user.name = data.name || '';
+                    window.appState.user.className = data.className || '';
+                    window.appState.scores = data.scores || { level1: 0, level2: 0, level3: 0 };
+                    window.appState.checklist = data.checklist || Array(30).fill(false);
                     
-                    if (state.name) {
-                        updateDashboardUI();
-                        updateChecklistUIFromState();
-                        showView('dashboard');
-                    } else {
-                        showView('login');
+                    if (window.appState.user.name !== '') {
+                        window.appState.isLoggedIn = true;
+                        document.getElementById('display-name').textContent = window.appState.user.name;
+                        showScreen('screen-menu');
+                        updateMenuLocks();
                     }
-                } else {
-                    showView('login');
                 }
-            } catch (e) { console.error("Load error:", e); showView('login'); }
-        }
-
-        function loadLeaderboard() {
-            if(!useFirebase) return;
-            const lbRef = collection(db, 'artifacts', appId, 'public', 'data', 'leaderboard');
-            onSnapshot(lbRef, (snapshot) => {
-                let players = [];
-                snapshot.forEach(doc => {
-                    players.push({id: doc.id, ...doc.data()});
-                });
-                players.sort((a, b) => b.totalScore - a.totalScore);
-                renderLeaderboard(players.slice(0, 50));
-            }, (error) => {
-                console.error("Leaderboard error:", error);
-            });
-        }
-
-        function renderLeaderboard(players) {
-            const list = document.getElementById('leaderboard-list');
-            list.innerHTML = '';
-            
-            if(players.length === 0) {
-                list.innerHTML = '<div class="text-center text-slate-400 py-10">Tiada rekod lagi. Jadilah yang pertama!</div>';
-                return;
+            } catch (e) {
+                console.error("Ralat memuat data:", e);
             }
+        }
 
-            players.forEach((p, index) => {
-                let badge = '';
-                if(index === 0) badge = '🥇';
-                else if (index === 1) badge = '🥈';
-                else if (index === 2) badge = '🥉';
-                else badge = `<span class="text-sm text-slate-400 font-bold">${index+1}</span>`;
+        window.saveUserData = saveUserData;
+        window.db = db;
+        window.appId = appId;
+        initAuth();
+    </script>
+</head>
+<body class="text-gray-700 antialiased selection:bg-pink-300 selection:text-white flex flex-col h-screen">
 
-                let row = document.createElement('div');
-                row.className = `flex items-center justify-between p-3 rounded-xl border-2 ${p.id === userId ? 'bg-blue-100 border-juara-blue shadow' : 'bg-white border-slate-200'} transition-all`;
-                row.innerHTML = `
-                    <div class="flex items-center">
-                        <div class="w-8 h-8 flex items-center justify-center mr-3 font-pixel text-xs">${badge}</div>
+    <header class="bg-pink-400 text-white p-4 shadow-sm z-10 flex justify-between items-center border-b-4 border-pink-300">
+        <div class="flex items-center gap-2">
+            <i class="fas fa-heart text-white text-2xl animate-pulse-fast"></i>
+            <h1 class="font-bold text-xl tracking-wide game-font mt-1">Kuiz Comel</h1>
+        </div>
+        <div id="user-info-badge" class="hidden flex items-center bg-white/30 px-3 py-1 rounded-full text-sm font-bold shadow-sm">
+            <i class="fas fa-cat mr-2"></i>
+            <span id="display-name">Pelajar</span>
+        </div>
+    </header>
+
+    <main class="flex-1 overflow-y-auto relative w-full max-w-2xl mx-auto bg-white shadow-xl">
+        
+        <!-- 1. SCREEN: LOGIN -->
+        <section id="screen-login" class="h-full flex flex-col items-center justify-center p-6 bg-gradient-to-br from-pink-50 to-pink-100">
+            <div class="bg-white p-8 rounded-3xl shadow-xl w-full max-w-md border-t-8 border-pink-400 text-center relative overflow-hidden">
+                <div class="absolute -top-4 -right-4 text-pink-100 text-8xl opacity-50 z-0"><i class="fas fa-paw"></i></div>
+                
+                <div class="relative z-10">
+                    <i class="fas fa-cat text-6xl text-pink-500 mb-4 animate-float"></i>
+                    <h2 class="text-3xl font-black mb-6 text-pink-600 game-font">Selamat Datang!</h2>
+                    <div class="space-y-4">
                         <div>
-                            <p class="font-bold text-slate-800">${p.name} ${p.id === userId ? '(Anda)' : ''}</p>
-                            <p class="text-xs text-slate-500 font-semibold">${p.kelas} | ID: ${p.id.substring(0,6)}...</p>
+                            <label class="block text-left text-sm font-bold mb-1 text-pink-400">Siapa nama awak?</label>
+                            <input type="text" id="input-name" class="w-full border-2 border-pink-200 rounded-2xl p-4 text-lg focus:border-pink-500 focus:ring-4 focus:ring-pink-100 outline-none transition bg-pink-50/50" placeholder="Cth: Alisa">
+                        </div>
+                        <div>
+                            <label class="block text-left text-sm font-bold mb-1 text-pink-400">Awak kelas mana?</label>
+                            <input type="text" id="input-class" class="w-full border-2 border-pink-200 rounded-2xl p-4 text-lg focus:border-pink-500 focus:ring-4 focus:ring-pink-100 outline-none transition bg-pink-50/50" placeholder="Cth: 5 Mawar">
+                        </div>
+                        <button onclick="handleLogin()" class="w-full bg-pink-500 hover:bg-pink-400 text-white font-bold text-xl py-4 rounded-2xl shadow-lg shadow-pink-200 transform transition active:scale-95 mt-6 game-font">
+                            MULA MAIN <i class="fas fa-star ml-2 text-yellow-300"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. SCREEN: MENU -->
+        <section id="screen-menu" class="hidden h-full p-6 flex flex-col bg-pink-50">
+            <div class="text-center mb-6">
+                <h2 class="text-2xl font-black text-pink-600 game-font">Pilih Permainan</h2>
+                <p class="text-pink-400 text-sm mt-1 font-bold">Kumpul markah penuh untuk buka kunci!</p>
+            </div>
+            
+            <div id="prize-banner" class="hidden bg-gradient-to-r from-pink-400 to-pink-300 text-white p-4 rounded-2xl shadow-md mb-6 animate-pulse-fast text-center font-bold border-2 border-white">
+                <i class="fas fa-gift text-3xl mb-1 block text-yellow-300"></i>
+                YAY! Markah anda > 90%. Tuntut hadiah misteri daripada cikgu! 🎀
+            </div>
+
+            <div class="space-y-4 flex-1">
+                <!-- Aras 1 -->
+                <button onclick="startLevel(1)" class="w-full bg-white border-2 border-pink-200 rounded-3xl p-4 flex items-center justify-between shadow-sm hover:shadow-md hover:border-pink-400 transition group">
+                    <div class="flex items-center gap-4">
+                        <div class="bg-pink-100 text-pink-500 w-14 h-14 rounded-2xl flex items-center justify-center text-2xl group-hover:scale-110 transition">
+                            <i class="fas fa-apple-whole"></i>
+                        </div>
+                        <div class="text-left">
+                            <h3 class="font-bold text-lg text-pink-600 game-font">Aras Rendah</h3>
+                            <p class="text-xs text-pink-400 font-bold">Kumpul Epal (10 Soalan)</p>
                         </div>
                     </div>
-                    <div class="text-lg font-black text-juara-blue bg-slate-100 px-3 py-1 rounded-lg border-2 border-slate-300">
-                        ${p.totalScore}
+                    <div class="text-right">
+                        <span id="score-badge-1" class="font-black text-pink-500 bg-pink-50 px-3 py-1 rounded-full text-sm">0/10</span>
                     </div>
-                `;
-                list.appendChild(row);
-            });
-        }
+                </button>
 
-        function updateDashboardUI() {
-            document.getElementById('dash-name').innerText = state.name;
-            document.getElementById('dash-class').innerText = state.kelas;
-            document.getElementById('dash-score').innerText = state.totalScore();
+                <!-- Aras 2 -->
+                <button id="btn-level-2" onclick="startLevel(2)" class="w-full bg-gray-50 border-2 border-gray-200 rounded-3xl p-4 flex items-center justify-between shadow-sm transition opacity-70 relative overflow-hidden group">
+                    <div class="flex items-center gap-4 relative z-10">
+                        <div class="bg-gray-200 text-gray-400 w-14 h-14 rounded-2xl flex items-center justify-center text-2xl transition" id="icon-level-2">
+                            <i class="fas fa-lock"></i>
+                        </div>
+                        <div class="text-left">
+                            <h3 class="font-bold text-lg text-gray-500 game-font" id="title-level-2">Aras Sederhana</h3>
+                            <p class="text-xs text-gray-400 font-bold">Lompat Awan (Perlu 8/10 Aras 1)</p>
+                        </div>
+                    </div>
+                    <div class="text-right relative z-10">
+                        <span id="score-badge-2" class="font-black text-gray-400 bg-gray-100 px-3 py-1 rounded-full text-sm">0/10</span>
+                    </div>
+                </button>
 
-            if(state.totalScore() >= 27) {
-                document.getElementById('prize-badge').classList.remove('hidden');
-            } else {
-                document.getElementById('prize-badge').classList.add('hidden');
-            }
+                <!-- Aras 3 -->
+                <button id="btn-level-3" onclick="startLevel(3)" class="w-full bg-gray-50 border-2 border-gray-200 rounded-3xl p-4 flex items-center justify-between shadow-sm transition opacity-70 relative overflow-hidden group">
+                    <div class="flex items-center gap-4 relative z-10">
+                        <div class="bg-gray-200 text-gray-400 w-14 h-14 rounded-2xl flex items-center justify-center text-2xl transition" id="icon-level-3">
+                            <i class="fas fa-lock"></i>
+                        </div>
+                        <div class="text-left">
+                            <h3 class="font-bold text-lg text-gray-500 game-font" id="title-level-3">Aras Tinggi</h3>
+                            <p class="text-xs text-gray-400 font-bold">Buka Hadiah (Perlu 8/10 Aras 2)</p>
+                        </div>
+                    </div>
+                    <div class="text-right relative z-10">
+                        <span id="score-badge-3" class="font-black text-gray-400 bg-gray-100 px-3 py-1 rounded-full text-sm">0/10</span>
+                    </div>
+                </button>
+            </div>
 
-            document.getElementById('score-badge-1').innerText = `${state.scores.l1}/10`;
+            <!-- Extras -->
+            <div class="grid grid-cols-2 gap-4 mt-6 border-t-2 border-pink-100 pt-6">
+                <button onclick="showScreen('screen-checklist')" class="bg-white border-2 border-pink-100 rounded-2xl p-3 flex flex-col items-center justify-center text-pink-500 hover:bg-pink-50 shadow-sm transition active:scale-95">
+                    <i class="fas fa-list-check text-2xl mb-2 text-blue-400"></i>
+                    <span class="font-bold text-sm game-font">Senarai Semak</span>
+                </button>
+                <button onclick="showScreen('screen-leaderboard'); loadLeaderboard();" class="bg-white border-2 border-pink-100 rounded-2xl p-3 flex flex-col items-center justify-center text-pink-500 hover:bg-pink-50 shadow-sm transition active:scale-95">
+                    <i class="fas fa-crown text-2xl mb-2 text-yellow-400"></i>
+                    <span class="font-bold text-sm game-font">Ranking</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- 3. SCREEN: LEVEL 1 (Kumpul Epal) -->
+        <section id="screen-level1" class="hidden h-full flex flex-col bg-white">
+            <div class="p-4 bg-pink-400 text-white flex justify-between items-center shadow-sm">
+                <button onclick="showScreen('screen-menu')" class="px-3 py-2 bg-white/20 rounded-xl font-bold text-sm hover:bg-white/30 transition"><i class="fas fa-arrow-left"></i> Kembali</button>
+                <span class="font-bold game-font text-lg tracking-wide">Kumpul Epal</span>
+                <span class="font-black bg-white text-pink-500 px-3 py-1 rounded-full text-sm" id="l1-score-display">0/10</span>
+            </div>
             
-            const btn2 = document.getElementById('btn-lvl-2');
-            const lck2 = document.getElementById('lock-lvl-2');
-            const bdg2 = document.getElementById('score-badge-2');
+            <div class="p-5 flex-1 flex flex-col bg-pink-50">
+                <!-- Visual Area -->
+                <div id="field-container" class="mb-6 relative">
+                    <!-- Cloud decorations -->
+                    <div class="cloud-decor w-16 h-8 top-4 left-4"></div>
+                    <div class="cloud-decor w-24 h-10 top-10 right-10 opacity-50"></div>
+                    <div class="cloud-decor w-12 h-6 bottom-4 left-1/3"></div>
+                    
+                    <!-- Goal and Ball -->
+                    <i id="goal" class="fas fa-apple-whole animate-pulse-fast"></i>
+                    <div id="goal-post" class="absolute right-0 top-[20%] bottom-[20%] w-10 border-4 border-r-0 border-white/50 rounded-l-3xl bg-white/20 z-0"></div>
+                    
+                    <div id="ball" style="left: 5%; top: 60%;" class="text-pink-600 drop-shadow-lg">
+                        <i class="fas fa-cat"></i>
+                    </div>
+                </div>
+
+                <!-- Question Area -->
+                <div class="flex-1 flex flex-col bg-white p-6 rounded-3xl shadow-sm border-2 border-pink-100" id="l1-question-container">
+                    <h3 class="text-xl font-bold text-center text-pink-600 mb-6 game-font leading-snug" id="l1-question-text">Soalan dimuatkan...</h3>
+                    <div class="grid grid-cols-1 gap-3 mt-auto" id="l1-options">
+                        <!-- Options generated by JS -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. SCREEN: LEVEL 2 (Lompat Awan) -->
+        <section id="screen-level2" class="hidden h-full flex flex-col bg-white">
+            <div class="p-4 bg-blue-400 text-white flex justify-between items-center shadow-sm">
+                <button onclick="showScreen('screen-menu')" class="px-3 py-2 bg-white/20 rounded-xl font-bold text-sm hover:bg-white/30 transition"><i class="fas fa-arrow-left"></i> Kembali</button>
+                <span class="font-bold game-font text-lg tracking-wide">Lompat Awan</span>
+                <span class="font-black bg-white text-blue-500 px-3 py-1 rounded-full text-sm" id="l2-score-display">0/10</span>
+            </div>
             
-            if(state.scores.l1 >= 8) {
-                btn2.classList.remove('bg-slate-300', 'text-slate-500', 'border-slate-400');
-                btn2.classList.add('bg-white', 'text-slate-800', 'border-slate-300', 'active:border-b-0', 'active:translate-y-1', 'border-b-4');
-                btn2.querySelector('.w-12').classList.replace('bg-black/10', 'bg-blue-100');
-                lck2.classList.add('hidden');
-                bdg2.classList.remove('hidden');
-                bdg2.innerText = `${state.scores.l2}/10`;
-            }
+            <div class="p-5 flex-1 flex flex-col bg-blue-50">
+                <!-- Visual Area -->
+                <div class="mb-6 bg-white p-3 rounded-3xl shadow-sm border-2 border-blue-100">
+                    <div class="checkers-board" id="checkers-board">
+                        <!-- Board generated by JS -->
+                    </div>
+                </div>
 
-            const btn3 = document.getElementById('btn-lvl-3');
-            const lck3 = document.getElementById('lock-lvl-3');
-            const bdg3 = document.getElementById('score-badge-3');
+                <!-- Question Area -->
+                <div class="flex-1 flex flex-col bg-white p-6 rounded-3xl shadow-sm border-2 border-blue-100" id="l2-question-container">
+                    <h3 class="text-xl font-bold text-center text-blue-600 mb-6 game-font leading-snug" id="l2-question-text">Soalan dimuatkan...</h3>
+                    <div class="grid grid-cols-1 gap-3 mt-auto" id="l2-options">
+                        <!-- Options generated by JS -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. SCREEN: LEVEL 3 (Kotak Hadiah) -->
+        <section id="screen-level3" class="hidden h-full flex flex-col bg-white">
+            <div class="p-4 bg-yellow-400 text-yellow-900 flex justify-between items-center shadow-sm">
+                <button onclick="showScreen('screen-menu')" class="px-3 py-2 bg-black/10 rounded-xl font-bold text-sm hover:bg-black/20 transition"><i class="fas fa-arrow-left"></i> Kembali</button>
+                <span class="font-bold game-font text-lg tracking-wide">Buka Hadiah</span>
+                <span class="font-black bg-white text-yellow-600 px-3 py-1 rounded-full text-sm" id="l3-score-display">0/10</span>
+            </div>
             
-            if(state.scores.l2 >= 8 && state.scores.l1 >= 8) {
-                btn3.classList.remove('bg-slate-300', 'text-slate-500', 'border-slate-400');
-                btn3.classList.add('bg-white', 'text-slate-800', 'border-slate-300', 'active:border-b-0', 'active:translate-y-1', 'border-b-4');
-                btn3.querySelector('.w-12').classList.replace('bg-black/10', 'bg-purple-100');
-                lck3.classList.add('hidden');
-                bdg3.classList.remove('hidden');
-                bdg3.innerText = `${state.scores.l3}/10`;
-            }
-        }
+            <div class="p-5 flex-1 overflow-y-auto bg-yellow-50">
+                <div class="bg-white p-4 rounded-2xl border-2 border-yellow-200 mb-6 text-center">
+                    <p class="text-sm font-bold text-yellow-700">Pilih kotak misteri dan taip jawapan yang betul! 🎁</p>
+                </div>
+                <div class="jersey-grid" id="jersey-grid">
+                    <!-- Cards generated by JS -->
+                </div>
+            </div>
+        </section>
 
-        window.startLevel = (level) => {
-            if(level === 2 && state.scores.l1 < 8) {
-                alertCustom("Masih Terkunci", "Perlu sekurang-kurangnya 8/10 di Aras Rendah untuk membina rumah.", "fa-solid fa-lock text-slate-400", "text-slate-600");
-                return;
-            }
-            if(level === 3 && state.scores.l2 < 8) {
-                alertCustom("Masih Terkunci", "Perlu sekurang-kurangnya 8/10 di Aras Sederhana untuk lari dari creeper.", "fa-solid fa-lock text-slate-400", "text-slate-600");
-                return;
-            }
-
-            state.currentLevel = level;
-            state.currentQ = 0;
-            state.levelScore = 0;
-
-            if(level === 1) initLevel1();
-            if(level === 2) initLevel2();
-            if(level === 3) initLevel3();
-
-            showView(`level${level}`);
-        };
-
-        window.alertCustom = (title, desc, iconClass, titleColorClass) => {
-            const modal = document.getElementById('modal-feedback');
-            const content = document.getElementById('modal-feedback-content');
+        <!-- 6. SCREEN: CHECKLIST -->
+        <section id="screen-checklist" class="hidden h-full flex flex-col bg-white">
+            <div class="p-4 bg-pink-400 text-white flex justify-between items-center shadow-sm">
+                <button onclick="showScreen('screen-menu')" class="px-3 py-2 bg-white/20 rounded-xl font-bold text-sm transition"><i class="fas fa-arrow-left"></i> Kembali</button>
+                <span class="font-bold game-font text-lg">Buku Nota Comel</span>
+            </div>
             
-            document.getElementById('feedback-icon').innerHTML = `<i class="${iconClass}"></i>`;
-            document.getElementById('feedback-title').innerText = title;
-            document.getElementById('feedback-title').className = `font-pixel text-lg mb-4 leading-relaxed ${titleColorClass}`;
-            document.getElementById('feedback-desc').innerText = desc;
-            
-            const btn = content.querySelector('button');
-            btn.innerText = "Tutup";
-            btn.onclick = () => { modal.classList.add('hidden'); };
+            <div class="p-5 border-b-2 border-pink-100 bg-pink-50">
+                <div class="flex justify-between text-sm font-bold text-pink-500 mb-2">
+                    <span>Kemajuan Belajar</span>
+                    <span id="checklist-progress-text" class="bg-white px-2 py-1 rounded-md">0/30</span>
+                </div>
+                <div class="w-full bg-pink-200 rounded-full h-5 overflow-hidden border-2 border-white shadow-inner">
+                    <div id="checklist-progress-bar" class="bg-gradient-to-r from-pink-400 to-yellow-300 h-full transition-all duration-500 w-0"></div>
+                </div>
+            </div>
 
-            modal.classList.remove('hidden');
-        };
+            <div class="flex-1 overflow-y-auto p-4 space-y-3 bg-white" id="checklist-container">
+                <!-- Checklist items generated by JS -->
+            </div>
+        </section>
 
-        window.showFeedback = (isCorrect, explanation) => {
-            const modal = document.getElementById('modal-feedback');
-            const content = document.getElementById('modal-feedback-content');
-            const btn = content.querySelector('button');
+        <!-- 7. SCREEN: LEADERBOARD -->
+        <section id="screen-leaderboard" class="hidden h-full flex flex-col bg-white">
+            <div class="p-4 bg-yellow-400 text-yellow-900 flex justify-between items-center shadow-sm">
+                <button onclick="showScreen('screen-menu')" class="px-3 py-2 bg-black/10 rounded-xl font-bold text-sm transition"><i class="fas fa-arrow-left"></i> Kembali</button>
+                <span class="font-bold game-font text-lg">Dewan Bintang</span>
+                <i class="fas fa-crown text-xl"></i>
+            </div>
             
-            if(isCorrect) {
-                document.getElementById('feedback-icon').innerHTML = `<div class="text-5xl">✨</div>`;
-                document.getElementById('feedback-title').innerText = "Tepat!";
-                document.getElementById('feedback-title').className = "font-pixel text-lg mb-4 text-juara-green";
-            } else {
-                playSound('wrong');
-                document.getElementById('feedback-icon').innerHTML = `<div class="text-5xl">💥</div>`;
-                document.getElementById('feedback-title').innerText = "Salah!";
-                document.getElementById('feedback-title').className = "font-pixel text-lg mb-4 text-red-600";
-            }
-            
-            document.getElementById('feedback-desc').innerText = explanation;
-            
-            btn.innerText = "Seterusnya";
-            btn.onclick = () => {
-                modal.classList.add('hidden');
-                processNextStep();
-            };
+            <div class="p-4 flex-1 overflow-y-auto bg-gradient-to-b from-yellow-50 to-white">
+                <div class="flex justify-between px-4 py-3 text-xs font-black text-yellow-600 uppercase tracking-widest border-b-2 border-yellow-200 mb-2">
+                    <span>Nama Kawan</span>
+                    <span>Bintang (Max 30)</span>
+                </div>
+                <div id="leaderboard-list" class="space-y-3">
+                    <div class="text-center py-10 text-yellow-400">
+                        <i class="fas fa-star fa-spin text-4xl mb-3"></i>
+                        <p class="font-bold game-font">Mencari bintang...</p>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-            modal.classList.remove('hidden');
-        };
+    </main>
 
-        window.processNextStep = () => {
-            state.currentQ++;
-            if(state.currentQ >= 10) {
-                if(state.currentLevel === 1) state.scores.l1 = Math.max(state.scores.l1, state.levelScore);
-                if(state.currentLevel === 2) state.scores.l2 = Math.max(state.scores.l2, state.levelScore);
-                if(state.currentLevel === 3) state.scores.l3 = Math.max(state.scores.l3, state.levelScore);
+    <!-- OVERLAYS -->
+    
+    <!-- Typing Answer Modal (Level 3) -->
+    <div id="typing-modal" class="modal-overlay hidden">
+        <div class="bg-white rounded-3xl p-6 w-full max-w-sm animate-pop text-center relative border-4 border-yellow-300 shadow-2xl">
+            <button onclick="closeTypingModal()" class="absolute top-4 right-4 text-gray-400 hover:text-pink-500 bg-gray-100 rounded-full w-8 h-8 flex items-center justify-center transition">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="w-20 h-20 bg-pink-100 text-pink-500 rounded-full flex items-center justify-center text-4xl mx-auto mb-4 border-4 border-white shadow-md">
+                <i class="fas fa-gift"></i>
+            </div>
+            <p class="text-sm font-bold text-yellow-500 mb-2 bg-yellow-50 inline-block px-3 py-1 rounded-full">Hadiah #<span id="modal-jersey-num"></span></p>
+            <h3 class="font-bold text-xl text-gray-700 mb-6 game-font leading-tight" id="modal-question">Soalan di sini</h3>
+            
+            <input type="text" id="modal-input" class="w-full border-b-4 border-pink-300 text-center text-2xl font-bold p-3 mb-6 outline-none focus:bg-pink-50 focus:border-pink-500 rounded-t-xl transition text-pink-600" placeholder="Taip jawapan...">
+            
+            <button onclick="submitTypingAnswer()" class="w-full bg-yellow-400 hover:bg-yellow-300 text-yellow-900 font-bold text-lg py-4 rounded-2xl shadow-md transition active:scale-95 game-font">
+                HANTAR JAWAPAN ✨
+            </button>
+        </div>
+    </div>
+
+    <!-- Feedback Modal -->
+    <div id="feedback-modal" class="modal-overlay hidden">
+        <div id="feedback-box" class="bg-white rounded-3xl p-8 w-full max-w-sm animate-pop text-center shadow-2xl border-t-8 border-pink-400">
+            <div id="feedback-icon" class="text-6xl mb-4 animate-float"></div>
+            <h2 id="feedback-title" class="text-3xl font-black mb-3 game-font text-pink-500">TAHNIAH!</h2>
+            <p id="feedback-explanation" class="text-gray-600 font-bold mb-6 bg-pink-50 border-2 border-pink-100 p-4 rounded-2xl text-sm">Penerangan di sini.</p>
+            <button onclick="closeFeedbackAndNext()" class="w-full bg-pink-500 text-white font-bold text-lg py-4 rounded-2xl shadow-md hover:bg-pink-400 transition active:scale-95 game-font">
+                TERUSKAN <i class="fas fa-chevron-right ml-2"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Big Animation Overlay (Comel / Hebat) -->
+    <div id="big-anim-overlay" class="fixed inset-0 pointer-events-none flex items-center justify-center z-[100] hidden">
+        <div id="big-anim-text" class="huge-text animate-pop opacity-0">
+            COMEL!
+        </div>
+    </div>
+
+    <script>
+        // Data and Questions
+        const simpulanBahasaList = [
+            "Anak emas", "Kaki bangku", "Ulat buku", "Buah tangan", "Kera sumbang", 
+            "Hidung tinggi", "Telinga lintah", "Ringan tulang", "Berat tulang", "Mulut murai",
+            "Durian runtuh", "Mandi peluh", "Putih tulang", "Langkah kanan", "Ayam tambatan", 
+            "Kepala batu", "Darah daging", "Bekas tangan", "Panjang tangan", "Tanda mata",
+            "Makan angin", "Rambang mata", "Ikat perut", "Beri muka", "Mulut tempayan", 
+            "Hati batu", "Kacang hantu", "Lipas kudung", "Nyawa-nyawa ikan", "Atas pagar"
+        ];
+
+        const qLevel1 = [
+            { q: "Orang yang disayangi oleh ibu bapa atau ketua.", a: "Anak emas", opts: ["Anak emas", "Anak angkat", "Anak tiri"], exp: "Anak emas bermaksud orang yang sangat disayangi." },
+            { q: "Seseorang yang tidak pandai bermain sukan.", a: "Kaki bangku", opts: ["Kaki ayam", "Kaki bangku", "Kaki bola"], exp: "Kaki bangku merujuk kepada orang yang tak pandai main bola." },
+            { q: "Orang yang sangat rajin membaca buku.", a: "Ulat buku", opts: ["Kutu embun", "Ulat buku", "Kutu buku"], exp: "Ulat buku ialah gelaran untuk orang yang suka membaca." },
+            { q: "Hadiah yang dibawa semasa melawat seseorang.", a: "Buah tangan", opts: ["Buah mulut", "Buah hati", "Buah tangan"], exp: "Buah tangan ialah hadiah atau pemberian." },
+            { q: "Orang yang sombong dan angkuh.", a: "Hidung tinggi", opts: ["Hidung belang", "Hidung tinggi", "Telinga nipis"], exp: "Hidung tinggi bermaksud orang yang bersikap sombong." },
+            { q: "Seseorang yang tajam pendengarannya.", a: "Telinga lintah", opts: ["Telinga kuali", "Telinga lintah", "Mata keranjang"], exp: "Telinga lintah bermaksud pendengaran yang sangat peka." },
+            { q: "Orang yang rajin bekerja dan menolong orang.", a: "Ringan tulang", opts: ["Berat tulang", "Tulang belakang", "Ringan tulang"], exp: "Ringan tulang adalah sikap yang rajin." },
+            { q: "Orang yang malas bekerja.", a: "Berat tulang", opts: ["Tulang hitam", "Berat tulang", "Putih tulang"], exp: "Berat tulang adalah kebalikan ringan tulang, iaitu malas." },
+            { q: "Orang yang banyak bercakap.", a: "Mulut murai", opts: ["Mulut tempayan", "Mulut murai", "Mulut manis"], exp: "Burung murai suka berbunyi, jadi mulut murai bermaksud banyak cakap." },
+            { q: "Orang yang suka menyendiri dan tidak bergaul.", a: "Kera sumbang", opts: ["Kera sumbang", "Kutu embun", "Kucing kurap"], exp: "Kera sumbang merujuk kepada orang yang mengasingkan diri." }
+        ];
+
+        const qLevel2 = [
+            { q: "Keuntungan besar yang diperoleh tanpa disangka-sangka.", a: "Durian runtuh", opts: ["Durian runtuh", "Rezeki terpijak", "Bulan jatuh"], exp: "Durian runtuh melambangkan keuntungan yang tiba-tiba." },
+            { q: "Bekerja dengan sangat kuat dan bersungguh-sungguh.", a: "Mandi peluh", opts: ["Mandi darah", "Mandi peluh", "Banting tulang"], exp: "Mandi peluh bermaksud bekerja keras sehingga berpeluh." },
+            { q: "Lebih baik mati daripada menanggung malu.", a: "Putih tulang", opts: ["Putih mata", "Putih tulang", "Tulang belakang"], exp: "Biar putih tulang, jangan putih mata (biar mati dari malu)." },
+            { q: "Sangat bernasib baik atau bertuah.", a: "Langkah kanan", opts: ["Langkah kiri", "Langkah kanan", "Langkah seribu"], exp: "Langkah kanan bermaksud nasib yang sangat baik apabila tiba di suatu tempat." },
+            { q: "Orang yang menjadi harapan dalam sesebuah pasukan.", a: "Ayam tambatan", opts: ["Ayam sabung", "Ayam tambatan", "Bapa ayam"], exp: "Ayam tambatan ialah pemain atau orang yang menjadi sandaran." },
+            { q: "Seseorang yang sangat degil dan tidak mahu mendengar nasihat.", a: "Kepala batu", opts: ["Hati batu", "Kepala batu", "Otak udang"], exp: "Kepala batu merujuk kepada kedegilan yang melampau." },
+            { q: "Anak kandung atau saudara mara sendiri.", a: "Darah daging", opts: ["Darah manis", "Darah daging", "Daging mentah"], exp: "Darah daging adalah pertalian keluarga yang rapat." },
+            { q: "Hasil kerja tangan atau karya seseorang.", a: "Bekas tangan", opts: ["Tanda tangan", "Bekas tangan", "Buah tangan"], exp: "Bekas tangan ialah hasil ciptaan atau kerja seseorang." },
+            { q: "Orang yang suka mencuri barang orang lain.", a: "Panjang tangan", opts: ["Tangan terbuka", "Tangan panjang", "Panjang tangan"], exp: "Panjang tangan merujuk kepada pencuri." },
+            { q: "Hadiah kenangan.", a: "Tanda mata", opts: ["Tanda harga", "Tanda mata", "Cahaya mata"], exp: "Tanda mata diberikan sebagai ingatan." }
+        ];
+
+        const qLevel3 = [
+            { q: "Pergi bercuti atau bersiar-siar untuk berehat.", a: ["makan angin"], exp: "Makan angin bermaksud mengambil angin luar untuk berehat." },
+            { q: "Sukar membuat pilihan kerana semuanya cantik-cantik.", a: ["rambang mata"], exp: "Rambang mata berlaku bila banyak pilihan yang menarik." },
+            { q: "Menahan lapar untuk berjimat cermat.", a: ["ikat perut"], exp: "Ikat perut bermaksud mengurangkan makan kerana ingin berjimat." },
+            { q: "Terlalu memanjakan seseorang.", a: ["beri muka", "bagi muka"], exp: "Beri muka boleh menyebabkan orang naik lemak." },
+            { q: "Orang yang tidak boleh menyimpan rahsia.", a: ["mulut tempayan"], exp: "Mulut tempayan merujuk kepada orang yang pecah rahsia." },
+            { q: "Sifat degil atau tidak bertimbang rasa.", a: ["hati batu"], exp: "Hati batu ialah orang yang keras hati." },
+            { q: "Orang jahat, nakal atau suka mengganggu orang lain.", a: ["kacang hantu"], exp: "Kacang hantu ialah budak yang nakal." },
+            { q: "Membuat kerja dengan sangat pantas.", a: ["lipas kudung"], exp: "Lipas kudung bergerak sangat laju." },
+            { q: "Keadaan yang hampir-hampir mati.", a: ["nyawa-nyawa ikan", "nyawa nyawa ikan"], exp: "Nyawa-nyawa ikan bermaksud nyawa di hujung tanduk." },
+            { q: "Tidak menyebelahi mana-mana pihak (berkecuali).", a: ["atas pagar"], exp: "Atas pagar bermaksud bersikap neutral." }
+        ];
+
+        const cuteEncouragements = ["COMEL!", "HEBAT!", "YAY!", "TERBAIK!", "BIJAK!"];
+
+        let currentLevel = 0;
+        let currentQuestionIndex = 0;
+        let levelQuestions = [];
+        let scoreCounter = 0;
+
+        function playSound(type) {
+            try {
+                if(Tone.context.state !== 'running') Tone.start();
+                const synth = new Tone.Synth().toDestination();
+                const now = Tone.now();
                 
-                saveUserData();
-                updateDashboardUI();
-
-                if(state.levelScore >= 8) {
-                    showBooyahAnimation();
-                } else {
-                    alertCustom("Cuba Lagi!", `Markah: ${state.levelScore}/10. Perlukan 8/10 untuk lulus.`, "fa-solid fa-rotate-right text-juara-blue", "text-juara-blue");
-                    setTimeout(() => {
-                        const m = document.getElementById('modal-feedback');
-                        const btn = m.querySelector('button');
-                        btn.onclick = () => { m.classList.add('hidden'); showView('dashboard'); };
-                    }, 100);
+                if (type === 'goal') {
+                    // Magical / Cute sound
+                    synth.triggerAttackRelease("C5", "16n", now);
+                    synth.triggerAttackRelease("E5", "16n", now + 0.1);
+                    synth.triggerAttackRelease("G5", "16n", now + 0.2);
+                    synth.triggerAttackRelease("C6", "8n", now + 0.3);
+                } else if (type === 'wrong') {
+                    // Soft bonk
+                    synth.triggerAttackRelease("C4", "8n", now);
+                    synth.triggerAttackRelease("G3", "4n", now + 0.2);
                 }
-            } else {
-                if(state.currentLevel === 1) renderLevel1Q();
-                if(state.currentLevel === 2) renderLevel2Q();
-            }
-        };
-
-        window.showBooyahAnimation = () => {
-            playSound('booyah');
-            const overlay = document.getElementById('overlay-goal');
-            overlay.classList.remove('hidden');
-        };
-
-        window.endLevel = () => {
-            document.getElementById('overlay-goal').classList.add('hidden');
-            showView('dashboard');
-        };
-
-        function initLevel1() {
-            document.getElementById('l1-zombie-hp').style.width = '100%';
-            renderLevel1Q();
+            } catch(e) { console.log("Audio not supported or interaction needed.", e); }
         }
 
-        function renderLevel1Q() {
-            document.getElementById('l1-q-num').innerText = state.currentQ + 1;
-            const qObj = questionsL1[state.currentQ];
-            document.getElementById('l1-question').innerText = qObj.q;
+        function showScreen(screenId) {
+            document.querySelectorAll('section').forEach(s => s.classList.add('hidden'));
+            document.getElementById(screenId).classList.remove('hidden');
+            
+            if (screenId !== 'screen-login') {
+                document.getElementById('user-info-badge').classList.remove('hidden');
+                document.getElementById('display-name').textContent = window.appState.user.name;
+            }
+        }
+
+        function handleLogin() {
+            const name = document.getElementById('input-name').value.trim();
+            const cls = document.getElementById('input-class').value.trim();
+            
+            if (!name || !cls) {
+                document.getElementById('input-name').classList.add('border-red-400');
+                setTimeout(() => document.getElementById('input-name').classList.remove('border-red-400'), 1000);
+                return;
+            }
+
+            window.appState.user.name = name;
+            window.appState.user.className = cls;
+            window.appState.isLoggedIn = true;
+            
+            saveUserData();
+            updateMenuLocks();
+            showScreen('screen-menu');
+            Tone.start();
+        }
+
+        function updateMenuLocks() {
+            document.getElementById('score-badge-1').textContent = `${window.appState.scores.level1}/10`;
+            document.getElementById('score-badge-2').textContent = `${window.appState.scores.level2}/10`;
+            document.getElementById('score-badge-3').textContent = `${window.appState.scores.level3}/10`;
+
+            const btn2 = document.getElementById('btn-level-2');
+            const icon2 = document.getElementById('icon-level-2');
+            const title2 = document.getElementById('title-level-2');
+            if (window.appState.scores.level1 >= 8) {
+                btn2.classList.remove('opacity-70', 'bg-gray-50');
+                btn2.classList.add('bg-white', 'border-blue-200', 'hover:shadow-md', 'hover:border-blue-400');
+                icon2.classList.remove('bg-gray-200', 'text-gray-400');
+                icon2.classList.add('bg-blue-100', 'text-blue-500', 'group-hover:scale-110');
+                icon2.innerHTML = '<i class="fas fa-cloud"></i>';
+                title2.classList.remove('text-gray-500');
+                title2.classList.add('text-blue-600');
+            }
+
+            const btn3 = document.getElementById('btn-level-3');
+            const icon3 = document.getElementById('icon-level-3');
+            const title3 = document.getElementById('title-level-3');
+            if (window.appState.scores.level2 >= 8) {
+                btn3.classList.remove('opacity-70', 'bg-gray-50');
+                btn3.classList.add('bg-white', 'border-yellow-200', 'hover:shadow-md', 'hover:border-yellow-400');
+                icon3.classList.remove('bg-gray-200', 'text-gray-400');
+                icon3.classList.add('bg-yellow-100', 'text-yellow-500', 'group-hover:scale-110');
+                icon3.innerHTML = '<i class="fas fa-gift"></i>';
+                title3.classList.remove('text-gray-500');
+                title3.classList.add('text-yellow-600');
+            }
+
+            const totalScore = window.appState.scores.level1 + window.appState.scores.level2 + window.appState.scores.level3;
+            if (totalScore >= 27) { 
+                document.getElementById('prize-banner').classList.remove('hidden');
+            }
+        }
+
+        function shuffle(array) {
+            let currentIndex = array.length,  randomIndex;
+            while (currentIndex != 0) {
+                randomIndex = Math.floor(Math.random() * currentIndex);
+                currentIndex--;
+                [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+            }
+            return array;
+        }
+
+        function startLevel(levelNum) {
+            if (levelNum === 2 && window.appState.scores.level1 < 8) return;
+            if (levelNum === 3 && window.appState.scores.level2 < 8) return;
+
+            currentLevel = levelNum;
+            currentQuestionIndex = 0;
+            scoreCounter = 0;
+
+            if (levelNum === 1) {
+                levelQuestions = shuffle([...qLevel1]);
+                document.getElementById('ball').style.left = '5%';
+                document.getElementById('ball').style.top = '60%';
+                updateScoreDisplay();
+                loadQuestionLevel1();
+                showScreen('screen-level1');
+            } 
+            else if (levelNum === 2) {
+                levelQuestions = shuffle([...qLevel2]);
+                initCheckersBoard();
+                updateScoreDisplay();
+                loadQuestionLevel2();
+                showScreen('screen-level2');
+            }
+            else if (levelNum === 3) {
+                levelQuestions = shuffle([...qLevel3]);
+                initJerseyGrid();
+                updateScoreDisplay();
+                showScreen('screen-level3');
+            }
+        }
+
+        function updateScoreDisplay() {
+            document.getElementById(`l${currentLevel}-score-display`).textContent = `${scoreCounter}/10`;
+        }
+
+        function loadQuestionLevel1() {
+            if (currentQuestionIndex >= 10) { endLevel(); return; }
+            const q = levelQuestions[currentQuestionIndex];
+            document.getElementById('l1-question-text').textContent = q.q;
             
             const optsContainer = document.getElementById('l1-options');
             optsContainer.innerHTML = '';
             
-            qObj.opts.forEach((opt, idx) => {
+            let opts = shuffle([...q.opts]);
+            opts.forEach(opt => {
                 const btn = document.createElement('button');
-                btn.className = "w-full p-4 text-left bg-slate-50 border-b-4 border-slate-300 rounded-xl active:border-b-0 active:translate-y-1 transition-all font-bold text-lg text-slate-700 hover:bg-slate-100";
-                btn.innerText = opt;
-                btn.onclick = () => checkAnswerL1(idx, qObj.a, qObj.desc);
+                btn.className = "bg-white border-2 border-pink-200 text-pink-600 font-bold py-4 px-4 rounded-2xl shadow-sm hover:bg-pink-50 hover:border-pink-400 transition transform active:scale-95 text-lg";
+                btn.textContent = opt;
+                btn.onclick = () => checkAnswer(opt, q.a, q.exp);
                 optsContainer.appendChild(btn);
             });
         }
 
-        function checkAnswerL1(selected, correct, desc) {
-            if (selected === correct) {
-                state.levelScore++;
-                
-                // Animate sword & zombie hit
-                playSound('zombie-hit');
-                const slash = document.getElementById('l1-slash');
-                const zombie = document.getElementById('l1-zombie');
-                
-                slash.classList.remove('hidden');
-                zombie.classList.add('anim-zombie-hit');
-                
-                // Reduce HP bar
-                const hpPct = 100 - (state.levelScore * 10);
-                document.getElementById('l1-zombie-hp').style.width = `${Math.max(hpPct, 0)}%`;
+        let damPosition = 0; 
+        function initCheckersBoard() {
+            const board = document.getElementById('checkers-board');
+            board.innerHTML = '';
+            damPosition = 0;
+            
+            for(let i=0; i<64; i++) {
+                const row = Math.floor(i/8);
+                const col = i%8;
+                const cell = document.createElement('div');
+                const isPink = (row + col) % 2 !== 0;
+                cell.className = `checkers-cell ${isPink ? 'cell-black' : 'cell-white'} relative`;
+                cell.id = `cell-${row}-${col}`;
+                board.appendChild(cell);
+            }
+            placeDamPiece();
+        }
 
-                setTimeout(() => {
-                    slash.classList.add('hidden');
-                    zombie.classList.remove('anim-zombie-hit');
-                    showFeedback(true, desc);
-                }, 400);
+        function placeDamPiece() {
+            const existing = document.getElementById('the-dam-piece');
+            if(existing) existing.remove();
 
-            } else {
-                showFeedback(false, desc);
+            let row = 7 - Math.floor(damPosition * 0.7);
+            let col = Math.floor(damPosition * 0.7);
+            
+            if ((row + col) % 2 === 0) col += 1; 
+            if(row < 0) row = 0; if(col > 7) col = 7;
+
+            const targetCell = document.getElementById(`cell-${row}-${col}`);
+            if(targetCell) {
+                const piece = document.createElement('div');
+                piece.id = 'the-dam-piece';
+                piece.className = 'dam-piece';
+                piece.innerHTML = '<i class="fas fa-star"></i>';
+                targetCell.appendChild(piece);
             }
         }
 
-        function initLevel2() {
-            buildGrid();
-            renderLevel2Q();
-        }
-
-        function buildGrid() {
-            const grid = document.getElementById('builder-grid');
-            grid.innerHTML = '';
-            // 10 blocks needed. We'll make a 3x3 + 1 roof structure.
-            for(let i=1; i<=10; i++) {
-                let cell = document.createElement('div');
-                cell.id = `build-block-${i}`;
-                cell.className = "w-10 h-10 bg-mc-dirt border-4 border-[#5c2e0b] opacity-0 transition-opacity duration-500 rounded-sm shadow-sm";
-                // Some simple layout styling
-                if (i===10) cell.className = "w-10 h-10 bg-mc-stone border-4 border-[#4a4a4a] opacity-0 transition-opacity duration-500 rounded-sm shadow-sm col-span-3 justify-self-center"; // Roof
-                grid.appendChild(cell);
-            }
-        }
-
-        function updateBuilderVisual(score) {
-            if(score === 0) return;
-            const block = document.getElementById(`build-block-${score}`);
-            if(block) {
-                block.classList.remove('opacity-0');
-                block.classList.add('animate-pop-in');
-            }
-        }
-
-        function renderLevel2Q() {
-            document.getElementById('l2-q-num').innerText = state.currentQ + 1;
-            const qObj = questionsL2[state.currentQ];
-            document.getElementById('l2-question').innerText = qObj.q;
+        function loadQuestionLevel2() {
+            if (currentQuestionIndex >= 10) { endLevel(); return; }
+            const q = levelQuestions[currentQuestionIndex];
+            document.getElementById('l2-question-text').textContent = q.q;
             
             const optsContainer = document.getElementById('l2-options');
             optsContainer.innerHTML = '';
             
-            qObj.opts.forEach((opt, idx) => {
+            let opts = shuffle([...q.opts]);
+            opts.forEach(opt => {
                 const btn = document.createElement('button');
-                btn.className = "w-full p-4 text-left bg-slate-50 border-b-4 border-slate-300 rounded-xl active:border-b-0 active:translate-y-1 transition-all font-bold text-lg text-slate-700 hover:bg-slate-100";
-                btn.innerText = opt;
-                btn.onclick = () => checkAnswerL2(idx, qObj.a, qObj.desc);
+                btn.className = "bg-white border-2 border-blue-200 text-blue-600 font-bold py-4 px-4 rounded-2xl shadow-sm hover:bg-blue-50 hover:border-blue-400 transition transform active:scale-95 text-lg";
+                btn.textContent = opt;
+                btn.onclick = () => checkAnswer(opt, q.a, q.exp);
                 optsContainer.appendChild(btn);
             });
         }
 
-        function checkAnswerL2(selected, correct, desc) {
-            if (selected === correct) {
-                playSound('correct');
-                state.levelScore++;
-                updateBuilderVisual(state.levelScore);
-                showFeedback(true, desc);
-            } else {
-                showFeedback(false, desc);
-            }
-        }
-
-        const cheeringWords = ["Anda Hebat!", "Cemerlang!", "Terbaik!", "Mantap!"];
-        const enemies = ["🧟", "🧟‍♂️", "🟩"]; // Creeper/Zombie
-        
-        function initLevel3() {
-            state.l3Answered = [];
-            state.levelScore = 0;
-            state.currentQ = 0;
-            document.getElementById('l3-score-display').innerText = state.levelScore;
-            
-            const grid = document.getElementById('escape-grid');
+        function initJerseyGrid() {
+            const grid = document.getElementById('jersey-grid');
             grid.innerHTML = '';
-
-            for(let i=0; i<10; i++) {
-                const btn = document.createElement('button');
-                btn.className = "bg-[#8B4513] border-4 border-[#5c2e0b] p-6 rounded-lg flex flex-col items-center justify-center text-white active:scale-95 transition-transform shadow-lg relative";
-                btn.id = `escape-door-${i}`;
-                btn.innerHTML = `
-                    <div class="text-4xl mb-1">🚪</div>
-                    <span class="font-pixel text-xs">Pintu ${i+1}</span>
+            for(let i=1; i<=10; i++) {
+                const card = document.createElement('div');
+                card.className = 'jersey-card';
+                card.id = `jersey-${i}`;
+                card.innerHTML = `
+                    <div class="jersey-icon"><i class="fas fa-gift"></i></div>
+                    <div class="game-font text-xl text-pink-700">${i}</div>
                 `;
-                btn.onclick = () => openL3Modal(i);
-                grid.appendChild(btn);
+                card.onclick = () => openTypingModal(i-1, card.id);
+                grid.appendChild(card);
             }
         }
 
-        window.openL3Modal = (idx) => {
-            if(state.l3Answered.includes(idx)) return; 
+        let currentCardId = null;
+        function openTypingModal(qIndex, cardId) {
+            const card = document.getElementById(cardId);
+            if(card.classList.contains('solved')) return;
+
+            currentQuestionIndex = qIndex;
+            currentCardId = cardId;
+            const q = levelQuestions[qIndex];
             
-            window.currentL3Index = idx;
-            const qObj = questionsL3[idx];
+            document.getElementById('modal-jersey-num').textContent = (qIndex + 1);
+            document.getElementById('modal-question').textContent = q.q;
+            document.getElementById('modal-input').value = '';
+            document.getElementById('typing-modal').classList.remove('hidden');
             
-            // Random enemy
-            const enemy = enemies[Math.floor(Math.random() * enemies.length)];
-            document.getElementById('modal-l3-enemy').innerText = enemy;
+            setTimeout(() => document.getElementById('modal-input').focus(), 100);
+        }
+
+        function closeTypingModal() {
+            document.getElementById('typing-modal').classList.add('hidden');
+        }
+
+        function submitTypingAnswer() {
+            const input = document.getElementById('modal-input').value.trim().toLowerCase();
+            if(!input) return;
             
-            document.getElementById('modal-l3-question').innerText = qObj.q;
-            document.getElementById('modal-l3-input').value = '';
-            document.getElementById('modal-l3-type').classList.remove('hidden');
-            setTimeout(() => document.getElementById('modal-l3-input').focus(), 100);
-        };
+            const q = levelQuestions[currentQuestionIndex];
+            closeTypingModal();
+            checkAnswer(input, q.a, q.exp, true);
+        }
 
-        window.closeL3Modal = () => {
-            document.getElementById('modal-l3-type').classList.add('hidden');
-        };
-
-        window.submitL3Answer = () => {
-            const inputVal = document.getElementById('modal-l3-input').value.trim().toLowerCase();
-            const idx = window.currentL3Index;
-            const qObj = questionsL3[idx];
+        function checkAnswer(selected, correct, explanation, isTyping = false) {
+            let isCorrect = false;
             
-            if(!inputVal) return;
-
-            closeL3Modal();
-
-            const btn = document.getElementById(`escape-door-${idx}`);
-            btn.classList.add('opacity-50', 'cursor-not-allowed', 'bg-slate-400', 'border-slate-500');
-            btn.onclick = null;
-            state.l3Answered.push(idx);
-
-            if (inputVal === qObj.a.toLowerCase()) {
-                playSound('correct');
-                state.levelScore++;
-                document.getElementById('l3-score-display').innerText = state.levelScore;
-                
-                showFloatingText(btn);
-                showFeedback(true, qObj.desc);
-                
-                // Change door to safe
-                btn.innerHTML = `<div class="text-4xl mb-1">✅</div>`;
+            if (isTyping) {
+                isCorrect = correct.includes(selected);
             } else {
-                showFeedback(false, `Jawapan yang betul ialah: ${qObj.a}. ${qObj.desc}`);
-                btn.innerHTML = `<div class="text-4xl mb-1">❌</div>`;
+                isCorrect = (selected === correct);
             }
+
+            if (isCorrect) {
+                scoreCounter++;
+                updateScoreDisplay();
+                playSound('goal');
+                showBigAnimation();
+                
+                if (currentLevel === 1) {
+                    const ball = document.getElementById('ball');
+                    const p = scoreCounter / 10;
+                    ball.style.left = `${5 + (p * 85)}%`;
+                    ball.style.top = `${60 - (p * 10)}%`;
+                } 
+                else if (currentLevel === 2) {
+                    damPosition++;
+                    placeDamPiece();
+                }
+                else if (currentLevel === 3) {
+                    const card = document.getElementById(currentCardId);
+                    card.classList.add('solved');
+                    card.innerHTML = `<div class="jersey-icon"><i class="fas fa-heart text-white text-3xl mt-2 animate-pop"></i></div>`;
+                }
+            } else {
+                playSound('wrong');
+            }
+
+            showFeedback(isCorrect, explanation);
+        }
+
+        function showBigAnimation() {
+            const overlay = document.getElementById('big-anim-overlay');
+            const textEl = document.getElementById('big-anim-text');
+            
+            // Random cute word
+            const word = cuteEncouragements[Math.floor(Math.random() * cuteEncouragements.length)];
+            textEl.textContent = word;
+            
+            overlay.classList.remove('hidden');
+            
+            // Restart animation
+            textEl.classList.remove('animate-pop');
+            void textEl.offsetWidth; 
+            textEl.classList.add('animate-pop');
 
             setTimeout(() => {
-                const m = document.getElementById('modal-feedback');
-                const fBtn = m.querySelector('button');
-                fBtn.onclick = () => { 
-                    m.classList.add('hidden');
-                    if(state.l3Answered.length >= 10) {
-                        finishLevel3();
-                    }
-                };
-            }, 100);
-        };
-
-        function showFloatingText(buttonElement) {
-            const container = document.getElementById('float-container');
-            const rect = buttonElement.getBoundingClientRect();
-            const parentRect = container.getBoundingClientRect();
-            
-            const el = document.createElement('div');
-            el.className = 'float-text text-juara-gold font-pixel text-sm';
-            el.innerText = cheeringWords[Math.floor(Math.random() * cheeringWords.length)];
-            
-            el.style.left = `${(rect.left - parentRect.left) + rect.width/2 - 40}px`;
-            el.style.top = `${(rect.top - parentRect.top)}px`;
-            
-            container.appendChild(el);
-            setTimeout(() => { el.remove(); }, 1500);
+                overlay.classList.add('hidden');
+            }, 1200);
         }
 
-        function finishLevel3() {
-            state.scores.l3 = Math.max(state.scores.l3, state.levelScore);
-            saveUserData();
-            updateDashboardUI();
-            
-            if(state.levelScore >= 8) {
-                showBooyahAnimation();
+        function showFeedback(isCorrect, explanation) {
+            const modal = document.getElementById('feedback-modal');
+            const icon = document.getElementById('feedback-icon');
+            const title = document.getElementById('feedback-title');
+            const exp = document.getElementById('feedback-explanation');
+            const box = document.getElementById('feedback-box');
+
+            if (isCorrect) {
+                icon.innerHTML = '<i class="fas fa-star text-yellow-400"></i>';
+                title.textContent = "YAY! BETUL!";
+                title.className = "text-3xl font-black mb-3 game-font text-pink-500";
+                box.className = "bg-white rounded-3xl p-8 w-full max-w-sm animate-pop text-center shadow-2xl border-t-8 border-pink-400";
             } else {
-                alertCustom("Cuba Lagi!", `Markah: ${state.levelScore}/10. Hati-hati menaip jawapan!`, "fa-solid fa-rotate-right text-juara-blue", "text-juara-blue");
-                const m = document.getElementById('modal-feedback');
-                m.querySelector('button').onclick = () => { m.classList.add('hidden'); showView('dashboard'); };
+                icon.innerHTML = '<i class="fas fa-face-sad-tear text-blue-400"></i>';
+                title.textContent = "ALAMAK, SALAH!";
+                title.className = "text-3xl font-black mb-3 game-font text-blue-500";
+                box.className = "bg-white rounded-3xl p-8 w-full max-w-sm animate-pop text-center shadow-2xl border-t-8 border-blue-400";
+            }
+            exp.textContent = explanation;
+            modal.classList.remove('hidden');
+        }
+
+        function closeFeedbackAndNext() {
+            document.getElementById('feedback-modal').classList.add('hidden');
+            
+            if (currentLevel === 1 || currentLevel === 2) {
+                currentQuestionIndex++;
+                if (currentLevel === 1) loadQuestionLevel1();
+                else loadQuestionLevel2();
+            } else if (currentLevel === 3) {
+                // For level 3, check if all answered
+                let allAnswered = true;
+                for(let i=1; i<=10; i++) {
+                    if(!document.getElementById(`jersey-${i}`).classList.contains('solved')) {
+                        allAnswered = false; break;
+                    }
+                }
+                if(allAnswered) endLevel();
             }
         }
 
-        function initChecklistUI() {
-            const list = document.getElementById('checklist-items');
-            list.innerHTML = '';
+        function endLevel() {
+            if (currentLevel === 1) window.appState.scores.level1 = Math.max(window.appState.scores.level1, scoreCounter);
+            if (currentLevel === 2) window.appState.scores.level2 = Math.max(window.appState.scores.level2, scoreCounter);
+            if (currentLevel === 3) window.appState.scores.level3 = Math.max(window.appState.scores.level3, scoreCounter);
             
-            checklistItems.forEach((itemText, idx) => {
-                const li = document.createElement('li');
-                li.className = "flex items-center p-4 bg-white rounded-xl shadow-sm border-2 border-slate-200 active:bg-slate-50";
-                
-                const cb = document.createElement('input');
-                cb.type = "checkbox";
-                cb.className = "w-6 h-6 text-juara-green bg-slate-100 border-2 border-slate-400 rounded focus:ring-juara-green focus:ring-2 mr-4";
-                cb.id = `chk-${idx}`;
-                cb.onchange = (e) => handleChecklistChange(idx, e.target.checked);
-                
-                const lbl = document.createElement('label');
-                lbl.htmlFor = `chk-${idx}`;
-                lbl.className = "text-slate-800 font-bold flex-grow cursor-pointer";
-                lbl.innerText = itemText;
-
-                li.appendChild(cb);
-                li.appendChild(lbl);
-                list.appendChild(li);
-            });
+            saveUserData();
+            updateMenuLocks();
+            
+            setTimeout(() => {
+                showScreen('screen-menu');
+            }, 500);
         }
 
-        function updateChecklistUIFromState() {
-            let count = 0;
-            state.checklist.forEach((isChecked, idx) => {
-                const cb = document.getElementById(`chk-${idx}`);
-                if(cb) {
-                    cb.checked = isChecked;
-                    if(isChecked) count++;
+        // Checklist Logic
+        function renderChecklist() {
+            const container = document.getElementById('checklist-container');
+            container.innerHTML = '';
+            let completed = 0;
+
+            simpulanBahasaList.forEach((item, index) => {
+                if(window.appState.checklist[index]) completed++;
+                
+                const div = document.createElement('div');
+                div.className = "flex items-center p-3 bg-pink-50 rounded-2xl border border-pink-100 cursor-pointer hover:bg-pink-100 transition";
+                div.onclick = () => toggleChecklist(index);
+                
+                const icon = window.appState.checklist[index] 
+                    ? '<i class="fas fa-check-circle text-pink-500 text-xl mr-3"></i>' 
+                    : '<i class="far fa-circle text-gray-300 text-xl mr-3"></i>';
+                
+                div.innerHTML = `${icon} <span class="font-bold ${window.appState.checklist[index] ? 'text-pink-600 line-through opacity-70' : 'text-gray-700'}">${item}</span>`;
+                container.appendChild(div);
+            });
+
+            document.getElementById('checklist-progress-text').textContent = `${completed}/30`;
+            document.getElementById('checklist-progress-bar').style.width = `${(completed/30)*100}%`;
+        }
+
+        function toggleChecklist(index) {
+            window.appState.checklist[index] = !window.appState.checklist[index];
+            renderChecklist();
+            saveUserData();
+        }
+
+        // Initialize Checklist rendering on load (after data loaded)
+        setInterval(() => {
+            if (document.getElementById('screen-checklist').classList.contains('hidden') === false) {
+                renderChecklist();
+            }
+        }, 1000); // Check occasionally or just bind to showScreen
+
+
+        // Leaderboard Logic
+        async function loadLeaderboard() {
+            const listEl = document.getElementById('leaderboard-list');
+            listEl.innerHTML = '<div class="text-center py-10 text-yellow-400"><i class="fas fa-star fa-spin text-4xl mb-3"></i><p class="font-bold game-font">Mencari kawan...</p></div>';
+            
+            if (!db) {
+                listEl.innerHTML = '<div class="text-center py-10 text-gray-400">Ranking tidak tersedia (Mod Luar Talian)</div>';
+                return;
+            }
+
+            try {
+                const q = collection(db, 'artifacts', appId, 'public', 'data', 'leaderboard');
+                const querySnapshot = await getDocs(q);
+                let results = [];
+                
+                querySnapshot.forEach((doc) => {
+                    results.push(doc.data());
+                });
+
+                results.sort((a, b) => b.totalScore - a.totalScore);
+                results = results.slice(0, 50); // Top 50
+
+                listEl.innerHTML = '';
+                if(results.length === 0) {
+                    listEl.innerHTML = '<div class="text-center py-10 text-gray-400">Belum ada pemain. Jadilah yang pertama!</div>';
+                    return;
                 }
-            });
-            updateChecklistProgress(count);
-        }
 
-        function handleChecklistChange(idx, isChecked) {
-            state.checklist[idx] = isChecked;
-            let count = state.checklist.filter(Boolean).length;
-            updateChecklistProgress(count);
-            if(useFirebase) saveUserData();
-        }
+                results.forEach((player, idx) => {
+                    const item = document.createElement('div');
+                    item.className = "flex justify-between items-center bg-white p-3 rounded-2xl shadow-sm border border-yellow-100";
+                    
+                    let rankIcon = `<span class="w-6 h-6 flex items-center justify-center bg-gray-200 text-gray-500 rounded-full text-xs font-bold mr-3">${idx+1}</span>`;
+                    if (idx === 0) rankIcon = `<i class="fas fa-medal text-yellow-400 text-xl mr-3"></i>`;
+                    else if (idx === 1) rankIcon = `<i class="fas fa-medal text-gray-400 text-xl mr-3"></i>`;
+                    else if (idx === 2) rankIcon = `<i class="fas fa-medal text-orange-400 text-xl mr-3"></i>`;
 
-        function updateChecklistProgress(count) {
-            document.getElementById('checklist-progress-text').innerText = `${count}/30`;
-            const pct = (count / 30) * 100;
-            document.getElementById('checklist-progress-bar').style.width = `${pct}%`;
-        }
+                    item.innerHTML = `
+                        <div class="flex items-center">
+                            ${rankIcon}
+                            <div>
+                                <div class="font-bold text-gray-700">${player.name}</div>
+                                <div class="text-xs text-gray-400">${player.className}</div>
+                            </div>
+                        </div>
+                        <div class="font-black text-pink-500 bg-pink-50 px-3 py-1 rounded-xl text-lg">${player.totalScore}</div>
+                    `;
+                    listEl.appendChild(item);
+                });
 
+            } catch(e) {
+                listEl.innerHTML = '<div class="text-center py-10 text-red-400">Ralat memuatkan ranking.</div>';
+            }
+        }
     </script>
 </body>
 </html>
